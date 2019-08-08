@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>JTTools解析工具</title>
+    <!-- import Vue.js -->
+    <script src="//vuejs.org/js/vue.min.js"></script>
+    <!-- import stylesheet -->
+    <link rel="stylesheet" href="//unpkg.com/iview/dist/styles/iview.css">
+    <!-- import iView -->
+    <script src="//unpkg.com/iview/dist/iview.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.bootcss.com/dayjs/1.8.14/dayjs.min.js"></script>
+    <style>
+      .pane-content{
+        width: 100%;
+        display: flex;
+                display: -webkit-flex;
+                align-items:center;
+                justify-content:center;
+            height: calc(100vh - 60px);
+            padding: 10px 20px;
+      }
+      .left,.right{
+        width: 45%;
+    height: 100%;
+    display: inline-block;
+      }
+      .center{
+        width: 10%;
+        display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+      }
+      textarea.ivu-input {
+    max-height: 100%;
+    min-height: 32px;
+    height: 100%;
+}
+.ivu-input-wrapper{
+    height: 100%;
+}
+@media (max-width:1024px){
+    .left,.right{
+        width: 40%;
+      }
+      .center{
+        width: 20%;
+      }
+}
+    </style>
+</head>
+<body>
+<div id="app">
+    <tabs value="name1">
+        <tab-pane label="JT808解析工具" name="name1" >
+            <div class="pane-content" >
+                <div class="left" >
+                    <i-input type="textarea"  placeholder="Enter something..."  />
+                </div>
+                <div class="center"   >
+                    <i-button type="primary">Primary</i-button>
+                </div>
+                <div  class="right"  >
+                    <i-input type="textarea" placeholder="Enter something..." />
+                </div>
+            </div>
+        </tab-pane>
+        <tab-pane label="JT809解析工具" name="name2">
+                <div class="pane-content" >
+                        <div class="left" >
+                            <i-input type="textarea"  placeholder="Enter something..."  />
+                        </div>
+                        <div class="center"   >
+                            <i-button type="primary">Primary2</i-button>
+                        </div>
+                        <div  class="right"  >
+                            <i-input type="textarea" placeholder="Enter something..." />
+                        </div>
+                    </div>
+        </tab-pane>
+        <tab-pane label="JT1078解析工具" name="name3">
+                <div class="pane-content" >
+                        <div class="left" >
+                            <i-input type="textarea"  placeholder="Enter something..."  />
+                        </div>
+                        <div class="center"   >
+                            <i-button type="primary">Primary3</i-button>
+                        </div>
+                        <div  class="right"  >
+                            <i-input type="textarea" placeholder="Enter something..." />
+                        </div>
+                    </div>
+        </tab-pane>
+    </tabs>
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            loading: false,
+            
+        },
+        mounted:function(){
+
+        },
+        methods: {
+            Api:{
+                parse808:function(){
+                    this.loading=true;
+                    axios.post('http://jttools.smallchi.cn/api/JTTools/Parse808',this.queryParameter)
+                    .then((response)=>{
+                        if(response.data=="" || response.data==null){
+                            this.queryData=[];
+                            this.loading=false;
+                            return;
+                        }
+                        this.queryData=response.data;
+                        this.loading=false;
+                    })
+                    .catch((error)=>{
+                        this.queryError=error;
+                        this.loading=false;
+                    });
+                },
+                parse809:function(){
+                    this.loading=true;
+                    axios.post('http://jttools.smallchi.cn/api/JTTools/Parse809',this.queryParameter)
+                    .then((response)=>{
+                        if(response.data=="" || response.data==null){
+                            this.queryData=[];
+                            this.loading=false;
+                            return;
+                        }
+                        this.queryData=response.data;
+                        this.loading=false;
+                    })
+                    .catch((error)=>{
+                        this.queryError=error;
+                        this.loading=false;
+                    });
+                },
+                parse1078:function(){
+                    this.loading=true;
+                    axios.post('http://jttools.smallchi.cn/api/JTTools/Parse1078',this.queryParameter)
+                    .then((response)=>{
+                        if(response.data=="" || response.data==null){
+                            this.queryData=[];
+                            this.loading=false;
+                            return;
+                        }
+                        this.queryData=response.data;
+                        this.loading=false;
+                    })
+                    .catch((error)=>{
+                        this.queryError=error;
+                        this.loading=false;
+                    });
+                }
+            }
+        }
+    })
+  </script>
+</body>
+</html>

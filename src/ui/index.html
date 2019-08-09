@@ -119,6 +119,7 @@
             parse808Result:"",
             parse809Result:"",
             parse1078Result:"",
+	    apiUrl:"https://jttools.smallchi.cn"
         },
         mounted:function(){
 
@@ -127,7 +128,7 @@
             parse808Click:function(){
                 if(!this.parse808Parameter) return;
                 this.$Loading.start();
-                axios.post('http://jttools.smallchi.cn/api/JTTools/Parse808',this.parse808Parameter)
+                axios.post(this.apiUrl+'/api/JTTools/Parse808',this.parse808Parameter)
                     .then((response)=>{
                         if(response.data.Code===200){
                             this.parse808Result=response.data.Data;
@@ -144,7 +145,7 @@
             parse809Click:function(){
                 if(!this.parse809Parameter) return;
                 this.$Loading.start();
-                axios.post('http://jttools.smallchi.cn/api/JTTools/Parse809',this.parse809Parameter)
+                axios.post(this.apiUrl+'/api/JTTools/Parse809',this.parse809Parameter)
                     .then((response)=>{
                         if(response.data.Code===200){
                             this.parse809Result=response.data.Data;
@@ -161,7 +162,7 @@
             parse1078Click:function(){
                 if(!this.parse1078Parameter) return;
                 this.$Loading.start();
-                axios.post('http://jttools.smallchi.cn/api/JTTools/Parse1078',this.parse1078Parameter)
+                axios.post(this.apiUrl+'/api/JTTools/Parse1078',this.parse1078Parameter)
                     .then((response)=>{
                         if(response.data.Code===200){
                             this.parse1078Result=response.data.Data;

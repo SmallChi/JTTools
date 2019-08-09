@@ -14,6 +14,7 @@ using JT808.Protocol.Interfaces;
 using JT808.Protocol.Extensions;
 using JT808.Protocol.Exceptions;
 using Microsoft.AspNetCore.Cors;
+using Newtonsoft.Json;
 
 namespace JTTools.Controllers
 {
@@ -26,6 +27,12 @@ namespace JTTools.Controllers
         private readonly IJT808Config jT808Config;
         private readonly JT808Serializer jT808Serializer;
         private readonly JT809Serializer jT809Serializer;
+        private static Newtonsoft.Json.JsonSerializerSettings setting = new Newtonsoft.Json.JsonSerializerSettings();
+        static JTToolsController()
+        {
+            setting.Formatting = Formatting.Indented;
+            setting.Converters.Add(new ByteArrayHexConverter());
+        }
         public JTToolsController(
             IJT809Config jT809Config, 
             IJT808Config jT808Config)
@@ -44,7 +51,7 @@ namespace JTTools.Controllers
             try
             {
                 jTResultDto.Code = 200;
-                jTResultDto.Data = jT808Serializer.Deserialize(parameter.HexData.ToHexBytes());
+                jTResultDto.Data =JsonConvert.SerializeObject(jT808Serializer.Deserialize(parameter.HexData.ToHexBytes()), setting);
             }
             catch(JT808Exception ex)
             {
@@ -67,7 +74,7 @@ namespace JTTools.Controllers
             try
             {
                 jTResultDto.Code = 200;
-                jTResultDto.Data = jT809Serializer.Deserialize(parameter.HexData.ToHexBytes());
+                jTResultDto.Data = JsonConvert.SerializeObject(jT809Serializer.Deserialize(parameter.HexData.ToHexBytes()), setting);
             }
             catch (JT809Exception ex)
             {
@@ -90,7 +97,7 @@ namespace JTTools.Controllers
             try
             {
                 jTResultDto.Code = 200;
-                jTResultDto.Data = JT1078Serializer.Deserialize(parameter.HexData.ToHexBytes());
+                jTResultDto.Data = JsonConvert.SerializeObject(JT1078Serializer.Deserialize(parameter.HexData.ToHexBytes()), setting);
             }
             catch (Exception ex)
             {

@@ -48,6 +48,7 @@ namespace JTTools
                             {
                                 jsonOptions.SerializerSettings.Converters.Add(new ByteArrayHexConverter());
                                 jsonOptions.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                                //jsonOptions.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
                             })
                             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
                     services.AddCors(options => 

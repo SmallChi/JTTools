@@ -1,8 +1,10 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
     <title>JTTools解析工具</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="JT808|gb808|JT809|gb809|JT1078|JTT1078|在线解析工具">
+    <meta name=”description” content="道路运输车辆卫星定位协议在线解析工具">
     <!-- import Vue.js -->
     <script src="//vuejs.org/js/vue.min.js"></script>
     <!-- import stylesheet -->
@@ -15,81 +17,87 @@
       .pane-content{
         width: 100%;
         display: flex;
-                display: -webkit-flex;
-                align-items:center;
-                justify-content:center;
-            height: calc(100vh - 60px);
-            padding: 10px 20px;
+        display: -webkit-flex;
+        align-items:center;
+        justify-content:center;
+        height: calc(100vh - 60px);
+        padding: 10px 20px;
       }
       .left,.right{
         width: 45%;
-    height: 100%;
-    display: inline-block;
+        height: 100%;
+        display: inline-block;
       }
       .center{
         width: 10%;
         display: flex;
-    display: -webkit-flex;
-    align-items: center;
-    justify-content: center;
+        display: -webkit-flex;
+        align-items: center;
+        justify-content: center;
       }
       textarea.ivu-input {
-    max-height: 100%;
-    min-height: 32px;
-    height: 100%;
-}
-.ivu-input-wrapper{
-    height: 100%;
-}
-@media (max-width:1024px){
-    .left,.right{
-        width: 40%;
+        max-height: 100%;
+        min-height: 32px;
+        height: 100%;
       }
-      .center{
-        width: 20%;
-      }
-}
+     .ivu-input-wrapper{
+        height: 100%;
+     }
+    @media (max-width:1024px){
+        .left,.right{
+            width: 40%;
+        }
+        .center{
+            width: 20%;
+        }
+    }
     </style>
 </head>
 <body>
 <div id="app">
     <tabs value="name1">
         <tab-pane label="JT808解析工具" name="name1" >
-            <div class="pane-content" >
-                <div class="left" >
-                    <i-input type="textarea"  placeholder="Enter something..."  />
+            <div class="pane-content">
+                <div class="left">
+                        <i-input v-model="parse808Parameter.HexData" type="textarea"  placeholder="Enter Hex Data..."  />
                 </div>
-                <div class="center"   >
-                    <i-button type="primary">Primary</i-button>
+                <div class="center">
+                    <i-button @click="parse808Click" type="primary">
+                        <Icon type="ios-arrow-forward"/>
+                    </i-button>
                 </div>
-                <div  class="right"  >
-                    <i-input type="textarea" placeholder="Enter something..." />
+                <div  class="right">
+                    <i-input v-model="parse808Result" type="textarea"/>
                 </div>
             </div>
         </tab-pane>
         <tab-pane label="JT809解析工具" name="name2">
                 <div class="pane-content" >
                         <div class="left" >
-                            <i-input type="textarea"  placeholder="Enter something..."  />
+                            <i-input v-model="parse809Parameter.HexData" type="textarea"  placeholder="Enter Hex Data..."  />
                         </div>
                         <div class="center"   >
-                            <i-button type="primary">Primary2</i-button>
+                            <i-button @click="parse809Click" type="primary">
+                                <Icon type="ios-arrow-forward"/>
+                            </i-button>
                         </div>
                         <div  class="right"  >
-                            <i-input type="textarea" placeholder="Enter something..." />
+                            <i-input v-model="parse809Result" type="textarea"/>
                         </div>
                     </div>
         </tab-pane>
         <tab-pane label="JT1078解析工具" name="name3">
                 <div class="pane-content" >
                         <div class="left" >
-                            <i-input type="textarea"  placeholder="Enter something..."  />
+                            <i-input v-model="parse1078Parameter.HexData" type="textarea"  placeholder="Enter Hex Data..."  />
                         </div>
                         <div class="center"   >
-                            <i-button type="primary">Primary3</i-button>
+                            <i-button @click="parse1078Click" type="primary">
+                                <Icon type="ios-arrow-forward"/>
+                            </i-button>
                         </div>
                         <div  class="right"  >
-                            <i-input type="textarea" placeholder="Enter something..." />
+                            <i-input v-model="parse1078Result" type="textarea"/>
                         </div>
                     </div>
         </tab-pane>
@@ -99,65 +107,73 @@
     new Vue({
         el: '#app',
         data: {
-            loading: false,
-            
+            parse808Parameter:{
+                HexData:"",
+            },
+            parse809Parameter:{
+                HexData:"",
+            },
+            parse1078Parameter:{             
+                HexData:"",
+            },
+            parse808Result:"",
+            parse809Result:"",
+            parse1078Result:"",
         },
         mounted:function(){
 
         },
         methods: {
-            Api:{
-                parse808:function(){
-                    this.loading=true;
-                    axios.post('http://jttools.smallchi.cn/api/JTTools/Parse808',this.queryParameter)
+            parse808Click:function(){
+                if(!this.parse808Parameter) return;
+                this.$Loading.start();
+                axios.post('http://jttools.smallchi.cn/api/JTTools/Parse808',this.parse808Parameter)
                     .then((response)=>{
-                        if(response.data=="" || response.data==null){
-                            this.queryData=[];
-                            this.loading=false;
-                            return;
+                        if(response.data.Code===200){
+                            this.parse808Result=response.data.Data;
+                        }else{
+                            this.parse808Result=response.data.Message;
                         }
-                        this.queryData=response.data;
-                        this.loading=false;
+                        this.$Loading.finish();
                     })
                     .catch((error)=>{
-                        this.queryError=error;
-                        this.loading=false;
+                        this.parse808Result=JSON.stringify(error);
+                        this.$Loading.error();
                     });
-                },
-                parse809:function(){
-                    this.loading=true;
-                    axios.post('http://jttools.smallchi.cn/api/JTTools/Parse809',this.queryParameter)
+            },
+            parse809Click:function(){
+                if(!this.parse809Parameter) return;
+                this.$Loading.start();
+                axios.post('http://jttools.smallchi.cn/api/JTTools/Parse809',this.parse809Parameter)
                     .then((response)=>{
-                        if(response.data=="" || response.data==null){
-                            this.queryData=[];
-                            this.loading=false;
-                            return;
+                        if(response.data.Code===200){
+                            this.parse809Result=response.data.Data;
+                        }else{
+                            this.parse809Result=response.data.Message;
                         }
-                        this.queryData=response.data;
-                        this.loading=false;
+                        this.$Loading.finish();
                     })
                     .catch((error)=>{
-                        this.queryError=error;
-                        this.loading=false;
+                        this.parse809Result=JSON.stringify(error);
+                        this.$Loading.error();
                     });
-                },
-                parse1078:function(){
-                    this.loading=true;
-                    axios.post('http://jttools.smallchi.cn/api/JTTools/Parse1078',this.queryParameter)
+            },
+            parse1078Click:function(){
+                if(!this.parse1078Parameter) return;
+                this.$Loading.start();
+                axios.post('http://jttools.smallchi.cn/api/JTTools/Parse1078',this.parse1078Parameter)
                     .then((response)=>{
-                        if(response.data=="" || response.data==null){
-                            this.queryData=[];
-                            this.loading=false;
-                            return;
+                        if(response.data.Code===200){
+                            this.parse1078Result=response.data.Data;
+                        }else{
+                            this.parse1078Result=response.data.Message;
                         }
-                        this.queryData=response.data;
-                        this.loading=false;
+                        this.$Loading.finish();
                     })
                     .catch((error)=>{
-                        this.queryError=error;
-                        this.loading=false;
+                        this.parse1078Result=JSON.stringify(error);
+                        this.$Loading.error();
                     });
-                }
             }
         }
     })

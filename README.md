@@ -2,7 +2,7 @@
 
 JT808、JT809、JT1078、JTNE解析工具
 
-[在线解析工具](http://jttools.smallchi.cn)
+<a href="http://jttools.smallchi.cn" target="_blank">在线解析工具</a>
 
 使用nodejs的PM2托管应用程序
 

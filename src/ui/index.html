@@ -14,170 +14,331 @@
     <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.bootcss.com/dayjs/1.8.14/dayjs.min.js"></script>
     <style>
-      .pane-content{
-        width: 100%;
-        display: flex;
-        display: -webkit-flex;
-        align-items:center;
-        justify-content:center;
-        height: calc(100vh - 60px);
-        padding: 10px 20px;
-      }
-      .left,.right{
-        width: 45%;
-        height: 100%;
-        display: inline-block;
-      }
-      .center{
-        width: 10%;
-        display: flex;
-        display: -webkit-flex;
-        align-items: center;
-        justify-content: center;
-      }
-      textarea.ivu-input {
-        max-height: 100%;
-        min-height: 32px;
-        height: 100%;
-      }
-     .ivu-input-wrapper{
-        height: 100%;
-     }
-    @media (max-width:1024px){
-        .left,.right{
-            width: 40%;
+
+        .layout {
+            border: 1px solid #d7dde4;
+            background: #f5f7f9;
+            position: relative;
+            border-radius: 0px;
+            overflow: hidden;
         }
-        .center{
-            width: 20%;
+
+        .ivu-layout {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -webkit-box-flex: 1;
+            -ms-flex: auto;
+            flex: auto;
+            background: #f5f7f9;
         }
-    }
+
+        .ivu-layout-header {
+            background: #2e8cf0;
+            padding: 0 50px;
+            height: 64px;
+            line-height: 64px;
+        }
+
+        .ivu-menu-horizontal {
+            height: 60px;
+            line-height: 60px;
+        }
+
+        .ivu-menu {
+            display: block;
+            margin: 0;
+            padding: 0;
+            outline: 0;
+            list-style: none;
+            color: #515a6e;
+            font-size: 14px;
+            position: relative;
+            z-index: 900;
+        }
+
+        .ivu-menu a{
+            color: #ccc;
+        }
+
+        ivu-menu a:hover,
+        .ivu-menu-item-active a  {
+            color: #fff;
+        }
+
+        .layout-logo {
+            height: 30px;
+            border-radius: 3px;
+            float: left;
+            position: relative;
+            top: 15px;
+            left: 20px;
+            color: #fff;
+            line-height: 30px;
+            font-size: 24px;
+            font-weight: 400;
+        }
+
+        .layout-nav {
+            width: 320px;
+            margin: 0 auto;
+            margin-right: 20px;
+            display: flex;
+        }
+
+        .ivu-menu-item a {
+            display: inline-block;
+        }
+
+        .ivu-menu-item {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .layout-footer-center {
+            text-align: center;
+        }
+
+        .pane-content {
+            width: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 210px);
+            padding: 20px 20px;
+        }
+
+        .ivu-tabs-bar {
+            margin-bottom: 0;
+        }
+
+        .left, .right {
+            width: 45%;
+            height: 100%;
+            display: inline-block;
+        }
+
+        .center {
+            width: 10%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        textarea.ivu-input {
+            max-height: 100%;
+            min-height: 32px;
+            height: 100%;
+        }
+
+        .ivu-input-wrapper {
+            height: 100%;
+        }
+
+        .ivu-card-body {
+            padding: 0;
+        }
+
+        .ivu-tabs-nav .ivu-tabs-tab {
+            padding: 16px;
+            /*margin-right: 0px;*/
+        }
+
+        .ivu-tabs-nav .ivu-tabs-tab-active {
+            color: #2d8cf0;
+            background: #f0faff;
+        }
+
+        @media (max-width: 1024px) {
+            .left, .right {
+                width: 40%;
+            }
+
+            .center {
+                width: 20%;
+            }
+        }
     </style>
 </head>
 <body>
 <div id="app">
-    <tabs value="name1">
-        <tab-pane label="JT808解析工具" name="name1" >
-            <div class="pane-content">
-                <div class="left">
-                        <i-input v-model="parse808Parameter.HexData" type="textarea"  placeholder="Enter Hex Data..."  />
-                </div>
-                <div class="center">
-                    <i-button @click="parse808Click" type="primary">
-                        <Icon type="ios-arrow-forward"/>
-                    </i-button>
-                </div>
-                <div  class="right">
-                    <i-input v-model="parse808Result" type="textarea"/>
+    <div class="layout">
+        <div class="ivu-layout">
+            <div class="ivu-layout-header">
+                <ul class="ivu-menu  ivu-menu-horizontal">
+                    <div class="layout-logo">SmallChi</div>
+                    <div class="layout-nav">
+                      <!--  <li class="ivu-menu-item  ">
+                            <a href="index.html">首页</a>
+                        </li>-->
+                        <li class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected">
+                            <a href="index.html" class="">JTTools在线解析</a>
+                        </li>
+                        <!-- <li class="ivu-menu-item"><a href="update-notes.html"><i class="ivu-icon ivu-icon-ios-analytics"></i>
+                             文档说明</a>
+                         </li>-->
+                        <li class="ivu-menu-item">
+                            <a href="https://github.com/SmallChi/JTTools" target="_blank">
+                                <img style="vertical-align: middle;"
+                                     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjQwcHgiIGhlaWdodD0iNDBweCIgdmlld0JveD0iMTIgMTIgNDAgNDAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMTIgMTIgNDAgNDAiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwYXRoIGZpbGw9IiMzMzMzMzMiIGQ9Ik0zMiAxMy40Yy0xMC41IDAtMTkgOC41LTE5IDE5YzAgOC40IDUuNSAxNS41IDEzIDE4YzEgMC4yIDEuMy0wLjQgMS4zLTAuOWMwLTAuNSAwLTEuNyAwLTMuMiBjLTUuMyAxLjEtNi40LTIuNi02LjQtMi42QzIwIDQxLjYgMTguOCA0MSAxOC44IDQxYy0xLjctMS4yIDAuMS0xLjEgMC4xLTEuMWMxLjkgMC4xIDIuOSAyIDIuOSAyYzEuNyAyLjkgNC41IDIuMSA1LjUgMS42IGMwLjItMS4yIDAuNy0yLjEgMS4yLTIuNmMtNC4yLTAuNS04LjctMi4xLTguNy05LjRjMC0yLjEgMC43LTMuNyAyLTUuMWMtMC4yLTAuNS0wLjgtMi40IDAuMi01YzAgMCAxLjYtMC41IDUuMiAyIGMxLjUtMC40IDMuMS0wLjcgNC44LTAuN2MxLjYgMCAzLjMgMC4yIDQuNyAwLjdjMy42LTIuNCA1LjItMiA1LjItMmMxIDIuNiAwLjQgNC42IDAuMiA1YzEuMiAxLjMgMiAzIDIgNS4xYzAgNy4zLTQuNSA4LjktOC43IDkuNCBjMC43IDAuNiAxLjMgMS43IDEuMyAzLjVjMCAyLjYgMCA0LjYgMCA1LjJjMCAwLjUgMC40IDEuMSAxLjMgMC45YzcuNS0yLjYgMTMtOS43IDEzLTE4LjFDNTEgMjEuOSA0Mi41IDEzLjQgMzIgMTMuNHoiLz48L3N2Zz4=">
+                            </a>
+                        </li>
+                        <!--  <li class="ivu-menu-item">
+                              <a href="update-notes.html">更新日志 </a>
+                          </li>-->
+                    </div>
+                </ul>
+            </div>
+            <div class="ivu-layout-content" style="padding: 0px 70px;margin-top: 20px">
+               <!-- <div class="ivu-breadcrumb" style="margin: 20px 0px;"><span><span
+                        class="ivu-breadcrumb-item-link">Home</span> <span
+                        class="ivu-breadcrumb-item-separator">/</span></span> <span><span
+                        class="ivu-breadcrumb-item-link">Components</span> <span
+                        class="ivu-breadcrumb-item-separator">/</span></span> <span><span
+                        class="ivu-breadcrumb-item-link">Layout</span> <span
+                        class="ivu-breadcrumb-item-separator">/</span></span></div>-->
+                <div class="ivu-card ivu-card-bordered"><!----> <!---->
+                    <div class="ivu-card-body">
+                        <div style="min-height: 200px;">
+                            <tabs value="name1">
+                                <tab-pane label="JT808解析工具" name="name1">
+                                    <div class="pane-content">
+                                        <div class="left">
+                                            <i-input v-model="parse808Parameter.HexData" type="textarea"
+                                                     placeholder="Enter Hex Data..."/>
+                                        </div>
+                                        <div class="center">
+                                            <i-button @click="parse808Click" type="primary">
+                                                <Icon type="ios-arrow-forward"/>
+                                            </i-button>
+                                        </div>
+                                        <div class="right">
+                                            <i-input v-model="parse808Result" type="textarea"/>
+                                        </div>
+                                    </div>
+                                </tab-pane>
+                                <tab-pane label="JT809解析工具" name="name2">
+                                    <div class="pane-content">
+                                        <div class="left">
+                                            <i-input v-model="parse809Parameter.HexData" type="textarea"
+                                                     placeholder="Enter Hex Data..."/>
+                                        </div>
+                                        <div class="center">
+                                            <i-button @click="parse809Click" type="primary">
+                                                <Icon type="ios-arrow-forward"/>
+                                            </i-button>
+                                        </div>
+                                        <div class="right">
+                                            <i-input v-model="parse809Result" type="textarea"/>
+                                        </div>
+                                    </div>
+                                </tab-pane>
+                                <tab-pane label="JT1078解析工具" name="name3">
+                                    <div class="pane-content">
+                                        <div class="left">
+                                            <i-input v-model="parse1078Parameter.HexData" type="textarea"
+                                                     placeholder="Enter Hex Data..."/>
+                                        </div>
+                                        <div class="center">
+                                            <i-button @click="parse1078Click" type="primary">
+                                                <Icon type="ios-arrow-forward"/>
+                                            </i-button>
+                                        </div>
+                                        <div class="right">
+                                            <i-input v-model="parse1078Result" type="textarea"/>
+                                        </div>
+                                    </div>
+                                </tab-pane>
+                            </tabs>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </tab-pane>
-        <tab-pane label="JT809解析工具" name="name2">
-                <div class="pane-content" >
-                        <div class="left" >
-                            <i-input v-model="parse809Parameter.HexData" type="textarea"  placeholder="Enter Hex Data..."  />
-                        </div>
-                        <div class="center"   >
-                            <i-button @click="parse809Click" type="primary">
-                                <Icon type="ios-arrow-forward"/>
-                            </i-button>
-                        </div>
-                        <div  class="right"  >
-                            <i-input v-model="parse809Result" type="textarea"/>
-                        </div>
-                    </div>
-        </tab-pane>
-        <tab-pane label="JT1078解析工具" name="name3">
-                <div class="pane-content" >
-                        <div class="left" >
-                            <i-input v-model="parse1078Parameter.HexData" type="textarea"  placeholder="Enter Hex Data..."  />
-                        </div>
-                        <div class="center"   >
-                            <i-button @click="parse1078Click" type="primary">
-                                <Icon type="ios-arrow-forward"/>
-                            </i-button>
-                        </div>
-                        <div  class="right"  >
-                            <i-input v-model="parse1078Result" type="textarea"/>
-                        </div>
-                    </div>
-        </tab-pane>
-    </tabs>
+            <div class="layout-footer-center ivu-layout-footer">Copyright © 2015-2019 SmallChi. All Rights Reserved. 粤ICP备15065376号-1</div>
+        </div>
+    </div>
 </div>
 <script>
     new Vue({
         el: '#app',
         data: {
-            parse808Parameter:{
-                HexData:"",
+            parse808Parameter: {
+                HexData: "",
             },
-            parse809Parameter:{
-                HexData:"",
+            parse809Parameter: {
+                HexData: "",
             },
-            parse1078Parameter:{             
-                HexData:"",
+            parse1078Parameter: {
+                HexData: "",
             },
-            parse808Result:"",
-            parse809Result:"",
-            parse1078Result:"",
-	    apiUrl:"https://jttools.smallchi.cn"
+            parse808Result: "",
+            parse809Result: "",
+            parse1078Result: "",
+            apiUrl:"https://jttools.smallchi.cn/api"
         },
-        mounted:function(){
+        mounted: function() {
 
         },
         methods: {
-            parse808Click:function(){
+            parse808Click: function() {
                 if(!this.parse808Parameter) return;
                 this.$Loading.start();
-                axios.post(this.apiUrl+'/api/JTTools/Parse808',this.parse808Parameter)
-                    .then((response)=>{
-                        if(response.data.Code===200){
-                            this.parse808Result=response.data.Data;
-                        }else{
-                            this.parse808Result=response.data.Message;
+                axios.post(this.apiUrl+'/JTTools/Parse808', this.parse808Parameter)
+                    .then((response) => {
+                        if(response.data.Code === 200) {
+                            this.parse808Result = response.data.Data;
+                        } else {
+                            this.parse808Result = response.data.Message;
                         }
                         this.$Loading.finish();
                     })
-                    .catch((error)=>{
-                        this.parse808Result=JSON.stringify(error);
+                    .catch((error) => {
+                        this.parse808Result = JSON.stringify(error);
                         this.$Loading.error();
                     });
             },
-            parse809Click:function(){
+            parse809Click: function() {
                 if(!this.parse809Parameter) return;
                 this.$Loading.start();
-                axios.post(this.apiUrl+'/api/JTTools/Parse809',this.parse809Parameter)
-                    .then((response)=>{
-                        if(response.data.Code===200){
-                            this.parse809Result=response.data.Data;
-                        }else{
-                            this.parse809Result=response.data.Message;
+                axios.post(this.apiUrl+'/JTTools/Parse809', this.parse809Parameter)
+                    .then((response) => {
+                        if(response.data.Code === 200) {
+                            this.parse809Result = response.data.Data;
+                        } else {
+                            this.parse809Result = response.data.Message;
                         }
                         this.$Loading.finish();
                     })
-                    .catch((error)=>{
-                        this.parse809Result=JSON.stringify(error);
+                    .catch((error) => {
+                        this.parse809Result = JSON.stringify(error);
                         this.$Loading.error();
                     });
             },
-            parse1078Click:function(){
+            parse1078Click: function() {
                 if(!this.parse1078Parameter) return;
                 this.$Loading.start();
-                axios.post(this.apiUrl+'/api/JTTools/Parse1078',this.parse1078Parameter)
-                    .then((response)=>{
-                        if(response.data.Code===200){
-                            this.parse1078Result=response.data.Data;
-                        }else{
-                            this.parse1078Result=response.data.Message;
+                axios.post(this.apiUrl+'/JTTools/Parse1078', this.parse1078Parameter)
+                    .then((response) => {
+                        if(response.data.Code === 200) {
+                            this.parse1078Result = response.data.Data;
+                        } else {
+                            this.parse1078Result = response.data.Message;
                         }
                         this.$Loading.finish();
                     })
-                    .catch((error)=>{
-                        this.parse1078Result=JSON.stringify(error);
+                    .catch((error) => {
+                        this.parse1078Result = JSON.stringify(error);
                         this.$Loading.error();
                     });
             }
         }
     })
-  </script>
+</script>
 </body>
 </html>

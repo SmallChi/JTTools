@@ -8,13 +8,11 @@ using JT1078.Protocol;
 using JT808.Protocol;
 using JT809.Protocol;
 using JT809.Protocol.Exceptions;
-using JT808.Protocol.Extensions.JT1078;
-using JT809.Protocol.Extensions.JT1078;
-using JT808.Protocol.Interfaces;
 using JT808.Protocol.Extensions;
 using JT808.Protocol.Exceptions;
 using Microsoft.AspNetCore.Cors;
 using Newtonsoft.Json;
+using JT808.Protocol.Interfaces;
 
 namespace JTTools.Controllers
 {
@@ -27,12 +25,7 @@ namespace JTTools.Controllers
         private readonly IJT808Config jT808Config;
         private readonly JT808Serializer jT808Serializer;
         private readonly JT809Serializer jT809Serializer;
-        private static Newtonsoft.Json.JsonSerializerSettings setting = new Newtonsoft.Json.JsonSerializerSettings();
-        static JTToolsController()
-        {
-            setting.Formatting = Formatting.Indented;
-            setting.Converters.Add(new ByteArrayHexConverter());
-        }
+
         public JTToolsController(
             IJT809Config jT809Config, 
             IJT808Config jT808Config)
@@ -51,7 +44,7 @@ namespace JTTools.Controllers
             try
             {
                 jTResultDto.Code = 200;
-                jTResultDto.Data =JsonConvert.SerializeObject(jT808Serializer.Deserialize(parameter.HexData.ToHexBytes()), setting);
+                jTResultDto.Data =jT808Serializer.Deserialize(parameter.HexData.ToHexBytes());
             }
             catch(JT808Exception ex)
             {
@@ -74,7 +67,7 @@ namespace JTTools.Controllers
             try
             {
                 jTResultDto.Code = 200;
-                jTResultDto.Data = JsonConvert.SerializeObject(jT809Serializer.Deserialize(parameter.HexData.ToHexBytes()), setting);
+                jTResultDto.Data = jT809Serializer.Deserialize(parameter.HexData.ToHexBytes());
             }
             catch (JT809Exception ex)
             {
@@ -97,7 +90,7 @@ namespace JTTools.Controllers
             try
             {
                 jTResultDto.Code = 200;
-                jTResultDto.Data = JsonConvert.SerializeObject(JT1078Serializer.Deserialize(parameter.HexData.ToHexBytes()), setting);
+                jTResultDto.Data = JT1078Serializer.Deserialize(parameter.HexData.ToHexBytes());
             }
             catch (Exception ex)
             {

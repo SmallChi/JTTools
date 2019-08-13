@@ -41,7 +41,7 @@ namespace JTTools
                     //logging.AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true });
                     //logging.SetMinimumLevel(LogLevel.Trace);
                 })
-                .ConfigureServices(services => 
+                .ConfigureServices((hostingContext, services) => 
                 {
                     services.AddMvc()
                             .AddJsonOptions(jsonOptions =>
@@ -52,7 +52,8 @@ namespace JTTools
                             })
                             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
                     services.AddCors(options => 
-                        options.AddPolicy("Domain",builder => builder.WithOrigins("http://jttools.smallchi.cn,https://jttools.smallchi.cn")
+                        options.AddPolicy("Domain",builder => 
+                                builder.WithOrigins(hostingContext.Configuration.GetSection("AllowedOrigins").Value.Split(","))
                                 .AllowAnyMethod()
                                 .AllowAnyHeader()
                                 .AllowAnyOrigin()

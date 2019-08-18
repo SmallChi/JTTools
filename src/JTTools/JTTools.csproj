@@ -11,10 +11,10 @@
 
   <ItemGroup>
     <PackageReference Include="JT1078" Version="1.0.0" />
-    <PackageReference Include="JT808" Version="2.1.2" />
-    <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="1.0.1" />
-    <PackageReference Include="JT809" Version="2.1.0" />
-    <PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="1.0.0" />
+    <PackageReference Include="JT808" Version="2.1.3" />
+    <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.1.3" />
+    <PackageReference Include="JT809" Version="2.1.1" />
+    <PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.5.2" />

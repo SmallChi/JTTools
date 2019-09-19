@@ -61,13 +61,24 @@ namespace JTTools.Controllers
 
         [Route("Parse809")]
         [HttpPost]
-        public ActionResult<JTResultDto> Parse809([FromBody]JTRequestDto parameter)
+        public ActionResult<JTResultDto> Parse809([FromBody]JT809RequestDto parameter)
         {
             JTResultDto jTResultDto = new JTResultDto();
             try
             {
+                if (parameter.IsEncrypt)
+                {
+                    IJT809Config jt809ConfigInternal = new JT809Config(Guid.NewGuid().ToString());
+                    jt809ConfigInternal.EncryptOptions = parameter.EncryptOptions;
+                    JT809Serializer jT809SerializerInternal = new JT809Serializer(jt809ConfigInternal);
+                    jTResultDto.Data = jT809SerializerInternal.Deserialize(parameter.HexData.ToHexBytes());
+                }
+                else
+                {
+                    jTResultDto.Data = jT809Serializer.Deserialize(parameter.HexData.ToHexBytes());
+                }
                 jTResultDto.Code = 200;
-                jTResultDto.Data = jT809Serializer.Deserialize(parameter.HexData.ToHexBytes());
+
             }
             catch (JT809Exception ex)
             {
@@ -99,5 +110,15 @@ namespace JTTools.Controllers
             }
             return jTResultDto;
         }
+    }
+
+    class JT809Config : JT809.Protocol.Interfaces.GlobalConfigBase
+    {
+        public JT809Config(string configId)
+        {
+            ConfigId = configId;
+        }
+
+        public override string ConfigId { get; }
     }
 }

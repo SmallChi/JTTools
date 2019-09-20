@@ -2,7 +2,7 @@
   "name": "jttools",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "SmallChi <564952747@qq.com>",
+  "author": "SmallChi",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

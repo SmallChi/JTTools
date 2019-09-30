@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JTTools", "JTTools\JTTools.csproj", "{4F7C65A6-85D2-4F32-AC00-B43D2C296618}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JTTools.Test", "JTTools.Test\JTTools.Test.csproj", "{4D721C46-A6A2-45F9-8934-CDEED97F3FC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JTTools.Test", "JTTools.Test\JTTools.Test.csproj", "{4D721C46-A6A2-45F9-8934-CDEED97F3FC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

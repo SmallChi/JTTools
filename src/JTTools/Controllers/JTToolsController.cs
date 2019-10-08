@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JTTools.Dtos;
 using Microsoft.AspNetCore.Mvc;
-//using JT1078.Protocol;
+using JT1078.Protocol;
 using JT808.Protocol;
 using JT809.Protocol;
 using JT809.Protocol.Exceptions;
@@ -95,23 +95,23 @@ namespace JTTools.Controllers
             return jTResultDto;
         }
 
-        //[Route("Parse1078")]
-        //[HttpPost]
-        //public ActionResult<JTResultDto> Parse1078([FromBody]JTRequestDto parameter)
-        //{
-        //    JTResultDto jTResultDto = new JTResultDto();
-        //    try
-        //    {
-        //        jTResultDto.Code = 200;
-        //        jTResultDto.Data = JT1078Serializer.Deserialize(parameter.HexData.ToHexBytes());
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        jTResultDto.Code = 500;
-        //        jTResultDto.Message = ex.Message;
-        //    }
-        //    return jTResultDto;
-        //}
+        [Route("Parse1078")]
+        [HttpPost]
+        public ActionResult<JTResultDto> Parse1078([FromBody]JTRequestDto parameter)
+        {
+            JTResultDto jTResultDto = new JTResultDto();
+            try
+            {
+                jTResultDto.Code = 200;
+                jTResultDto.Data = JT1078Serializer.Deserialize(parameter.HexData.ToHexBytes());
+            }
+            catch (Exception ex)
+            {
+                jTResultDto.Code = 500;
+                jTResultDto.Message = ex.Message;
+            }
+            return jTResultDto;
+        }
     }
 
     class JT809Config :JT809GlobalConfigBase

@@ -22,6 +22,8 @@ module.exports = {
   // add your custom rules here
   rules: {
     // allow async-await
+    'eslint-disable':'off',
+    'eslint-disable-next-line':'off',
     'generator-star-spacing': 'off',
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'

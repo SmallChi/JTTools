@@ -28,16 +28,19 @@ namespace JTTools
                     {
                         services.AddControllers()
                                 //Microsoft.AspNetCore.Mvc.NewtonsoftJson
-                                //.AddNewtonsoftJson(jsonOptions =>
-                                //{
-                                //    jsonOptions.SerializerSettings.Converters.Add(new ByteArrayHexConverter());
-                                //    jsonOptions.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                                //    jsonOptions.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
-                                //})
-                                .AddJsonOptions(jsonOptions =>
+                                .AddNewtonsoftJson(jsonOptions =>
                                 {
-                                    jsonOptions.JsonSerializerOptions.Converters.Add(new ByteArrayHexTextJsonConverter());
-                                });
+                                    jsonOptions.SerializerSettings.Converters.Add(new ByteArrayHexConverter());
+                                    jsonOptions.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                                    //jsonOptions.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+                                })
+                                //.AddJsonOptions(jsonOptions =>
+                                //{
+                                //    jsonOptions.JsonSerializerOptions.MaxDepth = 64;
+
+                                //    jsonOptions.JsonSerializerOptions.Converters.Add(new ByteArrayHexTextJsonConverter());
+                                //})
+                                ;
                         services.AddCors(options =>
                                      options.AddPolicy("Domain", builder =>
                                      builder.WithOrigins(hostingContext.Configuration.GetSection("AllowedOrigins").Value.Split(","))

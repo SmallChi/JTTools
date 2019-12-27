@@ -20,7 +20,6 @@
                 <iframe id="github-star" style="border:none;vertical-align: middle;" width="105" height="20" src="https://ghbtns.com/github-btn.html?user=SmallChi&amp;repo=JTTools&amp;type=watch&amp;count=true"></iframe>
 
               </li>
-            
               <!--  <li class="ivu-menu-item">
                               <a href="update-notes.html">更新日志 </a>
               </li>-->
@@ -109,92 +108,93 @@
         </div>
         <div
           class="layout-footer-center ivu-layout-footer"
-        >Copyright © 2015-2019 SmallChi. All Rights Reserved. 粤ICP备15065376号-1</div>
+        >Copyright © 2015-2019 SmallChi. All Rights Reserved. 粤ICP备19128140号</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
 export default {
-  name: "App",
-  data() {
+  name: 'App',
+  data () {
     return {
       parse808Parameter: {
-          HexData: "7E 02 00 00 26 12 34 56 78 90 12 00 7D 02 00 00 00 01 00 00 00 02 00 BA 7F 0E 07 E4 F1 1C 00 28 00 3C 00 00 18 10 15 10 10 10 01 04 00 00 00 64 02 02 00 7D 01 13 7E",
+        HexData: '7E 02 00 00 26 12 34 56 78 90 12 00 7D 02 00 00 00 01 00 00 00 02 00 BA 7F 0E 07 E4 F1 1C 00 28 00 3C 00 00 18 10 15 10 10 10 01 04 00 00 00 64 02 02 00 7D 01 13 7E'
       },
       parse809Parameter: {
-          HexData: "5B 00 00 00 92 00 00 06 82 94 00 01 33 EF B8 01 00 00 00 00 00 27 0F D4 C1 41 31 32 33 34 35 00 00 00 00 00 00 00 00 00 00 00 00 00 02 94 01 00 00 00 5C 01 00 02 00 00 00 00 5A 01 AC 3F 40 12 3F FA A1 00 00 00 00 5A 01 AC 4D 50 03 73 6D 61 6C 6C 63 68 69 00 00 00 00 00 00 00 00 31 32 33 34 35 36 37 38 39 30 31 00 00 00 00 00 00 00 00 00 31 32 33 34 35 36 40 71 71 2E 63 6F 6D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 BA D8 5D",
+        HexData: '5B 00 00 00 92 00 00 06 82 94 00 01 33 EF B8 01 00 00 00 00 00 27 0F D4 C1 41 31 32 33 34 35 00 00 00 00 00 00 00 00 00 00 00 00 00 02 94 01 00 00 00 5C 01 00 02 00 00 00 00 5A 01 AC 3F 40 12 3F FA A1 00 00 00 00 5A 01 AC 4D 50 03 73 6D 61 6C 6C 63 68 69 00 00 00 00 00 00 00 00 31 32 33 34 35 36 37 38 39 30 31 00 00 00 00 00 00 00 00 00 31 32 33 34 35 36 40 71 71 2E 63 6F 6D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 BA D8 5D'
       },
       parse1078Parameter: {
-          HexData: "30 31 63 64 81 E2 10 88 01 12 34 56 78 10 01 10 00 00 01 6B B3 92 CA 7C 02 80 00 28 00 2E 00 00 00 01 61 E1 A2 BF 00 98 CF C0 EE 1E 17 28 34 07 78 8E 39 A4 03 FD DB D1 D5 46 BF B0 63 01 3F 59 AC 34 C9 7A 02 1A B9 6A 28 A4 2C 08",
+        HexData: '30 31 63 64 81 E2 10 88 01 12 34 56 78 10 01 10 00 00 01 6B B3 92 CA 7C 02 80 00 28 00 2E 00 00 00 01 61 E1 A2 BF 00 98 CF C0 EE 1E 17 28 34 07 78 8E 39 A4 03 FD DB D1 D5 46 BF B0 63 01 3F 59 AC 34 C9 7A 02 1A B9 6A 28 A4 2C 08'
       },
-      parse808ResultObject:{},
-      parse808Result: "",
-      parse809Result: "",
-      parse1078Result: "",
-      apiUrl: "https://jttools.smallchi.cn/api"
-    };
+      parse808ResultObject: {},
+      parse808Result: '',
+      parse809Result: '',
+      parse1078Result: '',
+      apiUrl: 'https://jttools.smallchi.cn/api'
+      //apiUrl: 'http://localhost:18888/api'
+    }
   },
-  mounted: function() {},
+  mounted () {},
   methods: {
-    parse808Click: function() {
-      if (!this.parse808Parameter) return;
-      this.$Loading.start();
+    parse808Click () {
+      if (!this.parse808Parameter) return
+      this.$Loading.start()
       axios
-        .post(this.apiUrl + "/JTTools/Parse808", this.parse808Parameter)
+        .post(this.apiUrl + '/JTTools/Parse808', this.parse808Parameter)
         .then(response => {
           if (response.data.Code === 200) {
-            this.parse808Result = response.data.Data;
+            this.parse808Result = response.data.Data
           } else {
-            this.parse808Result = response.data.Message;
+            this.parse808Result = response.data.Message
           }
-          this.$Loading.finish();
+          this.$Loading.finish()
         })
         .catch(error => {
-          this.parse808Result = JSON.stringify(error);
-          this.$Loading.error();
-        });
+          this.parse808Result = JSON.stringify(error)
+          this.$Loading.error()
+        })
     },
-    parse809Click: function() {
-      if (!this.parse809Parameter) return;
-      this.$Loading.start();
+    parse809Click () {
+      if (!this.parse809Parameter) return
+      this.$Loading.start()
       axios
-        .post(this.apiUrl + "/JTTools/Parse809", this.parse809Parameter)
+        .post(this.apiUrl + '/JTTools/Parse809', this.parse809Parameter)
         .then(response => {
           if (response.data.Code === 200) {
-            this.parse809Result = response.data.Data;
+            this.parse809Result = response.data.Data
           } else {
-            this.parse809Result = response.data.Message;
+            this.parse809Result = response.data.Message
           }
-          this.$Loading.finish();
+          this.$Loading.finish()
         })
         .catch(error => {
-          this.parse809Result = JSON.stringify(error);
-          this.$Loading.error();
-        });
+          this.parse809Result = JSON.stringify(error)
+          this.$Loading.error()
+        })
     },
-    parse1078Click: function() {
-      if (!this.parse1078Parameter) return;
-      this.$Loading.start();
+    parse1078Click () {
+      if (!this.parse1078Parameter) return
+      this.$Loading.start()
       axios
-        .post(this.apiUrl + "/JTTools/Parse1078", this.parse1078Parameter)
+        .post(this.apiUrl + '/JTTools/Parse1078', this.parse1078Parameter)
         .then(response => {
           if (response.data.Code === 200) {
-            this.parse1078Result = response.data.Data;
+            this.parse1078Result = response.data.Data
           } else {
-            this.parse1078Result = response.data.Message;
+            this.parse1078Result = response.data.Message
           }
-          this.$Loading.finish();
+          this.$Loading.finish()
         })
         .catch(error => {
-          this.parse1078Result = JSON.stringify(error);
-          this.$Loading.error();
-        });
+          this.parse1078Result = JSON.stringify(error)
+          this.$Loading.error()
+        })
     }
   }
-};
+}
 </script>
 
 <style scope>

@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using JT808.Protocol;
 using JT809.Protocol;
 using JT808.Protocol.Extensions.JT1078;
+using JT808.Protocol.Extensions.JTActiveSafety;
 using JT809.Protocol.Extensions.JT1078;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -82,7 +83,8 @@ namespace JTTools
                 .ConfigureServices(services => 
                 {
                     services.AddJT808Configure()
-                            .AddJT1078Configure();
+                            .AddJT1078Configure()
+                            .AddJTActiveSafetyConfigure();
                     services.AddJT809Configure()
                             .AddJT1078Configure();
                 })

@@ -7,37 +7,18 @@
           <ul class="ivu-menu ivu-menu-horizontal">
             <div class="layout-logo">SmallChi</div>
             <div class="layout-nav">
-              <!--  <li class="ivu-menu-item  ">
-                            <a href="index.html">首页</a>
-              </li>-->
               <li class="ivu-menu-item ivu-menu-item-active ivu-menu-item-selected">
                 <a href="index.html" class>JTTools在线解析</a>
               </li>
-              <!-- <li class="ivu-menu-item"><a href="update-notes.html"><i class="ivu-icon ivu-icon-ios-analytics"></i>
-                             文档说明</a>
-              </li>-->
               <li class="ivu-menu-item">
                 <iframe id="github-star" style="border:none;vertical-align: middle;" width="105" height="20" src="https://ghbtns.com/github-btn.html?user=SmallChi&amp;repo=JTTools&amp;type=watch&amp;count=true"></iframe>
-
               </li>
-              <!--  <li class="ivu-menu-item">
-                              <a href="update-notes.html">更新日志 </a>
-              </li>-->
             </div>
           </ul>
         </div>
         <!-- End header -->
         <div class="ivu-layout-content" style="padding: 0px 70px;margin-top: 20px">
-          <!-- <div class="ivu-breadcrumb" style="margin: 20px 0px;"><span><span
-                        class="ivu-breadcrumb-item-link">Home</span> <span
-                        class="ivu-breadcrumb-item-separator">/</span></span> <span><span
-                        class="ivu-breadcrumb-item-link">Components</span> <span
-                        class="ivu-breadcrumb-item-separator">/</span></span> <span><span
-                        class="ivu-breadcrumb-item-link">Layout</span> <span
-          class="ivu-breadcrumb-item-separator">/</span></span></div>-->
           <div class="ivu-card ivu-card-bordered">
-            <!---->
-            <!---->
             <div class="ivu-card-body">
               <div style="min-height: 200px;">
                 <tabs value="name1">
@@ -58,6 +39,26 @@
                       </div>
                       <div class="right">
                         <json-viewer copyable :expand-depth=5 :value="parse808Result"></json-viewer>
+                      </div>
+                    </div>
+                  </tab-pane>
+                  <tab-pane :label="tabLabel"  name="name4">
+                    <div class="pane-content">
+                      <div class="left">
+                        <i-input
+                          v-model="analyze808arameter.HexData"
+                          type="textarea"
+                          placeholder="Enter Hex Data..."
+                          style="resize:none"
+                        />
+                      </div>
+                      <div class="center">
+                        <i-button @click="analyze808Click" type="primary">
+                          <Icon type="ios-arrow-forward" />
+                        </i-button>
+                      </div>
+                      <div class="right">
+                        <json-viewer copyable :expand-depth=5 :value="analyze808Result"></json-viewer>
                       </div>
                     </div>
                   </tab-pane>
@@ -120,7 +121,20 @@ export default {
   name: 'App',
   data () {
     return {
+      tabLabel: (h) => {
+        return h('div', [
+          h('span', 'JT808分析工具'),
+          h('Badge', {
+            props: {
+              dot: true
+            }
+          })
+        ])
+      },
       parse808Parameter: {
+        HexData: '7E 02 00 00 26 12 34 56 78 90 12 00 7D 02 00 00 00 01 00 00 00 02 00 BA 7F 0E 07 E4 F1 1C 00 28 00 3C 00 00 18 10 15 10 10 10 01 04 00 00 00 64 02 02 00 7D 01 13 7E'
+      },
+      analyze808arameter: {
         HexData: '7E 02 00 00 26 12 34 56 78 90 12 00 7D 02 00 00 00 01 00 00 00 02 00 BA 7F 0E 07 E4 F1 1C 00 28 00 3C 00 00 18 10 15 10 10 10 01 04 00 00 00 64 02 02 00 7D 01 13 7E'
       },
       parse809Parameter: {
@@ -129,12 +143,12 @@ export default {
       parse1078Parameter: {
         HexData: '30 31 63 64 81 E2 10 88 01 12 34 56 78 10 01 10 00 00 01 6B B3 92 CA 7C 02 80 00 28 00 2E 00 00 00 01 61 E1 A2 BF 00 98 CF C0 EE 1E 17 28 34 07 78 8E 39 A4 03 FD DB D1 D5 46 BF B0 63 01 3F 59 AC 34 C9 7A 02 1A B9 6A 28 A4 2C 08'
       },
-      parse808ResultObject: {},
       parse808Result: '',
+      analyze808Result: '',
       parse809Result: '',
       parse1078Result: '',
       apiUrl: 'https://jttools.smallchi.cn/api'
-      //apiUrl: 'http://localhost:18888/api'
+      // apiUrl: 'http://localhost:18888/api'
     }
   },
   mounted () {},
@@ -154,6 +168,24 @@ export default {
         })
         .catch(error => {
           this.parse808Result = JSON.stringify(error)
+          this.$Loading.error()
+        })
+    },
+    analyze808Click () {
+      if (!this.analyze808arameter) return
+      this.$Loading.start()
+      axios
+        .post(this.apiUrl + '/JTTools/Analyze808', this.analyze808arameter)
+        .then(response => {
+          if (response.data.Code === 200) {
+            this.analyze808Result = JSON.parse(response.data.Data)
+          } else {
+            this.analyze808Result = response.data.Message
+          }
+          this.$Loading.finish()
+        })
+        .catch(error => {
+          this.analyze808Result = JSON.stringify(error)
           this.$Loading.error()
         })
     },
@@ -226,7 +258,8 @@ export default {
   height: 60px;
   line-height: 60px;
 }
-
+.ivu-badge{top: -15px;
+    right: -10px;}
 .ivu-menu-horizontal {
   height: 60px;
   line-height: 60px;

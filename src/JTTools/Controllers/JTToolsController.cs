@@ -61,6 +61,29 @@ namespace JTTools.Controllers
             return jTResultDto;
         }
 
+        [Route("Analyze808")]
+        [HttpPost]
+        public ActionResult<JTResultDto> Analyze808([FromBody]JTRequestDto parameter)
+        {
+            JTResultDto jTResultDto = new JTResultDto();
+            try
+            {
+                jTResultDto.Code = 200;
+                jTResultDto.Data = jT808Serializer.Analyze(parameter.HexData.ToHexBytes());
+            }
+            catch (JT808Exception ex)
+            {
+                jTResultDto.Code = 500;
+                jTResultDto.Message = $"{ex.ErrorCode}-{ex.Message}";
+            }
+            catch (Exception ex)
+            {
+                jTResultDto.Code = 500;
+                jTResultDto.Message = ex.Message;
+            }
+            return jTResultDto;
+        }
+
         [Route("Parse809")]
         [HttpPost]
         public ActionResult<JTResultDto> Parse809([FromBody]JT809RequestDto parameter)

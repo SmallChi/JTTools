@@ -1,0 +1,35 @@
+﻿@page "/jt808"
+
+@using JT808.Protocol;
+@using JT808.Protocol.Extensions;
+@using Newtonsoft.Json;
+@inject IJT808Config  JT808Config
+
+<h3>JT808Parse</h3>
+
+<p>Hex: @HexData</p>
+
+<button class="btn btn-primary" @onclick="Query">解析</button>
+
+<div class="right">
+    @Json
+</div>
+
+@code {
+    private JT808Serializer Serializer;
+
+    private string HexData = "7E 02 00 00 26 12 34 56 78 90 12 00 7D 02 00 00 00 01 00 00 00 02 00 BA 7F 0E 07 E4 F1 1C 00 28 00 3C 00 00 18 10 15 10 10 10 01 04 00 00 00 64 02 02 00 7D 01 13 7E";
+
+    private string Json;
+
+    protected override void OnInitialized()
+    {
+        Serializer = JT808Config.GetSerializer();
+    }
+
+    private void Query()
+    {
+        var data = HexData.ToHexBytes();
+        Json = JsonConvert.SerializeObject(Serializer.Deserialize(data));
+    }
+}

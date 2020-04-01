@@ -1,0 +1,35 @@
+﻿@page "/jt809"
+
+@using JT809.Protocol;
+@using JT809.Protocol.Extensions;
+@using Newtonsoft.Json;
+@inject IJT809Config  Config
+
+<h3>JT809Parse</h3>
+
+<p>Hex: @HexData</p>
+
+<button class="btn btn-primary" @onclick="Query">解析</button>
+
+<div class="right">
+    @Json
+</div>
+
+@code {
+    private JT809Serializer Serializer;
+
+    private string HexData = "5B 00 00 00 92 00 00 06 82 94 00 01 33 EF B8 01 00 00 00 00 00 27 0F D4 C1 41 31 32 33 34 35 00 00 00 00 00 00 00 00 00 00 00 00 00 02 94 01 00 00 00 5C 01 00 02 00 00 00 00 5A 01 AC 3F 40 12 3F FA A1 00 00 00 00 5A 01 AC 4D 50 03 73 6D 61 6C 6C 63 68 69 00 00 00 00 00 00 00 00 31 32 33 34 35 36 37 38 39 30 31 00 00 00 00 00 00 00 00 00 31 32 33 34 35 36 40 71 71 2E 63 6F 6D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 BA D8 5D";
+
+    private string Json;
+
+    protected override void OnInitialized()
+    {
+        Serializer = Config.GetSerializer();
+    }
+
+    private void Query()
+    {
+        var data = HexData.ToHexBytes();
+        Json = JsonConvert.SerializeObject(Serializer.Deserialize(data));
+    }
+}

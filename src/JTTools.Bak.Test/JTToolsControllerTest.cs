@@ -21,8 +21,8 @@ namespace JTTools.Test
 
         public JTToolsControllerTest()
         {
-            serviceDescriptors.AddJT808Configure()
-                              .AddJT1078Configure();
+            serviceDescriptors.AddJT808Configure();
+                              //.AddJT1078Configure();
             serviceDescriptors.AddJT809Configure()
                               .AddJT1078Configure();
             serviceDescriptors.AddSingleton<JTToolsController>();
@@ -50,6 +50,16 @@ namespace JTTools.Test
             Assert.Equal(30116, package.CRCCode);
             Assert.Equal("ÔÁSEB408²â", jT809_0X1200.VehicleNo);
             Assert.Equal(JT809VehicleColorType.»ÆÉ«, jT809_0X1200.VehicleColor);
+        }
+        [Fact]
+        public void Parse808Test1()
+        {
+            var result=jTToolsController.Parse808(new JT809RequestDto()
+            {
+                 IsEncrypt=true,
+                 HexData= "7E 02 00 00 57 00 00 00 00 77 77 62 F7 00 08 00 00 00 04 00 03 01 66 53 A7 06 A2 55 F8 00 9E 00 00 00 00 20 03 31 07 00 35 01 04 00 00 00 00 03 02 00 00 21 08 00 00 00 A0 00 05 6F 67 25 04 00 00 00 00 2B 04 00 00 00 00 30 01 03 31 01 0C 16 04 00 00 0B FE 17 01 02 18 04 01 1D 00 00 14 04 00 00 00 02 8A 7E"
+            });
+
         }
     }
 }

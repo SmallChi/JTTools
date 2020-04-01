@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.DependencyInjection;
-using JTTools.Data;
 using Newtonsoft.Json.Serialization;
 
 namespace JTTools
@@ -33,7 +32,6 @@ namespace JTTools
                     {
                         services.AddRazorPages();
                         services.AddServerSideBlazor();
-                        services.AddSingleton<WeatherForecastService>();
                         services.AddControllers()
                                 //Microsoft.AspNetCore.Mvc.NewtonsoftJson
                                 .AddNewtonsoftJson(jsonOptions =>

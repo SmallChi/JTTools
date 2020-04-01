@@ -3,7 +3,7 @@
 @using JT808.Protocol;
 @using JT808.Protocol.Extensions;
 @using Newtonsoft.Json;
-@inject IJT808Config  JT808Config
+@inject IJT808Config  Config
 
 <h3>JT808Parse</h3>
 
@@ -24,7 +24,7 @@
 
     protected override void OnInitialized()
     {
-        Serializer = JT808Config.GetSerializer();
+        Serializer = Config.GetSerializer();
     }
 
     private void Query()

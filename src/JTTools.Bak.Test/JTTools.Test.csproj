@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JTTools\JTTools.csproj" />
+    <ProjectReference Include="..\JTTools.Bak\JTTools.csproj" />
   </ItemGroup>
 
 </Project>

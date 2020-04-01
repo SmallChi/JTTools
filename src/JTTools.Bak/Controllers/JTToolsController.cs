@@ -26,15 +26,21 @@ namespace JTTools.Controllers
         private readonly IJT809Config jT809Config;
         private readonly IJT808Config jT808Config;
         private readonly JT808Serializer jT808Serializer;
+        private readonly JT808Serializer jT808_JTAS_Serializer;
+        private readonly JT808Serializer jT808_JT1078Serializer;
         private readonly JT809Serializer jT809Serializer;
 
         public JTToolsController(
+            JT808_JTActiveSafety_Config jT808_JTActiveSafety_Config,
+            JT808_JT1078_Config jT808_JT1078_Config,
             IJT809Config jT809Config, 
             IJT808Config jT808Config)
         {
             this.jT809Config = jT809Config;
             this.jT808Config = jT808Config;
             jT808Serializer = jT808Config.GetSerializer();
+            jT808_JTAS_Serializer = jT808_JTActiveSafety_Config.GetSerializer();
+            jT808_JT1078Serializer = jT808_JT1078_Config.GetSerializer();
             jT809Serializer = jT809Config.GetSerializer();
         }
 
@@ -46,7 +52,8 @@ namespace JTTools.Controllers
             try
             {
                 jTResultDto.Code = 200;
-                jTResultDto.Data =jT808Serializer.Deserialize(parameter.HexData.ToHexBytes());
+                var a = parameter.HexData.ToHexBytes();
+                jTResultDto.Data =jT808Serializer.Deserialize(a);
             }
             catch(JT808Exception ex)
             {
@@ -70,6 +77,52 @@ namespace JTTools.Controllers
             {
                 jTResultDto.Code = 200;
                 jTResultDto.Data = jT808Serializer.Analyze(parameter.HexData.ToHexBytes());
+            }
+            catch (JT808Exception ex)
+            {
+                jTResultDto.Code = 500;
+                jTResultDto.Message = $"{ex.ErrorCode}-{ex.Message}";
+            }
+            catch (Exception ex)
+            {
+                jTResultDto.Code = 500;
+                jTResultDto.Message = ex.Message;
+            }
+            return jTResultDto;
+        }
+
+        [Route("Analyze808ExtJTAS")]
+        [HttpPost]
+        public ActionResult<JTResultDto> Analyze808ExtJTAS([FromBody]JTRequestDto parameter)
+        {
+            JTResultDto jTResultDto = new JTResultDto();
+            try
+            {
+                jTResultDto.Code = 200;
+                jTResultDto.Data = jT808_JTAS_Serializer.Analyze(parameter.HexData.ToHexBytes());
+            }
+            catch (JT808Exception ex)
+            {
+                jTResultDto.Code = 500;
+                jTResultDto.Message = $"{ex.ErrorCode}-{ex.Message}";
+            }
+            catch (Exception ex)
+            {
+                jTResultDto.Code = 500;
+                jTResultDto.Message = ex.Message;
+            }
+            return jTResultDto;
+        }
+
+        [Route("Analyze808ExtJT1078")]
+        [HttpPost]
+        public ActionResult<JTResultDto> Analyze808ExtJT1078([FromBody]JTRequestDto parameter)
+        {
+            JTResultDto jTResultDto = new JTResultDto();
+            try
+            {
+                jTResultDto.Code = 200;
+                jTResultDto.Data = jT808_JT1078Serializer.Analyze(parameter.HexData.ToHexBytes());
             }
             catch (JT808Exception ex)
             {

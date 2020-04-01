@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using JT808.Protocol;
+using JT808.Protocol.Interfaces;
 using JT809.Protocol;
 using JT808.Protocol.Extensions.JT1078;
 using JT808.Protocol.Extensions.JTActiveSafety;
@@ -27,8 +28,6 @@ namespace JTTools
                 {
                     webBuilder.ConfigureServices((hostingContext, services) =>
                     {
-                        services.AddRazorPages();
-                        services.AddServerSideBlazor();
                         services.AddControllers()
                                 //Microsoft.AspNetCore.Mvc.NewtonsoftJson
                                 .AddNewtonsoftJson(jsonOptions =>
@@ -79,21 +78,31 @@ namespace JTTools
                         app.UseEndpoints(endpoints =>
                         {
                             endpoints.MapControllers();
-                            endpoints.MapBlazorHub();
-                            endpoints.MapFallbackToPage("/_Host");
                         });
                     });
                 })
                 .ConfigureServices(services => 
                 {
-                    services.AddJT808Configure()
-                            .AddJT1078Configure()
-                            .AddJTActiveSafetyConfigure();
+                    services.AddJT808Configure();
+                    services.AddJT808Configure(new JT808_JTActiveSafety_Config())
+                            .AddJTActiveSafetyConfigure();                    
+                    services.AddJT808Configure(new JT808_JT1078_Config())
+                            .AddJT1078Configure();
                     services.AddJT809Configure()
                             .AddJT1078Configure();
                 })
                 .Build()
                 .Run();
         }
+    }
+
+    public class JT808_JTActiveSafety_Config : GlobalConfigBase
+    {
+        public override string ConfigId { get; protected set; } = "JT808_JTActiveSafety_Config";
+    }
+
+    public class JT808_JT1078_Config : GlobalConfigBase
+    {
+        public override string ConfigId { get; protected set; } = "JT808_JT1078_Config";
     }
 }

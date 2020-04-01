@@ -3,10 +3,17 @@
 @using JT808.Protocol;
 @using JT808.Protocol.Extensions;
 @using Newtonsoft.Json;
-@inject IJT808Config  JT808Config
+@inject IJT808Config  Config
 
 <h3>jt808analyze</h3>
 
+@*<select class="btn-success" onchange=@DoStuff>
+    <option value="JT808">国标</option>
+    <option value="JT808_JT1078">国标扩展JT1078</option>
+    <option value="JT808_JTAS">国标扩展主动安全(苏标)</option>
+</select>*@
+
+<p>@protocolType</p>
 <p>Hex: @HexData</p>
 
 <button class="btn btn-primary" @onclick="Query">分析</button>
@@ -15,8 +22,21 @@
     @Json
 </div>
 
+@functions {
+    string selectedString = "JT808";
+
+    void DoStuff(ChangeEventArgs e)
+    {
+        selectedString = e.Value.ToString();
+        Console.WriteLine("It is definitely: " + selectedString);
+    }
+}
+
 @code {
+
     private JT808Serializer Serializer;
+
+    string protocolType = "JT808";
 
     private string HexData = "7E 02 00 00 26 12 34 56 78 90 12 00 7D 02 00 00 00 01 00 00 00 02 00 BA 7F 0E 07 E4 F1 1C 00 28 00 3C 00 00 18 10 15 10 10 10 01 04 00 00 00 64 02 02 00 7D 01 13 7E";
 
@@ -24,7 +44,7 @@
 
     protected override void OnInitialized()
     {
-        Serializer = JT808Config.GetSerializer();
+        Serializer = Config.GetSerializer();
     }
 
     private void Query()

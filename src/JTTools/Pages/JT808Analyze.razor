@@ -3,17 +3,20 @@
 @using JT808.Protocol;
 @using JT808.Protocol.Extensions;
 @using Newtonsoft.Json;
-@inject IJT808Config  Config
-
+@using JTTools.Configs;
+@inject IJT808Config  config
+@inject JT808_JT1078_Config  jT808_JT1078_Config
+@inject JT808_JTActiveSafety_Config  jT808_JTActiveSafety_Config
 <h3>jt808analyze</h3>
 
-@*<select class="btn-success" onchange=@DoStuff>
+<select class="btn-success" @onchange="@OnSelectProtocolType">
     <option value="JT808">国标</option>
     <option value="JT808_JT1078">国标扩展JT1078</option>
     <option value="JT808_JTAS">国标扩展主动安全(苏标)</option>
-</select>*@
+</select>
 
 <p>@protocolType</p>
+
 <p>Hex: @HexData</p>
 
 <button class="btn btn-primary" @onclick="Query">分析</button>
@@ -22,19 +25,11 @@
     @Json
 </div>
 
-@functions {
-    string selectedString = "JT808";
-
-    void DoStuff(ChangeEventArgs e)
-    {
-        selectedString = e.Value.ToString();
-        Console.WriteLine("It is definitely: " + selectedString);
-    }
-}
-
 @code {
 
     private JT808Serializer Serializer;
+    private JT808Serializer JTAS_Serializer;
+    private JT808Serializer JT1078Serializer;
 
     string protocolType = "JT808";
 
@@ -42,14 +37,32 @@
 
     private string Json;
 
+    private void OnSelectProtocolType(ChangeEventArgs e)
+    {
+        protocolType = e.Value.ToString();
+    }
+
     protected override void OnInitialized()
     {
-        Serializer = Config.GetSerializer();
+        Serializer = config.GetSerializer();
+        JT1078Serializer = jT808_JT1078_Config.GetSerializer();
+        JTAS_Serializer = jT808_JTActiveSafety_Config.GetSerializer();
     }
 
     private void Query()
     {
         var data = HexData.ToHexBytes();
-        Json = Serializer.Analyze(data);
+        switch (protocolType)
+        {
+            case "JT808":
+                Json = Serializer.Analyze(data);
+                break;
+            case "JT808_JT1078":
+                Json = JT1078Serializer.Analyze(data);
+                break;
+            case "JT808_JTAS":
+                Json = JTAS_Serializer.Analyze(data);
+                break;
+        }
     }
 }

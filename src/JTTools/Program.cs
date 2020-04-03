@@ -1,23 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using JT808.Protocol;
 using JT808.Protocol.Extensions.JT1078;
 using JT808.Protocol.Extensions.JTActiveSafety;
 using JT809.Protocol;
 using JT809.Protocol.Extensions.JT1078;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
+using JTTools.Configs;
 
 namespace JTTools
 {
@@ -90,9 +83,11 @@ namespace JTTools
                 })
                 .ConfigureServices(services =>
                 {
-                    services.AddJT808Configure()
-                            .AddJT1078Configure()
+                    services.AddJT808Configure();
+                    services.AddJT808Configure(new JT808_JTActiveSafety_Config())
                             .AddJTActiveSafetyConfigure();
+                    services.AddJT808Configure(new JT808_JT1078_Config())
+                            .AddJT1078Configure();
                     services.AddJT809Configure()
                             .AddJT1078Configure();
                 })

@@ -1,13 +1,14 @@
-﻿@page "/jt808analyze"
+﻿@page "/jt808"
 
 @using JT808.Protocol;
 @using JT808.Protocol.Extensions;
-@using Newtonsoft.Json;
 @using JTTools.Configs;
+@using System.Text;
+@using System.Text.Encodings.Web;
+@using System.Text.Unicode;
 @inject IJT808Config  config
 @inject JT808_JT1078_Config  jT808_JT1078_Config
 @inject JT808_JTActiveSafety_Config  jT808_JTActiveSafety_Config
-<h3>jt808analyze</h3>
 
 <select class="btn-success" @onchange="@OnSelectProtocolType">
     <option value="JT808">国标</option>
@@ -15,20 +16,19 @@
     <option value="JT808_JTAS">国标扩展主动安全(苏标)</option>
 </select>
 
-<p>@protocolType</p>
-
-<p>Hex: @HexData</p>
-
 <button class="btn btn-primary" @onclick="Query">分析</button>
 
 <div class="right">
-    @Json
+    <textarea class="form-control" @bind="HexData" rows="10"></textarea>
+    <textarea class="form-control" @bind="Json" rows="10"></textarea>
 </div>
 
 @code {
 
     private JT808Serializer Serializer;
+
     private JT808Serializer JTAS_Serializer;
+
     private JT808Serializer JT1078Serializer;
 
     string protocolType = "JT808";
@@ -55,13 +55,13 @@
         switch (protocolType)
         {
             case "JT808":
-                Json = Serializer.Analyze(data);
+                Json = Serializer.Analyze(data,options: JTJsonWriterOptions.Instance);
                 break;
             case "JT808_JT1078":
-                Json = JT1078Serializer.Analyze(data);
+                Json = JT1078Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
                 break;
             case "JT808_JTAS":
-                Json = JTAS_Serializer.Analyze(data);
+                Json = JTAS_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
                 break;
         }
     }

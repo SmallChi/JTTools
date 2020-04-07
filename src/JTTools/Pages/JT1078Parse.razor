@@ -4,15 +4,11 @@
 @using JT1078.Protocol.Extensions;
 @using Newtonsoft.Json;
 
-
-<h3>JT1078Parse</h3>
-
-<p>Hex: @HexData</p>
-
 <button class="btn btn-primary" @onclick="Query">解析</button>
 
 <div class="right">
-    @Json
+    <textarea class="form-control" @bind="HexData" rows="10"></textarea>
+    <textarea class="form-control" @bind="Json" rows="10"></textarea>
 </div>
 
 @code {
@@ -25,6 +21,6 @@
     private void Query()
     {
         var data = HexData.ToHexBytes();
-        Json = JsonConvert.SerializeObject(JT1078Serializer.Deserialize(data));
+        Json = JsonConvert.SerializeObject(JT1078Serializer.Deserialize(data), Formatting.Indented);
     }
 }

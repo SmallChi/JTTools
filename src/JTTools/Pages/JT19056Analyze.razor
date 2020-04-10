@@ -33,9 +33,11 @@
         {
             case "up":
                 HexData = UpHexData;
+                Json = "";
                 break;
             case "down":
                 HexData = DownHexData;
+                Json = "";
                 break;
         }
     }
@@ -53,11 +55,9 @@
         switch (wayType)
         {
             case "up":
-#warning UpAnalyze bug
                 Json = Serializer.UpAnalyze(data, options: JTJsonWriterOptions.Instance);
                 break;
             case "down":
-#warning DownAnalyze bug
                 Json = Serializer.DownAnalyze(data, options: JTJsonWriterOptions.Instance);
                 break;
         }

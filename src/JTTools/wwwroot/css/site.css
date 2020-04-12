@@ -181,3 +181,11 @@ app {
         display: block;
     }
 }
+.footer {
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    width: calc(100% - 250px);
+    padding: 0 !important;
+    margin: 10px !important;
+}

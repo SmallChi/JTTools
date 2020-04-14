@@ -10,7 +10,7 @@
 @inject JT808_JT1078_Config  jT808_JT1078_Config
 @inject JT808_JTActiveSafety_Config  jT808_JTActiveSafety_Config
 
-<select class="btn-success" @onchange="@OnSelectProtocolType">
+<select class="form-control" @onchange="@OnSelectProtocolType">
     <option value="JT808">国标</option>
     <option value="JT808_JT1078">国标扩展JT1078</option>
     <option value="JT808_JTAS">国标扩展主动安全(苏标)</option>
@@ -20,7 +20,9 @@
 
 <div class="right">
     <textarea class="form-control" @bind="HexData" rows="10"></textarea>
-    <textarea class="form-control" @bind="Json" rows="10"></textarea>
+    <pre>
+         @Json
+    </pre>
 </div>
 
 @code {

@@ -3,13 +3,30 @@
 @using JT809.Protocol;
 @using JT809.Protocol.Extensions;
 @using Newtonsoft.Json;
+@using JT809.Protocol.Configs;
+@using JT809.Protocol.Interfaces;
 @inject IJT809Config  Config
 
+<select class="form-control" @onchange="@OnSelectEncryptType">
+    <option value="none">未加密</option>
+    <option value="encrypt">加密</option>
+</select>
+
+@if (encryptType == "encrypt")
+{
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="M1" @bind="EncryptOptions.M1">
+        <input type="text" class="form-control" placeholder="IA1" @bind="EncryptOptions.IA1">
+        <input type="text" class="form-control" placeholder="IC1" @bind="EncryptOptions.IC1">
+    </div>
+}
 <button class="btn btn-primary" @onclick="Query">解析</button>
 
 <div class="right">
     <textarea class="form-control" @bind="HexData" rows="10"></textarea>
-    <textarea class="form-control" @bind="Json" rows="10"></textarea>
+    <pre>
+         @Json
+    </pre>
 </div>
 
 @code {
@@ -19,14 +36,44 @@
 
     private string Json;
 
+    string encryptType = "none";
+
+    JT809EncryptOptions EncryptOptions;
+
+    private void OnSelectEncryptType(ChangeEventArgs e)
+    {
+        encryptType = e.Value.ToString();
+    }
+
     protected override void OnInitialized()
     {
         Serializer = Config.GetSerializer();
+        EncryptOptions = new JT809EncryptOptions();
     }
 
     private void Query()
     {
         var data = HexData.ToHexBytes();
-        Json = JsonConvert.SerializeObject(Serializer.Deserialize(data), Formatting.Indented);
+        if (encryptType == "none")
+        {
+            Json = JsonConvert.SerializeObject(Serializer.Deserialize(data), Formatting.Indented);
+        }
+        else
+        {
+            IJT809Config jt809ConfigInternal = new JT809Config(Guid.NewGuid().ToString());
+            jt809ConfigInternal.EncryptOptions = EncryptOptions;
+            JT809Serializer jT809SerializerInternal = new JT809Serializer(jt809ConfigInternal);
+            Json = JsonConvert.SerializeObject(jT809SerializerInternal.Deserialize(data), Formatting.Indented);
+        }
+    }
+
+    class JT809Config : JT809GlobalConfigBase
+    {
+        public JT809Config(string configId)
+        {
+            ConfigId = configId;
+        }
+
+        public override string ConfigId { get; }
     }
 }

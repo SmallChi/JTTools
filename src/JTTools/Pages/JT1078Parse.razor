@@ -5,7 +5,9 @@
 @using Newtonsoft.Json;
 
 <button class="btn btn-primary" @onclick="Query">解析</button>
-
+<BSAlert Color="Color.Danger" IsOpen="@isOpen" IsDismissible="true" OnDismiss="@OnDismiss">
+    @ErrerMessage
+</BSAlert>
 <div class="right">
     <textarea class="form-control" @bind="HexData" rows="10"></textarea>
     <pre>
@@ -19,10 +21,29 @@
 
     private string Json;
 
+    private string ErrerMessage;
+
+    private bool isOpen = false;
+
+    void OnDismiss()
+    {
+        isOpen = !isOpen;
+        StateHasChanged();
+    }
 
     private void Query()
     {
-        var data = HexData.ToHexBytes();
-        Json = JsonConvert.SerializeObject(JT1078Serializer.Deserialize(data), Formatting.Indented);
+        try
+        {
+            isOpen = false;
+            var data = HexData.ToHexBytes();
+            Json = JsonConvert.SerializeObject(JT1078Serializer.Deserialize(data), Formatting.Indented);
+        }
+        catch (Exception ex)
+        {
+            isOpen = !isOpen;
+            Json = "";
+            ErrerMessage = ex.StackTrace;
+        }
     }
 }

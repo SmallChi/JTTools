@@ -17,11 +17,13 @@
 </select>
 
 <button class="btn btn-primary" @onclick="Query">分析</button>
-
+<BSAlert Color="Color.Danger" IsOpen="@isOpen" IsDismissible="true" OnDismiss="@OnDismiss">
+    @ErrerMessage
+</BSAlert>
 <div class="right">
     <textarea class="form-control" @bind="HexData" rows="10"></textarea>
     <pre>
-         @Json
+       @Json
     </pre>
 </div>
 
@@ -39,6 +41,16 @@
 
     private string Json;
 
+    private string ErrerMessage;
+
+    private bool isOpen = false;
+
+    void OnDismiss()
+    {
+        isOpen = !isOpen;
+        StateHasChanged();
+    }
+
     private void OnSelectProtocolType(ChangeEventArgs e)
     {
         protocolType = e.Value.ToString();
@@ -53,18 +65,29 @@
 
     private void Query()
     {
-        var data = HexData.ToHexBytes();
-        switch (protocolType)
+        try
         {
-            case "JT808":
-                Json = Serializer.Analyze(data,options: JTJsonWriterOptions.Instance);
-                break;
-            case "JT808_JT1078":
-                Json = JT1078Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
-                break;
-            case "JT808_JTAS":
-                Json = JTAS_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
-                break;
+            isOpen = false;
+            var data = HexData.ToHexBytes();
+            switch (protocolType)
+            {
+                case "JT808":
+                    Json = Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+
+                    break;
+                case "JT808_JT1078":
+                    Json = JT1078Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+                    break;
+                case "JT808_JTAS":
+                    Json = JTAS_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            isOpen = !isOpen;
+            Json = "";
+            ErrerMessage = ex.StackTrace;
         }
     }
 }

@@ -21,7 +21,9 @@
     </div>
 }
 <button class="btn btn-primary" @onclick="Query">解析</button>
-
+<BSAlert Color="Color.Danger" IsOpen="@isOpen" IsDismissible="true" OnDismiss="@OnDismiss">
+    @ErrerMessage
+</BSAlert>
 <div class="right">
     <textarea class="form-control" @bind="HexData" rows="10"></textarea>
     <pre>
@@ -40,6 +42,16 @@
 
     JT809EncryptOptions EncryptOptions;
 
+    private string ErrerMessage;
+
+    private bool isOpen = false;
+
+    void OnDismiss()
+    {
+        isOpen = !isOpen;
+        StateHasChanged();
+    }
+
     private void OnSelectEncryptType(ChangeEventArgs e)
     {
         encryptType = e.Value.ToString();
@@ -53,17 +65,27 @@
 
     private void Query()
     {
-        var data = HexData.ToHexBytes();
-        if (encryptType == "none")
+        try
         {
-            Json = JsonConvert.SerializeObject(Serializer.Deserialize(data), Formatting.Indented);
+            isOpen = false;
+            var data = HexData.ToHexBytes();
+            if (encryptType == "none")
+            {
+                Json = JsonConvert.SerializeObject(Serializer.Deserialize(data), Formatting.Indented);
+            }
+            else
+            {
+                IJT809Config jt809ConfigInternal = new JT809Config(Guid.NewGuid().ToString());
+                jt809ConfigInternal.EncryptOptions = EncryptOptions;
+                JT809Serializer jT809SerializerInternal = new JT809Serializer(jt809ConfigInternal);
+                Json = JsonConvert.SerializeObject(jT809SerializerInternal.Deserialize(data), Formatting.Indented);
+            }
         }
-        else
+        catch(Exception ex)
         {
-            IJT809Config jt809ConfigInternal = new JT809Config(Guid.NewGuid().ToString());
-            jt809ConfigInternal.EncryptOptions = EncryptOptions;
-            JT809Serializer jT809SerializerInternal = new JT809Serializer(jt809ConfigInternal);
-            Json = JsonConvert.SerializeObject(jT809SerializerInternal.Deserialize(data), Formatting.Indented);
+            isOpen = !isOpen;
+            Json = "";
+            ErrerMessage = ex.StackTrace;
         }
     }
 

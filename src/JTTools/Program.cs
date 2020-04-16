@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using JTTools.Configs;
+using BlazorStrap;
 
 namespace JTTools
 {
@@ -46,7 +47,7 @@ namespace JTTools
                                      .AllowAnyMethod()
                                      .AllowAnyHeader()
                                      .AllowAnyOrigin()));
-
+                        services.AddBootstrapCss();
                     })
                     .ConfigureKestrel(ksOptions =>
                     {

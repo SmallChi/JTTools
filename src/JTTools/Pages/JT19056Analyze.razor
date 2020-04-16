@@ -5,11 +5,14 @@
 @using JTTools.Configs;
 @inject IJT808Config  Config
 
-<select class="btn-success" @onchange="@OnSelectWayType">
+<select class="form-control" @onchange="@OnSelectWayType">
     <option value="up">上行</option>
     <option value="down">下行</option>
 </select>
 <button class="btn btn-primary" @onclick="Query">分析</button>
+<BSAlert Color="Color.Danger" IsOpen="@isOpen" IsDismissible="true" OnDismiss="@OnDismiss">
+    @ErrerMessage
+</BSAlert>
 <div class="right">
     <textarea class="form-control" @bind="HexData" rows="10"></textarea>
     <pre>
@@ -46,6 +49,16 @@
 
     private string Json;
 
+    private string ErrerMessage;
+
+    private bool isOpen = false;
+
+    void OnDismiss()
+    {
+        isOpen = !isOpen;
+        StateHasChanged();
+    }
+
     protected override void OnInitialized()
     {
         Serializer = Config.GetCarDVRSerializer();
@@ -53,15 +66,25 @@
 
     private void Query()
     {
-        var data = HexData.ToHexBytes();
-        switch (wayType)
+        try
         {
-            case "up":
-                Json = Serializer.UpAnalyze(data, options: JTJsonWriterOptions.Instance);
-                break;
-            case "down":
-                Json = Serializer.DownAnalyze(data, options: JTJsonWriterOptions.Instance);
-                break;
+            isOpen = false;
+            var data = HexData.ToHexBytes();
+            switch (wayType)
+            {
+                case "up":
+                    Json = Serializer.UpAnalyze(data, options: JTJsonWriterOptions.Instance);
+                    break;
+                case "down":
+                    Json = Serializer.DownAnalyze(data, options: JTJsonWriterOptions.Instance);
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            isOpen = !isOpen;
+            Json = "";
+            ErrerMessage = ex.StackTrace;
         }
     }
-}
+ }

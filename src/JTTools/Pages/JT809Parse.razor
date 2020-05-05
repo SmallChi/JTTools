@@ -5,6 +5,7 @@
 @using Newtonsoft.Json;
 @using JT809.Protocol.Configs;
 @using JT809.Protocol.Interfaces;
+@using JT809.Protocol.Exceptions;
 @inject IJT809Config  Config
 
 <select class="form-control" @onchange="@OnSelectEncryptType">
@@ -80,6 +81,12 @@
                 JT809Serializer jT809SerializerInternal = new JT809Serializer(jt809ConfigInternal);
                 Json = JsonConvert.SerializeObject(jT809SerializerInternal.Deserialize(data), Formatting.Indented);
             }
+        }
+        catch(JT809Exception ex)
+        {
+            isOpen = !isOpen;
+            Json = "";
+            ErrerMessage = ex.Message;
         }
         catch(Exception ex)
         {

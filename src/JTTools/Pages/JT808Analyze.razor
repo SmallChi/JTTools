@@ -2,6 +2,7 @@
 
 @using JT808.Protocol;
 @using JT808.Protocol.Extensions;
+@using JT808.Protocol.Exceptions;
 @using JTTools.Configs;
 @using System.Text;
 @using System.Text.Encodings.Web;
@@ -82,6 +83,12 @@
                     Json = JTAS_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
                     break;
             }
+        }
+        catch (JT808Exception ex)
+        {
+            isOpen = !isOpen;
+            Json = "";
+            ErrerMessage = ex.Message;
         }
         catch (Exception ex)
         {

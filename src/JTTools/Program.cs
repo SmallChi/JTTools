@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using JTTools.Configs;
 using BlazorStrap;
+using Newtonsoft.Json;
 
 namespace JTTools
 {
@@ -19,6 +20,18 @@ namespace JTTools
     {
         public static void Main(string[] args)
         {
+            Newtonsoft.Json.JsonConvert.DefaultSettings = new Func<JsonSerializerSettings>(() =>
+            {
+                Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings();
+                //日期类型默认格式化处理
+                settings.DateFormatHandling = Newtonsoft.Json.DateFormatHandling.MicrosoftDateFormat;
+                settings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                //空值处理
+                settings.NullValueHandling = NullValueHandling.Ignore;
+                settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                settings.Converters.Add(new ByteArrayHexConverter());
+                return settings;
+            });
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
@@ -89,8 +102,9 @@ namespace JTTools
                             .AddJTActiveSafetyConfigure();
                     services.AddJT808Configure(new JT808_JT1078_Config())
                             .AddJT1078Configure();
-                    services.AddJT809Configure()
-                            .AddJT1078Configure();
+                    //.AddJT1078Configure();
+                    services.AddJT809Configure(new JT809_2011_Config());
+                    services.AddJT809Configure(new JT809_2019_Config());
                 })
                 .Build()
                 .Run();

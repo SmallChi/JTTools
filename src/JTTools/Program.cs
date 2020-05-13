@@ -102,9 +102,10 @@ namespace JTTools
                             .AddJTActiveSafetyConfigure();
                     services.AddJT808Configure(new JT808_JT1078_Config())
                             .AddJT1078Configure();
-                    //.AddJT1078Configure();
-                    services.AddJT809Configure(new JT809_2011_Config());
-                    services.AddJT809Configure(new JT809_2019_Config());
+                    services.AddJT809Configure(new JT809_2011_Config())
+                            .AddJT1078Configure();
+                    services.AddJT809Configure(new JT809_2019_Config())
+                            .AddJT1078Configure();
                 })
                 .Build()
                 .Run();

@@ -88,8 +88,8 @@
 
     protected override void OnInitialized()
     {
-        Serializer2011 = JT809ConfigExtensions.GetSerializer(Config2011);
-        Serializer2019 = JT809ConfigExtensions.GetSerializer(Config2019);
+        Serializer2011 = Config2011.GetSerializer();
+        Serializer2019 = Config2019.GetSerializer();
         EncryptOptions = new JT809EncryptOptions();
         HexData = HexData2011;
     }

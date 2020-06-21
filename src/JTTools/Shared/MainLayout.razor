@@ -1,5 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@inject IBootstrapCss BootstrapCss
 
 <div class="sidebar">
     <NavMenu />
@@ -18,27 +17,3 @@
         <a href="http://www.beian.miit.gov.cn" target="_blank">Copyright © 2015-2020 SmallChi. All Rights Reserved. 粤ICP备19128140号-1</a>
     </div>
 </div>
-
-@code {
-    private bool isServerSide = false;
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            await BootstrapCss.SetBootstrapCss("4.5.0");
-        }
-        catch (Exception)
-        {
-            isServerSide = true;
-        }
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstrun)
-    {
-        if (isServerSide && firstrun)
-        {
-            await BootstrapCss.SetBootstrapCss("4.5.0");
-        }
-    }
-}

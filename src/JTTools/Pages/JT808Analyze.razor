@@ -13,11 +13,11 @@
 
 <BSBasicForm IsInline="true">
     <BSFormGroup Class="mb-5 mr-sm-5 mb-sm-0">
-        <BSBasicInput Id="exampleFormControlSelect1" @onchange="@OnSelectProtocolType" InputType="InputType.Select" Value="protocolType">
+        <select class="form-control" Id="exampleFormControlSelect1" @onchange="@OnSelectProtocolType">
             <option value="JT808">国标</option>
             <option value="JT808_JT1078">国标扩展JT1078</option>
             <option value="JT808_JTAS">国标扩展主动安全(苏标)</option>
-        </BSBasicInput>
+        </select>
     </BSFormGroup>
     <BSFormGroup Class="mb-5 mr-sm-5 mb-sm-0">
         <BSButton Class="btn btn-primary" ButtonType="ButtonType.Button" @onclick="Query">分析</BSButton>

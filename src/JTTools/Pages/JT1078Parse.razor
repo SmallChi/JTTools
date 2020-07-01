@@ -2,7 +2,7 @@
 
 @using JT1078.Protocol;
 @using JT1078.Protocol.Extensions;
-@using Newtonsoft.Json;
+@using JTTools.Configs;
 
 <button class="btn btn-primary" @onclick="Query">解析</button>
 <BSAlert Color="Color.Danger" IsOpen="@isOpen" IsDismissible="true" OnDismiss="@OnDismiss">
@@ -37,7 +37,7 @@
         {
             isOpen = false;
             var data = HexData.ToHexBytes();
-            Json = JsonConvert.SerializeObject(JT1078Serializer.Deserialize(data), Formatting.Indented);
+            Json = JT1078Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
         }
         catch (Exception ex)
         {

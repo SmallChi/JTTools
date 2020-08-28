@@ -9,14 +9,14 @@
   <ItemGroup>
     <PackageReference Include="BlazorStrap" Version="1.3.2" />
     <PackageReference Include="JT1078" Version="1.0.3" />
-    <PackageReference Include="JT808" Version="2.2.11" />
+    <PackageReference Include="JT808" Version="2.2.12" />
     <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.2.9.1" />
     <PackageReference Include="JT808.Protocol.Extensions.JTActiveSafety" Version="1.0.4" />
     <PackageReference Include="JT809" Version="2.1.4-preview5" />
     <PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="2.1.4-preview4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.7" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="1.6.4" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.6.5" />
   </ItemGroup>
 
 </Project>

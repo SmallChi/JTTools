@@ -1,47 +1,20 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">JTTools</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <BSNavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </BSNavLink>
-        </li>
-        <li class="nav-item px-3">
-            <BSNavLink class="nav-link" href="jt808">
-                <span aria-hidden="true"></span>JT808分析工具
-            </BSNavLink>
-        </li>
-        <li class="nav-item px-3">
-            <BSNavLink class="nav-link" href="jt809">
-                <span aria-hidden="true"></span>JT809分析工具
-            </BSNavLink>
-        </li>
-        <li class="nav-item px-3">
-            <BSNavLink class="nav-link" href="jt1078">
-                <span aria-hidden="true"></span>JT1078分析工具
-            </BSNavLink>
-        </li>
-        <li class="nav-item px-3">
-            <BSNavLink class="nav-link" href="jt19056">
-                <span aria-hidden="true"></span>JT19056分析工具
-            </BSNavLink>
-        </li>
-    </ul>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+﻿<Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"home"})>
+    <MenuItem Key="home" RouterLink="" RouterMatch="NavLinkMatch.All">
+        <span class="nav-text">Home</span>
+    </MenuItem>
+    <MenuItem Key="jt808" RouterLink="jt808">
+        <span class="nav-text">JT808分析工具</span>
+    </MenuItem>
+    <MenuItem Key="jt809" RouterLink="jt809">
+        <span class="nav-text">JT809分析工具</span>
+    </MenuItem>
+    <MenuItem Key="jt1078" RouterLink="jt1078">
+        <span class="nav-text">JT1078分析工具</span>
+    </MenuItem>
+    <MenuItem Key="jt1078pack" RouterLink="jt1078pack">
+        <span class="nav-text">JT1078组包工具</span>
+    </MenuItem>
+    <MenuItem Key="jt19056" RouterLink="jt19056">
+        <span class="nav-text">JT19056分析工具</span>
+    </MenuItem>
+</Menu>

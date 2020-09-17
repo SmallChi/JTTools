@@ -10,25 +10,24 @@
 @inject IJT808Config  config
 @inject JT808_JT1078_Config  jT808_JT1078_Config
 @inject JT808_JTActiveSafety_Config  jT808_JTActiveSafety_Config
+@using OneOf;
 
-<BSBasicForm IsInline="true">
-    <BSFormGroup Class="mb-5 mr-sm-5 mb-sm-0">
-        <select class="form-control" Id="exampleFormControlSelect1" @onchange="@OnSelectProtocolType">
-            <option value="JT808">国标</option>
-            <option value="JT808_JT1078">国标扩展JT1078</option>
-            <option value="JT808_JTAS">国标扩展主动安全(苏标)</option>
-        </select>
-    </BSFormGroup>
-    <BSFormGroup Class="mb-5 mr-sm-5 mb-sm-0">
-        <BSButton Class="btn btn-primary" ButtonType="ButtonType.Button" @onclick="Query">分析</BSButton>
-    </BSFormGroup>
-</BSBasicForm>
-<BSFormGroup>
-    <BSBasicInput InputType="InputType.TextArea" Name="text" Id="exampleText" Rows="10" @bind-Value="HexData" />
-</BSFormGroup>
-<BSAlert Color="Color.Danger" IsOpen="@isOpen" IsDismissible="true" OnDismiss="@OnDismiss">
-    @ErrerMessage
-</BSAlert>
+<Select DefaultValue=@("JT808") Style="width:200px" OnChange="OnSelectProtocolType">
+    <SelectOption Value="JT808">国标</SelectOption>
+    <SelectOption Value="JT808_JT1078">国标扩展JT1078</SelectOption>
+    <SelectOption Value="JT808_JTAS">国标扩展主动安全(苏标)</SelectOption>
+</Select>
+
+<Button Type="primary" @onclick="Query">分析</Button>
+
+<TextArea AllowClear="true" AutoSize="true" MinRows="10" MaxRows="30" @bind-Value="@HexData" />
+
+@if (isOpen)
+{
+    <Alert Type="@AlertType.Error" Closable AfterClose="OnDismiss">
+        @ErrerMessage
+    </Alert>
+}
 
 <div class="right">
     <pre>
@@ -57,12 +56,12 @@
     void OnDismiss()
     {
         isOpen = !isOpen;
-        StateHasChanged();
     }
 
-    private void OnSelectProtocolType(ChangeEventArgs e)
+    private void OnSelectProtocolType(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value, 
+        OneOf<SelectOption, IEnumerable<SelectOption>> option)
     {
-        protocolType = e.Value.ToString();
+        protocolType = value.Value.ToString();
     }
 
     protected override void OnInitialized()

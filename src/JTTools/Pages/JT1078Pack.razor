@@ -1,0 +1,20 @@
+﻿@page "/jt1078pack"
+
+<h3>JT1078扩展808、809组包</h3>
+
+<select class="form-control" Id="exampleFormControlSelect1" @onchange="@OnSelectMsgType">
+    <option value="0x9101">808_打开看视频</option>
+    <option value="0x9102">808_关闭看视频</option>
+</select>
+
+@MsgType
+
+@code {
+
+    string MsgType = "0x9101";
+
+    private void OnSelectMsgType(ChangeEventArgs e)
+    {
+        MsgType = e.Value.ToString();
+    }
+}

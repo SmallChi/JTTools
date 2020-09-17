@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using JTTools.Configs;
-using BlazorStrap;
 using Newtonsoft.Json;
 
 namespace JTTools
@@ -39,28 +38,7 @@ namespace JTTools
                     {
                         services.AddRazorPages();
                         services.AddServerSideBlazor();
-                        services.AddControllers()
-                                //Microsoft.AspNetCore.Mvc.NewtonsoftJson
-                                .AddNewtonsoftJson(jsonOptions =>
-                                {
-                                    jsonOptions.SerializerSettings.Converters.Add(new ByteArrayHexConverter());
-                                    jsonOptions.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                                    //jsonOptions.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
-                                })
-                                //.AddJsonOptions(jsonOptions =>
-                                //{
-                                //    jsonOptions.JsonSerializerOptions.MaxDepth = 64;
-
-                                //    jsonOptions.JsonSerializerOptions.Converters.Add(new ByteArrayHexTextJsonConverter());
-                                //})
-                                ;
-                        services.AddCors(options =>
-                                     options.AddPolicy("Domain", builder =>
-                                     builder.WithOrigins(hostingContext.Configuration.GetSection("AllowedOrigins").Value.Split(","))
-                                     .AllowAnyMethod()
-                                     .AllowAnyHeader()
-                                     .AllowAnyOrigin()));
-                        services.AddBootstrapCss();
+                        services.AddAntDesign();
                     })
                     .ConfigureKestrel(ksOptions =>
                     {
@@ -85,11 +63,9 @@ namespace JTTools
                     })
                     .Configure(app => {
                         app.UseRouting();
-                        app.UseCors("Domain");
                         app.UseStaticFiles();
                         app.UseEndpoints(endpoints =>
                         {
-                            endpoints.MapControllers();
                             endpoints.MapBlazorHub();
                             endpoints.MapFallbackToPage("/_Host");
                         });

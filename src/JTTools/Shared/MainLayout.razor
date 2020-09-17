@@ -1,19 +1,43 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
-</div>
+<Layout>
 
-<div class="main">
-    <div class="top-row px-4">
-        <iframe id="github-star" style="border:none;vertical-align: middle;" width="105" height="20" src="https://ghbtns.com/github-btn.html?user=SmallChi&amp;repo=JTTools&amp;type=watch&amp;count=true"></iframe>
-    </div>
+    <Sider Breakpoint="@BreakpointType.Lg"
+           CollapsedWidth="0"
+           OnBreakpoint="broken => {
+            Console.WriteLine(broken);
+        }"
+           OnCollapse="collapsed => {
+            Console.WriteLine(collapsed);
+        }">
+        <div class="logo" />
+        <NavMenu />
+    </Sider>
+    <Layout>
+        <Header Class="site-layout-sub-header-background" Style="padding: 0;">
+            <iframe id="github-star" style="border:none;vertical-align: middle;" width="105" height="20" src="https://ghbtns.com/github-btn.html?user=SmallChi&amp;repo=JTTools&amp;type=watch&amp;count=true"></iframe>
+        </Header>
+        <Content Style=" margin: 24px 16px 0;">
+            <div class="site-layout-background" style="padding: 24px; min-height: 360px">
+                @Body
+            </div>
+        </Content>
+        <Footer Style="text-align: center;"><a href="http://www.beian.miit.gov.cn" target="_blank">Copyright © 2015-2020 SmallChi. All Rights Reserved. 粤ICP备19128140号-1</a></Footer>
+    </Layout>
+</Layout>
 
-    <div class="content px-4">
-        @Body
-    </div>
+<style>
+    #components-layout-demo-responsive .logo {
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 16px;
+    }
 
-    <div class="footer">
-        <a href="http://www.beian.miit.gov.cn" target="_blank">Copyright © 2015-2020 SmallChi. All Rights Reserved. 粤ICP备19128140号-1</a>
-    </div>
-</div>
+    .site-layout-sub-header-background {
+        background: #fff;
+    }
+
+    .site-layout-background {
+        background: #fff;
+    }
+</style>

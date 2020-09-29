@@ -10,6 +10,7 @@
 @inject IJT808Config  config
 @inject JT808_JT1078_Config  jT808_JT1078_Config
 @inject JT808_JTActiveSafety_Config  jT808_JTActiveSafety_Config
+@inject JT808_Streamax_Config  jT808_Streamax_Config
 
 <BSBasicForm IsInline="true">
     <BSFormGroup Class="mb-5 mr-sm-5 mb-sm-0">
@@ -17,6 +18,7 @@
             <option value="JT808">国标</option>
             <option value="JT808_JT1078">国标扩展JT1078</option>
             <option value="JT808_JTAS">国标扩展主动安全(苏标)</option>
+            <option value="JT808_JTRM">锐明JT808公交业务扩展协议</option>
         </select>
     </BSFormGroup>
     <BSFormGroup Class="mb-5 mr-sm-5 mb-sm-0">
@@ -41,6 +43,8 @@
     private JT808Serializer Serializer;
 
     private JT808Serializer JTAS_Serializer;
+
+    private JT808Serializer JTRM_Serializer;
 
     private JT808Serializer JT1078Serializer;
 
@@ -70,6 +74,7 @@
         Serializer = config.GetSerializer();
         JT1078Serializer = jT808_JT1078_Config.GetSerializer();
         JTAS_Serializer = jT808_JTActiveSafety_Config.GetSerializer();
+        JTRM_Serializer = jT808_Streamax_Config.GetSerializer();
     }
 
     private void Query()
@@ -88,6 +93,9 @@
                     break;
                 case "JT808_JTAS":
                     Json = JTAS_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+                    break;
+                case "JT808_JTRM":
+                    Json = JTRM_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
                     break;
             }
         }

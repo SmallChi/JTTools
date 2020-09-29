@@ -13,6 +13,7 @@ using Newtonsoft.Json.Serialization;
 using JTTools.Configs;
 using BlazorStrap;
 using Newtonsoft.Json;
+using JT808.Protocol.Extensions.Streamax;
 
 namespace JTTools
 {
@@ -106,6 +107,8 @@ namespace JTTools
                             .AddJT1078Configure();
                     services.AddJT809Configure(new JT809_2019_Config())
                             .AddJT1078Configure();
+                    services.AddJT808Configure(new JT808_Streamax_Config())
+                            .AddStreamaxConfigure();
                 })
                 .Build()
                 .Run();

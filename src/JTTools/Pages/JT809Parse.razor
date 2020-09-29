@@ -1,0 +1,168 @@
+﻿@page "/jt809"
+
+@using JT809.Protocol;
+@using JT809.Protocol.Extensions;
+@using Newtonsoft.Json;
+@using JT809.Protocol.Configs;
+@using JT809.Protocol.Interfaces;
+@using JT809.Protocol.Exceptions;
+@using JTTools.Configs;
+@using JT809.Protocol.Enums;
+@inject JT809_2011_Config  Config2011
+@inject JT809_2019_Config  Config2019
+
+<select class="form-control" @onchange="@OnSelectVersion">
+    <option value="v2011">2011版本</option>
+    <option value="v2019">2019版本</option>
+</select>
+<select class="form-control" @onchange="@OnSelectEncryptType">
+    <option value="none">未加密</option>
+    <option value="encrypt">加密</option>
+</select>
+
+@if (encryptType == "encrypt")
+{
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="M1" @bind="EncryptOptions.M1">
+        <input type="text" class="form-control" placeholder="IA1" @bind="EncryptOptions.IA1">
+        <input type="text" class="form-control" placeholder="IC1" @bind="EncryptOptions.IC1">
+    </div>
+}
+<button class="btn btn-primary" @onclick="Query">解析</button>
+<BSAlert Color="Color.Danger" IsOpen="@isOpen" IsDismissible="true" OnDismiss="@OnDismiss">
+    @ErrerMessage
+</BSAlert>
+<div class="right">
+    <textarea class="form-control" @bind="HexData" rows="10"></textarea>
+    <pre>
+         @Json
+    </pre>
+</div>
+
+@code {
+    private JT809Serializer Serializer2011;
+    private JT809Serializer Serializer2019;
+
+    private string HexData2011 = "5B 00 00 00 92 00 00 06 82 94 00 01 33 EF B8 01 00 00 00 00 00 27 0F D4 C1 41 31 32 33 34 35 00 00 00 00 00 00 00 00 00 00 00 00 00 02 94 01 00 00 00 5C 01 00 02 00 00 00 00 5A 01 AC 3F 40 12 3F FA A1 00 00 00 00 5A 01 AC 4D 50 03 73 6D 61 6C 6C 63 68 69 00 00 00 00 00 00 00 00 31 32 33 34 35 36 37 38 39 30 31 00 00 00 00 00 00 00 00 00 31 32 33 34 35 36 40 71 71 2E 63 6F 6D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 BA D8 5D";
+
+    private string HexData2019 = "5B 00 00 00 C9 00 00 06 82 17 00 01 34 15 F4 01 00 00 00 00 00 27 0F 00 00 00 00 5E 02 A5 07 B8 D4 C1 41 31 32 33 34 35 00 00 00 00 00 00 00 00 00 00 00 00 00 02 17 01 00 00 00 8B 01 02 03 04 05 06 07 08 09 10 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 E7 D3 5D";
+
+    private string HexData = "";
+
+    private string Json;
+
+    string encryptType = "none";
+
+    string version = "v2011";
+
+    JT809EncryptOptions EncryptOptions;
+
+    private string ErrerMessage;
+
+    private bool isOpen = false;
+
+    void OnDismiss()
+    {
+        isOpen = !isOpen;
+        StateHasChanged();
+    }
+
+    private void OnSelectVersion(ChangeEventArgs e)
+    {
+        version = e.Value.ToString();
+        switch (version)
+        {
+            case "v2011":
+                HexData = HexData2011;
+                break;
+            case "v2019":
+                HexData = HexData2019;
+                break;
+        }
+    }
+
+    private void OnSelectEncryptType(ChangeEventArgs e)
+    {
+        encryptType = e.Value.ToString();
+    }
+
+    protected override void OnInitialized()
+    {
+        Serializer2011 = Config2011.GetSerializer();
+        Serializer2019 = Config2019.GetSerializer();
+        EncryptOptions = new JT809EncryptOptions();
+        HexData = HexData2011;
+    }
+
+    private void Query()
+    {
+        try
+        {
+            isOpen = false;
+            var data = HexData.ToHexBytes();
+            switch (version)
+            {
+                case "v2011":
+                    if (encryptType == "none")
+                    {
+                        Json = Serializer2011.Analyze(data, JTJsonWriterOptions.Instance);
+                    }
+                    else
+                    {
+                        IJT809Config jt809ConfigInternal = new JT809Config2011(Guid.NewGuid().ToString());
+                        jt809ConfigInternal.EncryptOptions = EncryptOptions;
+                        JT809Serializer jT809SerializerInternal = new JT809Serializer(jt809ConfigInternal);
+                        Json = jT809SerializerInternal.Analyze(data, JTJsonWriterOptions.Instance);
+                    }
+                    break;
+
+                case "v2019":
+                    if (encryptType == "none")
+                    {
+                        Json = Serializer2019.Analyze(data, JTJsonWriterOptions.Instance);
+                    }
+                    else
+                    {
+                        IJT809Config jt809ConfigInternal = new JT809Config2019(Guid.NewGuid().ToString());
+                        jt809ConfigInternal.EncryptOptions = EncryptOptions;
+                        JT809Serializer jT809SerializerInternal = new JT809Serializer(jt809ConfigInternal);
+                        Json = jT809SerializerInternal.Analyze(data, JTJsonWriterOptions.Instance);
+                    }
+                    break;
+            }
+        }
+        catch (JT809Exception ex)
+        {
+            isOpen = !isOpen;
+            Json = "";
+            ErrerMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            isOpen = !isOpen;
+            Json = "";
+            ErrerMessage = ex.StackTrace;
+        }
+    }
+
+    class JT809Config2011 : JT809GlobalConfigBase
+    {
+        public JT809Config2011(string configId)
+        {
+            ConfigId = configId;
+        }
+
+        public override string ConfigId { get; }
+    }
+
+    class JT809Config2019 : JT809GlobalConfigBase
+    {
+        public JT809Config2019(string configId)
+        {
+            ConfigId = configId;
+            Version = JT809Version.JTT2019;
+        }
+
+        public override string ConfigId { get; }
+    }
+}

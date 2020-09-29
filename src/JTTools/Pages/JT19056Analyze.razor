@@ -1,0 +1,90 @@
+﻿@page "/jt19056"
+
+@using JT808.Protocol;
+@using JT808.Protocol.Extensions;
+@using JTTools.Configs;
+@inject IJT808Config  Config
+
+<select class="form-control" @onchange="@OnSelectWayType">
+    <option value="up">上行</option>
+    <option value="down">下行</option>
+</select>
+<button class="btn btn-primary" @onclick="Query">分析</button>
+<BSAlert Color="Color.Danger" IsOpen="@isOpen" IsDismissible="true" OnDismiss="@OnDismiss">
+    @ErrerMessage
+</BSAlert>
+<div class="right">
+    <textarea class="form-control" @bind="HexData" rows="10"></textarea>
+    <pre>
+         @Json
+    </pre>
+</div>
+
+@code {
+    private JT808CarDVRSerializer Serializer;
+
+    private static string UpHexData = "55 7A C4 00 00 00 EB";
+
+    private static string DownHexData = "55 7A C4 00 14 00 20 03 25 10 26 01 20 03 25 10 26 01 00 00 12 34 00 12 34 56 A9";
+
+    private string HexData = UpHexData;
+
+    string wayType = "up";
+
+    private void OnSelectWayType(ChangeEventArgs e)
+    {
+        wayType = e.Value.ToString();
+        switch (wayType)
+        {
+            case "up":
+                HexData = UpHexData;
+                Json = "";
+                break;
+            case "down":
+                HexData = DownHexData;
+                Json = "";
+                break;
+        }
+    }
+
+    private string Json;
+
+    private string ErrerMessage;
+
+    private bool isOpen = false;
+
+    void OnDismiss()
+    {
+        isOpen = !isOpen;
+        StateHasChanged();
+    }
+
+    protected override void OnInitialized()
+    {
+        Serializer = Config.GetCarDVRSerializer();
+    }
+
+    private void Query()
+    {
+        try
+        {
+            isOpen = false;
+            var data = HexData.ToHexBytes();
+            switch (wayType)
+            {
+                case "up":
+                    Json = Serializer.UpAnalyze(data, options: JTJsonWriterOptions.Instance);
+                    break;
+                case "down":
+                    Json = Serializer.DownAnalyze(data, options: JTJsonWriterOptions.Instance);
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            isOpen = !isOpen;
+            Json = "";
+            ErrerMessage = ex.StackTrace;
+        }
+    }
+ }

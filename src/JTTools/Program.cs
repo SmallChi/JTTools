@@ -1,24 +1,18 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using JT808.Protocol;
 using JT808.Protocol.Extensions.JT1078;
 using JT808.Protocol.Extensions.JTActiveSafety;
 using JT809.Protocol;
 using JT809.Protocol.Extensions.JT1078;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.DependencyInjection;
-using JTTools.Data;
 using Newtonsoft.Json.Serialization;
+using JTTools.Configs;
+using BlazorStrap;
+using Newtonsoft.Json;
 
 namespace JTTools
 {
@@ -26,6 +20,18 @@ namespace JTTools
     {
         public static void Main(string[] args)
         {
+            Newtonsoft.Json.JsonConvert.DefaultSettings = new Func<JsonSerializerSettings>(() =>
+            {
+                Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings();
+                //日期类型默认格式化处理
+                settings.DateFormatHandling = Newtonsoft.Json.DateFormatHandling.MicrosoftDateFormat;
+                settings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                //空值处理
+                settings.NullValueHandling = NullValueHandling.Ignore;
+                settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                settings.Converters.Add(new ByteArrayHexConverter());
+                return settings;
+            });
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
@@ -33,7 +39,6 @@ namespace JTTools
                     {
                         services.AddRazorPages();
                         services.AddServerSideBlazor();
-                        services.AddSingleton<WeatherForecastService>();
                         services.AddControllers()
                                 //Microsoft.AspNetCore.Mvc.NewtonsoftJson
                                 .AddNewtonsoftJson(jsonOptions =>
@@ -55,7 +60,7 @@ namespace JTTools
                                      .AllowAnyMethod()
                                      .AllowAnyHeader()
                                      .AllowAnyOrigin()));
-
+                        services.AddBootstrapCss();
                     })
                     .ConfigureKestrel(ksOptions =>
                     {
@@ -92,10 +97,14 @@ namespace JTTools
                 })
                 .ConfigureServices(services =>
                 {
-                    services.AddJT808Configure()
-                            .AddJT1078Configure()
+                    services.AddJT808Configure();
+                    services.AddJT808Configure(new JT808_JTActiveSafety_Config())
                             .AddJTActiveSafetyConfigure();
-                    services.AddJT809Configure()
+                    services.AddJT808Configure(new JT808_JT1078_Config())
+                            .AddJT1078Configure();
+                    services.AddJT809Configure(new JT809_2011_Config())
+                            .AddJT1078Configure();
+                    services.AddJT809Configure(new JT809_2019_Config())
                             .AddJT1078Configure();
                 })
                 .Build()

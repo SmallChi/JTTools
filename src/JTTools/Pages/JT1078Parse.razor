@@ -1,0 +1,49 @@
+﻿@page "/jt1078"
+
+@using JT1078.Protocol;
+@using JT1078.Protocol.Extensions;
+@using JTTools.Configs;
+
+<button class="btn btn-primary" @onclick="Query">解析</button>
+<BSAlert Color="Color.Danger" IsOpen="@isOpen" IsDismissible="true" OnDismiss="@OnDismiss">
+    @ErrerMessage
+</BSAlert>
+<div class="right">
+    <textarea class="form-control" @bind="HexData" rows="10"></textarea>
+    <pre>
+         @Json
+    </pre>
+</div>
+
+@code {
+
+    private string HexData = "30 31 63 64 81 E2 10 88 01 12 34 56 78 10 01 10 00 00 01 6B B3 92 CA 7C 02 80 00 28 00 2E 00 00 00 01 61 E1 A2 BF 00 98 CF C0 EE 1E 17 28 34 07 78 8E 39 A4 03 FD DB D1 D5 46 BF B0 63 01 3F 59 AC 34 C9 7A 02 1A B9 6A 28 A4 2C 08";
+
+    private string Json;
+
+    private string ErrerMessage;
+
+    private bool isOpen = false;
+
+    void OnDismiss()
+    {
+        isOpen = !isOpen;
+        StateHasChanged();
+    }
+
+    private void Query()
+    {
+        try
+        {
+            isOpen = false;
+            var data = HexData.ToHexBytes();
+            Json = JT1078Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+        }
+        catch (Exception ex)
+        {
+            isOpen = !isOpen;
+            Json = "";
+            ErrerMessage = ex.StackTrace;
+        }
+    }
+}

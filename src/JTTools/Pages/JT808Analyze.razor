@@ -1,35 +1,107 @@
-﻿@page "/jt808analyze"
+﻿@page "/jt808"
 
 @using JT808.Protocol;
 @using JT808.Protocol.Extensions;
-@using Newtonsoft.Json;
-@inject IJT808Config  JT808Config
+@using JT808.Protocol.Exceptions;
+@using JTTools.Configs;
+@using System.Text;
+@using System.Text.Encodings.Web;
+@using System.Text.Unicode;
+@inject IJT808Config  config
+@inject JT808_JT1078_Config  jT808_JT1078_Config
+@inject JT808_JTActiveSafety_Config  jT808_JTActiveSafety_Config
 
-<h3>jt808analyze</h3>
-
-<p>Hex: @HexData</p>
-
-<button class="btn btn-primary" @onclick="Query">分析</button>
+<BSBasicForm IsInline="true">
+    <BSFormGroup Class="mb-5 mr-sm-5 mb-sm-0">
+        <select class="form-control" Id="exampleFormControlSelect1" @onchange="@OnSelectProtocolType">
+            <option value="JT808">国标</option>
+            <option value="JT808_JT1078">国标扩展JT1078</option>
+            <option value="JT808_JTAS">国标扩展主动安全(苏标)</option>
+        </select>
+    </BSFormGroup>
+    <BSFormGroup Class="mb-5 mr-sm-5 mb-sm-0">
+        <BSButton Class="btn btn-primary" ButtonType="ButtonType.Button" @onclick="Query">分析</BSButton>
+    </BSFormGroup>
+</BSBasicForm>
+<BSFormGroup>
+    <BSBasicInput InputType="InputType.TextArea" Name="text" Id="exampleText" Rows="10" @bind-Value="HexData" />
+</BSFormGroup>
+<BSAlert Color="Color.Danger" IsOpen="@isOpen" IsDismissible="true" OnDismiss="@OnDismiss">
+    @ErrerMessage
+</BSAlert>
 
 <div class="right">
-    @Json
+    <pre>
+       @Json
+    </pre>
 </div>
 
 @code {
+
     private JT808Serializer Serializer;
+
+    private JT808Serializer JTAS_Serializer;
+
+    private JT808Serializer JT1078Serializer;
+
+    string protocolType = "JT808";
 
     private string HexData = "7E 02 00 00 26 12 34 56 78 90 12 00 7D 02 00 00 00 01 00 00 00 02 00 BA 7F 0E 07 E4 F1 1C 00 28 00 3C 00 00 18 10 15 10 10 10 01 04 00 00 00 64 02 02 00 7D 01 13 7E";
 
     private string Json;
 
+    private string ErrerMessage;
+
+    private bool isOpen = false;
+
+    void OnDismiss()
+    {
+        isOpen = !isOpen;
+        StateHasChanged();
+    }
+
+    private void OnSelectProtocolType(ChangeEventArgs e)
+    {
+        protocolType = e.Value.ToString();
+    }
+
     protected override void OnInitialized()
     {
-        Serializer = JT808Config.GetSerializer();
+        Serializer = config.GetSerializer();
+        JT1078Serializer = jT808_JT1078_Config.GetSerializer();
+        JTAS_Serializer = jT808_JTActiveSafety_Config.GetSerializer();
     }
 
     private void Query()
     {
-        var data = HexData.ToHexBytes();
-        Json = Serializer.Analyze(data);
+        try
+        {
+            isOpen = false;
+            var data = HexData.ToHexBytes();
+            switch (protocolType)
+            {
+                case "JT808":
+                    Json = Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+                    break;
+                case "JT808_JT1078":
+                    Json = JT1078Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+                    break;
+                case "JT808_JTAS":
+                    Json = JTAS_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+                    break;
+            }
+        }
+        catch (JT808Exception ex)
+        {
+            isOpen = !isOpen;
+            Json = "";
+            ErrerMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            isOpen = !isOpen;
+            Json = "";
+            ErrerMessage = ex.StackTrace;
+        }
     }
 }

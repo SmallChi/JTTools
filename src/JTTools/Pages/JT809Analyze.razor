@@ -9,35 +9,39 @@
 @using JTTools.Configs;
 @using JT809.Protocol.Enums;
 @using OneOf;
+@using AntDesign;
 @inject JT809_2011_Config  Config2011
 @inject JT809_2019_Config  Config2019
 
-<Select DefaultValue=@("v2011") Style="width:200px" OnSelect="OnSelectVersion">
+<Select DefaultValue="@version" @bind-Value="@version" Style="width:200px" OnChange="@OnSelectVersion">
     <SelectOption Value="v2011">2011版本</SelectOption>
     <SelectOption Value="v2019">2019版本</SelectOption>
 </Select>
 
-<Select DefaultValue=@("none") Style="width:200px" OnChange="@OnSelectEncryptType">
+<Select DefaultValue="@encryptType" @bind-Value="@encryptType" Style="width:200px" OnChange="@OnSelectEncryptType">
     <SelectOption Value="none">未加密</SelectOption>
     <SelectOption Value="encrypt">加密</SelectOption>
 </Select>
 
 @if (encryptType == "encrypt")
 {
-    @*<Input Placeholder="M1" @bind-Value="@M1" />
-        <Input Placeholder="IA1" @bind-Value="@IA1" />
-        <Input Placeholder="IC1" @bind-Value="@IC1" />*@
+    <AntDesign.Input @bind-Value="@M1">
+        <AddOnBefore>M1</AddOnBefore>
+    </AntDesign.Input>
+    <AntDesign.Input @bind-Value="@IA1">
+        <AddOnBefore>IA1</AddOnBefore>
+    </AntDesign.Input>
+    <AntDesign.Input @bind-Value="@IC1">
+        <AddOnBefore>IC1</AddOnBefore>
+    </AntDesign.Input>
 }
+
 <Button Type="primary" @onclick="Query">分析</Button>
 
 @if (isOpen)
 {
-    <Alert Type="@AlertType.Error" Closable AfterClose="OnDismiss">
-        @ErrerMessage
-    </Alert>
+    <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
 }
-
-@HexData
 
 <div class="right">
     <TextArea AllowClear="true" AutoSize="true" MinRows="10" MaxRows="30" @bind-Value="@HexData" />
@@ -54,7 +58,7 @@
 
     private string HexData2019 = "5B 00 00 00 C9 00 00 06 82 17 00 01 34 15 F4 01 00 00 00 00 00 27 0F 00 00 00 00 5E 02 A5 07 B8 D4 C1 41 31 32 33 34 35 00 00 00 00 00 00 00 00 00 00 00 00 00 02 17 01 00 00 00 8B 01 02 03 04 05 06 07 08 09 10 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 E7 D3 5D";
 
-    private string HexData  = "";
+    private string HexData = "";
 
     private string Json;
 
@@ -68,29 +72,28 @@
 
     private bool isOpen = false;
 
-    private uint? M1;
-    private uint? IA1;
-    private uint? IC1;
+    private long M1;
+    private long IA1;
+    private long IC1;
 
     void OnDismiss()
     {
         isOpen = !isOpen;
-        StateHasChanged();
     }
 
-    public void OnSelectVersion(OneOf<string, LabeledValue> value, SelectOption option)
+    public void OnSelectVersion(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value,
+        OneOf<SelectOption, IEnumerable<SelectOption>> option)
     {
-        HexData = new Random().Next(1, 100).ToString();
-        //this.version = value.Value.ToString();
-        //switch (version)
-        //{
-        //    case "v2011":
-        //        this.HexData = HexData2011;
-        //        break;
-        //    case "v2019":
-        //        this.HexData = HexData2019;
-        //        break;
-        //}
+        this.version = value.Value.ToString();
+        switch (version)
+        {
+            case "v2011":
+                this.HexData = HexData2011;
+                break;
+            case "v2019":
+                this.HexData = HexData2019;
+                break;
+        }
     }
 
     private void OnSelectEncryptType(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value,
@@ -123,12 +126,12 @@
                     else
                     {
                         IJT809Config jt809ConfigInternal = new JT809Config2011(Guid.NewGuid().ToString());
+                        SetEncryptOptions();
                         jt809ConfigInternal.EncryptOptions = EncryptOptions;
                         JT809Serializer jT809SerializerInternal = new JT809Serializer(jt809ConfigInternal);
                         Json = jT809SerializerInternal.Analyze(data, JTJsonWriterOptions.Instance);
                     }
                     break;
-
                 case "v2019":
                     if (encryptType == "none")
                     {
@@ -137,6 +140,7 @@
                     else
                     {
                         IJT809Config jt809ConfigInternal = new JT809Config2019(Guid.NewGuid().ToString());
+                        SetEncryptOptions();
                         jt809ConfigInternal.EncryptOptions = EncryptOptions;
                         JT809Serializer jT809SerializerInternal = new JT809Serializer(jt809ConfigInternal);
                         Json = jT809SerializerInternal.Analyze(data, JTJsonWriterOptions.Instance);
@@ -156,6 +160,13 @@
             Json = "";
             ErrerMessage = ex.StackTrace;
         }
+    }
+
+    private void SetEncryptOptions()
+    {
+        EncryptOptions.M1 = (uint)M1;
+        EncryptOptions.IA1 = (uint)IA1;
+        EncryptOptions.IC1 = (uint)IC1;
     }
 
     class JT809Config2011 : JT809GlobalConfigBase

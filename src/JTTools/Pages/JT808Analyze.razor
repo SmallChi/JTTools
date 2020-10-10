@@ -10,12 +10,14 @@
 @inject IJT808Config  config
 @inject JT808_JT1078_Config  jT808_JT1078_Config
 @inject JT808_JTActiveSafety_Config  jT808_JTActiveSafety_Config
+@inject JT808_Streamax_Config  jT808_Streamax_Config
 @using OneOf;
 
-<Select DefaultValue=@("JT808") Style="width:200px" OnChange="OnSelectProtocolType">
+<Select DefaultValue="@protocolType" @bind-Value="@protocolType" Style="width:200px" OnChange="@OnSelectProtocolType">
     <SelectOption Value="JT808">国标</SelectOption>
     <SelectOption Value="JT808_JT1078">国标扩展JT1078</SelectOption>
     <SelectOption Value="JT808_JTAS">国标扩展主动安全(苏标)</SelectOption>
+    <SelectOption Value="JT808_JTRM">公交扩展协议(锐明)</SelectOption>
 </Select>
 
 <Button Type="primary" @onclick="Query">分析</Button>
@@ -24,9 +26,7 @@
 
 @if (isOpen)
 {
-    <Alert Type="@AlertType.Error" Closable AfterClose="OnDismiss">
-        @ErrerMessage
-    </Alert>
+    <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
 }
 
 <div class="right">
@@ -38,6 +38,8 @@
 @code {
 
     private JT808Serializer Serializer;
+
+    private JT808Serializer JTRM_Serializer;
 
     private JT808Serializer JTAS_Serializer;
 
@@ -58,7 +60,7 @@
         isOpen = !isOpen;
     }
 
-    private void OnSelectProtocolType(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value, 
+    private void OnSelectProtocolType(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value,
         OneOf<SelectOption, IEnumerable<SelectOption>> option)
     {
         protocolType = value.Value.ToString();
@@ -69,6 +71,7 @@
         Serializer = config.GetSerializer();
         JT1078Serializer = jT808_JT1078_Config.GetSerializer();
         JTAS_Serializer = jT808_JTActiveSafety_Config.GetSerializer();
+        JTRM_Serializer = jT808_Streamax_Config.GetSerializer();
     }
 
     private void Query()
@@ -87,6 +90,9 @@
                     break;
                 case "JT808_JTAS":
                     Json = JTAS_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+                    break;
+                case "JT808_JTRM":
+                    Json = JTRM_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
                     break;
             }
         }

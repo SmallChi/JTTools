@@ -4,18 +4,21 @@
 @using JT808.Protocol.Extensions;
 @using JTTools.Configs;
 @inject IJT808Config  Config
+@using OneOf;
 
-<select class="form-control" @onchange="@OnSelectWayType">
-    <option value="up">上行</option>
-    <option value="down">下行</option>
-</select>
-<button class="btn btn-primary" @onclick="Query">分析</button>
+<Select DefaultValue="@wayType" @bind-Value="@wayType" Style="width:100px" OnChange="@OnSelectWayType">
+    <SelectOption Value="up">上行</SelectOption>
+    <SelectOption Value="down">下行</SelectOption>
+</Select>
 
-<Alert Type="@AlertType.Error" Closable>
-    @ErrerMessage
-</Alert>
+<Button Type="primary" @onclick="Query">分析</Button>
+
+@if (isOpen)
+{
+    <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
+}
 <div class="right">
-    <textarea class="form-control" @bind="HexData" rows="10"></textarea>
+    <TextArea AllowClear="true" AutoSize="true" MinRows="10" MaxRows="30" @bind-Value="@HexData" />
     <pre>
          @Json
     </pre>
@@ -32,9 +35,10 @@
 
     string wayType = "up";
 
-    private void OnSelectWayType(ChangeEventArgs e)
+    private void OnSelectWayType(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value,
+        OneOf<SelectOption, IEnumerable<SelectOption>> option)
     {
-        wayType = e.Value.ToString();
+        wayType = value.Value.ToString();
         switch (wayType)
         {
             case "up":
@@ -57,7 +61,6 @@
     void OnDismiss()
     {
         isOpen = !isOpen;
-        StateHasChanged();
     }
 
     protected override void OnInitialized()
@@ -88,4 +91,4 @@
             ErrerMessage = ex.StackTrace;
         }
     }
- }
+}

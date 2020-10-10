@@ -4,12 +4,14 @@
 @using JT1078.Protocol.Extensions;
 @using JTTools.Configs;
 
-<button class="btn btn-primary" @onclick="Query">解析</button>
-<Alert Type="@AlertType.Error" Closable>
-    @ErrerMessage
-</Alert>
+<Button Type="primary" @onclick="Query">分析</Button>
+
+@if (isOpen)
+{
+    <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
+}
 <div class="right">
-    <textarea class="form-control" @bind="HexData" rows="10"></textarea>
+    <TextArea AllowClear="true" AutoSize="true" MinRows="10" MaxRows="30" @bind-Value="@HexData" />
     <pre>
          @Json
     </pre>
@@ -28,7 +30,6 @@
     void OnDismiss()
     {
         isOpen = !isOpen;
-        StateHasChanged();
     }
 
     private void Query()

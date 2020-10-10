@@ -12,6 +12,7 @@
     <PackageReference Include="JT808" Version="2.2.12" />
     <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.2.12" />
     <PackageReference Include="JT808.Protocol.Extensions.JTActiveSafety" Version="1.0.4" />
+    <PackageReference Include="JT808.Protocol.Extensions.Streamax" Version="0.1.2" />
     <PackageReference Include="JT809" Version="2.1.4-preview5" />
     <PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="2.1.4-preview4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />

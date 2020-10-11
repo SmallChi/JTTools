@@ -1,27 +1,199 @@
 ﻿@page "/jt1078pack"
+
+@using JT808.Protocol;
+@using JT808.Protocol.Extensions.JT1078.MessageBody;
+@using JT808.Protocol.Extensions;
+@using JT808.Protocol.Exceptions;
+@using JTTools.Configs;
+@using System.Text;
+@using System.Text.Encodings.Web;
+@using System.Text.Unicode;
+@inject IJT808Config  config
+@inject JT808_JT1078_Config  jT808_JT1078_Config
 @using OneOf;
+@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json;
 
 <Select DefaultValue="@MsgType" @bind-Value="@MsgType" Style="width:200px" OnChange="@OnSelectMsgType">
     <SelectOption Value="0x9101">808_打开看视频</SelectOption>
     <SelectOption Value="0x9102">808_关闭看视频</SelectOption>
 </Select>
 
-<Button Type="primary" @onclick="@Pack">组包</Button>
+@if (MsgType == "0x9101")
+{
+    <Form Model="@jT_0X9101_Form">
+        <AntDesign.Input @bind-Value="@context.Sim" Placeholder="123456789012" AllowClear>
+            <AddOnBefore>SIM</AddOnBefore>
+        </AntDesign.Input>
+        <AntDesign.Input @bind-Value="@context.SN" AllowClear>
+            <AddOnBefore>流水号</AddOnBefore>
+        </AntDesign.Input>
+        <AntDesign.Input @bind-Value="@context.IPAddress" Placeholder="127.0.0.1" AllowClear>
+            <AddOnBefore>IP地址</AddOnBefore>
+        </AntDesign.Input>
+        <AntDesign.Input @bind-Value="@context.TcpPort" AllowClear>
+            <AddOnBefore>Tcp端口</AddOnBefore>
+        </AntDesign.Input>
+        <AntDesign.Input @bind-Value="@context.UdpPort" AllowClear>
+            <AddOnBefore>Udp端口</AddOnBefore>
+        </AntDesign.Input>
+        <AntDesign.Input @bind-Value="@context.LogicalChannelNo" AllowClear>
+            <AddOnBefore>通道号</AddOnBefore>
+        </AntDesign.Input>
+        <Select Style="width:150px;" DefaultValue="@context.DataType" @bind-Value="@context.DataType">
+            <SelectOption Value="0">音视频</SelectOption>
+            <SelectOption Value="1">视频</SelectOption>
+            <SelectOption Value="2">双向对讲</SelectOption>
+            <SelectOption Value="3">监听</SelectOption>
+            <SelectOption Value="4">中心广播</SelectOption>
+            <SelectOption Value="5">透传</SelectOption>
+        </Select>
+        <Select Style="width:150px;" DefaultValue="@context.StreamType" @bind-Value="@context.StreamType">
+            <SelectOption Value="0">主码流</SelectOption>
+            <SelectOption Value="1">子码流</SelectOption>
+        </Select>
+        <FormItem>
+            <Button Type="primary" @onclick="@Pack">组包</Button>
+        </FormItem>
+    </Form>
+}
+else if (MsgType == "0x9102")
+{
+    <Form Model="@jT_0x9102_Form">
+        <AntDesign.Input @bind-Value="@context.Sim" Placeholder="123456789012" AllowClear>
+            <AddOnBefore>SIM</AddOnBefore>
+        </AntDesign.Input>
+        <AntDesign.Input @bind-Value="@context.SN" AllowClear>
+            <AddOnBefore>流水号</AddOnBefore>
+        </AntDesign.Input>
+        <AntDesign.Input @bind-Value="@context.LogicalChannelNo" AllowClear>
+            <AddOnBefore>通道号</AddOnBefore>
+        </AntDesign.Input>
+        <Select Style="width:350px;" DefaultValue="@context.ControlCmd" @bind-Value="@context.ControlCmd">
+            <SelectOption Value="0">关闭音视频传输指令</SelectOption>
+            <SelectOption Value="1">切换码流（增加暂停和继续）</SelectOption>
+            <SelectOption Value="2">暂停该通道所有流的发送</SelectOption>
+            <SelectOption Value="3">恢复暂停前流的发送,与暂停前的流类型一致</SelectOption>
+            <SelectOption Value="4">关闭双向对讲</SelectOption>
+        </Select>
+        <Select Style="width:350px;" DefaultValue="@context.CloseAVData" @bind-Value="@context.CloseAVData">
+            <SelectOption Value="0">关闭该通道有关的音视频数据</SelectOption>
+            <SelectOption Value="1">只关闭该通道有关的音频，保留该通道有关的视频</SelectOption>
+            <SelectOption Value="2">只关闭该通道有关的视频，保留该通道有关的音频</SelectOption>
+        </Select>
+        <Select Style="width:150px;" DefaultValue="@context.SwitchStreamType" @bind-Value="@context.SwitchStreamType">
+            <SelectOption Value="0">主码流</SelectOption>
+            <SelectOption Value="1">子码流</SelectOption>
+        </Select>
+        <FormItem>
+            <Button Type="primary" @onclick="@Pack">组包</Button>
+        </FormItem>
+    </Form>
+}
 
-待开发
+<TextArea AllowClear="true" AutoSize="true" MinRows="10" MaxRows="30" @bind-Value="@HexData" />
 
 @code {
 
     string MsgType = "0x9101";
 
-    private void OnSelectMsgType(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value,
-        OneOf<SelectOption, IEnumerable<SelectOption>> option)
+    JT_0x9101_Form jT_0X9101_Form = new JT_0x9101_Form();
+
+    JT_0x9102_Form jT_0x9102_Form = new JT_0x9102_Form();
+
+    JT808Serializer JT1078Serializer;
+
+    private string HexData = "";
+
+    protected override void OnInitialized()
+    {
+        JT1078Serializer = jT808_JT1078_Config.GetSerializer();
+    }
+
+    void OnSelectMsgType(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value,
+    OneOf<SelectOption, IEnumerable<SelectOption>> option)
     {
         MsgType = value.Value.ToString();
     }
 
-    private void Pack()
+    void Pack()
     {
-        Console.WriteLine("pack");
+        try
+        {
+            if (MsgType == "0x9101")
+            {
+                JT808Package jT808Package = new JT808Package();
+                JT808Header header = new JT808Header();
+                header.MsgId = 0x9101;
+                header.ManualMsgNum = (ushort)jT_0X9101_Form.SN;
+                header.TerminalPhoneNo = jT_0X9101_Form.Sim;
+                jT808Package.Header = header;
+                JT808_0x9101 jT808_0X9101 = new JT808_0x9101();
+                jT808_0X9101.ServerIPAddress = jT_0X9101_Form.IPAddress;
+                jT808_0X9101.ServerVideoChannelTcpPort = (ushort)jT_0X9101_Form.TcpPort;
+                jT808_0X9101.ServerVideoChannelUdpPort = (ushort)jT_0X9101_Form.UdpPort;
+                jT808_0X9101.LogicalChannelNo = jT_0X9101_Form.LogicalChannelNo;
+                jT808_0X9101.DataType = byte.Parse(jT_0X9101_Form.DataType);
+                jT808_0X9101.StreamType = byte.Parse(jT_0X9101_Form.StreamType);
+                jT808Package.Bodies = jT808_0X9101;
+                HexData = JT1078Serializer.Serialize(jT808Package).ToHexString();
+            }
+            else if (MsgType == "0x9102")
+            {
+                JT808Package jT808Package = new JT808Package();
+                JT808Header header = new JT808Header();
+                header.MsgId = 0x9102;
+                header.ManualMsgNum = (ushort)jT_0x9102_Form.SN;
+                header.TerminalPhoneNo = jT_0x9102_Form.Sim;
+                jT808Package.Header = header;
+                JT808_0x9102 jT808_0X9102 = new JT808_0x9102();
+                jT808_0X9102.LogicalChannelNo = jT_0x9102_Form.LogicalChannelNo;
+                jT808_0X9102.ControlCmd = byte.Parse(jT_0x9102_Form.ControlCmd);
+                jT808_0X9102.CloseAVData = byte.Parse(jT_0x9102_Form.CloseAVData);
+                jT808_0X9102.SwitchStreamType = byte.Parse(jT_0x9102_Form.SwitchStreamType);
+                jT808Package.Bodies = jT808_0X9102;
+                HexData = JT1078Serializer.Serialize(jT808Package).ToHexString();
+            }
+        }
+        catch (Exception ex)
+        {
+            HexData = ex.StackTrace;
+        }
+    }
+
+    public class JT_0x9101_Form
+    {
+        [Required]
+        public string Sim { get; set; } = "123456789012";
+        [Required]
+        public int SN { get; set; } = new Random().Next(1, 2000);
+        [Required]
+        public string IPAddress { get; set; } = "127.0.0.1";
+        [Required]
+        public int TcpPort { get; set; }
+        [Required]
+        public int UdpPort { get; set; }
+        [Required]
+        public byte LogicalChannelNo { get; set; }
+        [Required]
+        public string DataType { get; set; } = "1";
+        [Required]
+        public string StreamType { get; set; } = "1";
+    }
+
+    public class JT_0x9102_Form
+    {
+        [Required]
+        public string Sim { get; set; } = "123456789012";
+        [Required]
+        public int SN { get; set; } = new Random().Next(1, 2000);
+        [Required]
+        public byte LogicalChannelNo { get; set; }
+        [Required]
+        public string ControlCmd { get; set; } = "0";
+        [Required]
+        public string CloseAVData { get; set; } = "0";
+        [Required]
+        public string SwitchStreamType { get; set; } = "1";
     }
 }

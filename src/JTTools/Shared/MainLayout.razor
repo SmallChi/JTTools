@@ -10,7 +10,6 @@
            OnCollapse="collapsed => {
             Console.WriteLine(collapsed);
         }">
-        <div class="logo" />
         <NavMenu />
     </Sider>
     <Layout>
@@ -27,6 +26,11 @@
 </Layout>
 
 <style>
+    body, html {
+        font-size: 15px;
+        overflow-x: hidden;
+    }
+
     #components-layout-demo-responsive .logo {
         height: 32px;
         background: rgba(255, 255, 255, 0.2);
@@ -39,5 +43,17 @@
 
     .site-layout-background {
         background: #fff;
+    }
+
+    .ant-layout {
+        height: 100%;
+    }
+
+    .ant-layout .ant-layout-header h4 {
+        font-size: 30px;
+        padding: 0 35px;
+    }
+
+    .ant-layout-footer {
     }
 </style>

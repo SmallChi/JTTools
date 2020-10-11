@@ -1,0 +1,50 @@
+﻿@page "/jtas"
+
+@using JTActiveSafety.Protocol;
+@using JTActiveSafety.Protocol.Extensions;
+@using JTTools.Configs;
+
+<Button Type="primary" @onclick="Query">分析</Button>
+
+@if (isOpen)
+{
+    <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
+}
+<div class="right">
+    <TextArea AllowClear="true" AutoSize="true" MinRows="10" MaxRows="60" @bind-Value="@HexData" />
+    <pre>
+         @Json
+    </pre>
+</div>
+
+@code {
+
+    private string HexData = "30 31 63 64 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 61 6C 61 72 6D 2E 78 6C 73 78 00 00 00 01 00 00 00 05 01 02 03 04 05";
+
+    private string Json;
+
+    private string ErrerMessage;
+
+    private bool isOpen = false;
+
+    void OnDismiss()
+    {
+        isOpen = !isOpen;
+    }
+
+    private void Query()
+    {
+        try
+        {
+            isOpen = false;
+            var data = HexData.ToHexBytes();
+            Json = JTActiveSafetySerializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+        }
+        catch (Exception ex)
+        {
+            isOpen = !isOpen;
+            Json = "";
+            ErrerMessage = ex.StackTrace;
+        }
+    }
+}

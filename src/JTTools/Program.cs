@@ -41,10 +41,6 @@ namespace JTTools
                         services.AddServerSideBlazor();
                         services.AddAntDesign();
                     })
-                    .ConfigureKestrel(ksOptions =>
-                    {
-                        ksOptions.ListenAnyIP(18888);
-                    })
                     .ConfigureLogging((context, logging) => {
                         //if (Environment.OSVersion.Platform == PlatformID.Unix)
                         //{

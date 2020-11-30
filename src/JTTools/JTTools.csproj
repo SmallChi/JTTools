@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <AssemblyVersion>1.0.1</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AntDesign" Version="0.4.1" />
     <PackageReference Include="JT1078" Version="1.1.0" />
-    <PackageReference Include="JT808" Version="2.3.0" />
+    <PackageReference Include="JT808" Version="2.3.1" />
     <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.3.0" />
     <PackageReference Include="JT808.Protocol.Extensions.JTActiveSafety" Version="1.1.0" />
     <PackageReference Include="JT808.Protocol.Extensions.Streamax" Version="0.1.8" />

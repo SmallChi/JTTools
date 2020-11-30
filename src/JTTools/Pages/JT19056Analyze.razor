@@ -6,7 +6,7 @@
 @inject IJT808Config  Config
 @using OneOf;
 
-<Select DefaultValue="@wayType" @bind-Value="@wayType" Style="width:100px" OnChange="@OnSelectWayType">
+<Select DefaultValue=@wayType @bind-Value="@wayType" Style="width:100px" OnChange="@OnSelectWayType">
     <SelectOption Value="up">上行</SelectOption>
     <SelectOption Value="down">下行</SelectOption>
 </Select>
@@ -50,6 +50,7 @@
                 Json = "";
                 break;
         }
+        StateHasChanged();
     }
 
     private string Json;

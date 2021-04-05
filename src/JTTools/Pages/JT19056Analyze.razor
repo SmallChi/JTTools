@@ -4,11 +4,13 @@
 @using JT808.Protocol.Extensions;
 @using JTTools.Configs;
 @inject IJT808Config  Config
-@using OneOf;
 
-<Select DefaultValue=@wayType @bind-Value="@wayType" Style="width:100px" OnChange="@OnSelectWayType">
-    <SelectOption Value="up">上行</SelectOption>
-    <SelectOption Value="down">下行</SelectOption>
+
+<Select @bind-Value="@wayType" TItemValue="string" TItem="string" Style="width:100px" OnSelectedItemChanged="@OnSelectWayType">
+    <SelectOptions>
+        <SelectOption TItemValue="string" TItem="string" Value="@("up")"  Label="上行"/>
+        <SelectOption TItemValue="string" TItem="string" Value="@("down")" Label="下行"/>
+    </SelectOptions>
 </Select>
 
 <Button Type="primary" @onclick="Query">分析</Button>
@@ -35,10 +37,9 @@
 
     string wayType = "up";
 
-    private void OnSelectWayType(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value,
-        OneOf<SelectOption, IEnumerable<SelectOption>> option)
+    private void OnSelectWayType(string value)
     {
-        wayType = value.Value.ToString();
+        wayType = value;
         switch (wayType)
         {
             case "up":

@@ -14,9 +14,11 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
 
-<Select DefaultValue="@MsgType" @bind-Value="@MsgType" Style="width:200px" OnChange="@OnSelectMsgType">
-    <SelectOption Value="0x9101">808_打开看视频</SelectOption>
-    <SelectOption Value="0x9102">808_关闭看视频</SelectOption>
+<Select DefaultValue="@MsgType" TItemValue="string" TItem="string" @bind-Value="@MsgType" Style="width:200px" OnSelectedItemChanged="OnSelectMsgType">
+    <SelectOptions>
+        <SelectOption TItemValue="string" TItem="string" Value="@("0x9101")" Label="808_打开看视频" />
+        <SelectOption TItemValue="string" TItem="string" Value="@("0x9102")" Label="808_关闭看视频"/>
+     </SelectOptions>
 </Select>
 
 @if (MsgType == "0x9101")
@@ -40,17 +42,21 @@
         <AntDesign.Input @bind-Value="@context.LogicalChannelNo" AllowClear>
             <AddOnBefore>通道号</AddOnBefore>
         </AntDesign.Input>
-        <Select Style="width:150px;" DefaultValue="@context.DataType" @bind-Value="@context.DataType">
-            <SelectOption Value="0">音视频</SelectOption>
-            <SelectOption Value="1">视频</SelectOption>
-            <SelectOption Value="2">双向对讲</SelectOption>
-            <SelectOption Value="3">监听</SelectOption>
-            <SelectOption Value="4">中心广播</SelectOption>
-            <SelectOption Value="5">透传</SelectOption>
+        <Select Style="width:150px;" TItemValue="string" TItem="string" DefaultValue="@context.DataType" @bind-Value="@context.DataType">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="音视频"/>
+                <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="视频"/>
+                <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="双向对讲"/>
+                <SelectOption TItemValue="string" TItem="string" Value="@("3")" Label="监听"/>
+                <SelectOption TItemValue="string" TItem="string" Value="@("4")" Label="中心广播"/>
+                <SelectOption TItemValue="string" TItem="string" Value="@("5")" Label="透传"/>
+            </SelectOptions>
         </Select>
-        <Select Style="width:150px;" DefaultValue="@context.StreamType" @bind-Value="@context.StreamType">
-            <SelectOption Value="0">主码流</SelectOption>
-            <SelectOption Value="1">子码流</SelectOption>
+        <Select Style="width:150px;" TItemValue="string" TItem="string" DefaultValue="@context.StreamType" @bind-Value="@context.StreamType">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="主码流" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="子码流" />
+            </SelectOptions>
         </Select>
         <FormItem>
             <Button Type="primary" @onclick="@Pack">组包</Button>
@@ -69,21 +75,27 @@ else if (MsgType == "0x9102")
         <AntDesign.Input @bind-Value="@context.LogicalChannelNo" AllowClear>
             <AddOnBefore>通道号</AddOnBefore>
         </AntDesign.Input>
-        <Select Style="width:350px;" DefaultValue="@context.ControlCmd" @bind-Value="@context.ControlCmd">
-            <SelectOption Value="0">关闭音视频传输指令</SelectOption>
-            <SelectOption Value="1">切换码流（增加暂停和继续）</SelectOption>
-            <SelectOption Value="2">暂停该通道所有流的发送</SelectOption>
-            <SelectOption Value="3">恢复暂停前流的发送,与暂停前的流类型一致</SelectOption>
-            <SelectOption Value="4">关闭双向对讲</SelectOption>
+        <Select Style="width:350px;" TItemValue="string" TItem="string" @bind-Value="@context.ControlCmd">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="关闭音视频传输指令" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="切换码流（增加暂停和继续）" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="暂停该通道所有流的发送" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("3")" Label="恢复暂停前流的发送,与暂停前的流类型一致" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("4")" Label="关闭双向对讲" />
+            </SelectOptions>
         </Select>
-        <Select Style="width:350px;" DefaultValue="@context.CloseAVData" @bind-Value="@context.CloseAVData">
-            <SelectOption Value="0">关闭该通道有关的音视频数据</SelectOption>
-            <SelectOption Value="1">只关闭该通道有关的音频，保留该通道有关的视频</SelectOption>
-            <SelectOption Value="2">只关闭该通道有关的视频，保留该通道有关的音频</SelectOption>
+        <Select Style="width:350px;" TItemValue="string" TItem="string" @bind-Value="@context.CloseAVData">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="关闭该通道有关的音视频数据" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="只关闭该通道有关的音频，保留该通道有关的视频" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="只关闭该通道有关的视频，保留该通道有关的音频" />
+            </SelectOptions>
         </Select>
-        <Select Style="width:150px;" DefaultValue="@context.SwitchStreamType" @bind-Value="@context.SwitchStreamType">
-            <SelectOption Value="0">主码流</SelectOption>
-            <SelectOption Value="1">子码流</SelectOption>
+        <Select Style="width:150px;" TItemValue="string" TItem="string" @bind-Value="@context.SwitchStreamType">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="主码流" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="子码流" />
+            </SelectOptions>
         </Select>
         <FormItem>
             <Button Type="primary" @onclick="@Pack">组包</Button>
@@ -110,11 +122,13 @@ else if (MsgType == "0x9102")
         JT1078Serializer = jT808_JT1078_Config.GetSerializer();
     }
 
-    void OnSelectMsgType(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value,
-    OneOf<SelectOption, IEnumerable<SelectOption>> option)
+
+
+    void OnSelectMsgType(string value)
     {
-        MsgType = value.Value.ToString();
+        MsgType = value;
     }
+
 
     void Pack()
     {
@@ -129,10 +143,10 @@ else if (MsgType == "0x9102")
                 header.TerminalPhoneNo = jT_0X9101_Form.Sim;
                 jT808Package.Header = header;
                 JT808_0x9101 jT808_0X9101 = new JT808_0x9101();
-                jT808_0X9101.ServerIPAddress = jT_0X9101_Form.IPAddress;
-                jT808_0X9101.ServerVideoChannelTcpPort = (ushort)jT_0X9101_Form.TcpPort;
-                jT808_0X9101.ServerVideoChannelUdpPort = (ushort)jT_0X9101_Form.UdpPort;
-                jT808_0X9101.LogicalChannelNo = jT_0X9101_Form.LogicalChannelNo;
+                jT808_0X9101.ServerIp = jT_0X9101_Form.IPAddress;
+                jT808_0X9101.TcpPort = (ushort)jT_0X9101_Form.TcpPort;
+                jT808_0X9101.UdpPort = (ushort)jT_0X9101_Form.UdpPort;
+                jT808_0X9101.ChannelNo = jT_0X9101_Form.LogicalChannelNo;
                 jT808_0X9101.DataType = byte.Parse(jT_0X9101_Form.DataType);
                 jT808_0X9101.StreamType = byte.Parse(jT_0X9101_Form.StreamType);
                 jT808Package.Bodies = jT808_0X9101;
@@ -147,10 +161,10 @@ else if (MsgType == "0x9102")
                 header.TerminalPhoneNo = jT_0x9102_Form.Sim;
                 jT808Package.Header = header;
                 JT808_0x9102 jT808_0X9102 = new JT808_0x9102();
-                jT808_0X9102.LogicalChannelNo = jT_0x9102_Form.LogicalChannelNo;
+                jT808_0X9102.ChannelNo = jT_0x9102_Form.LogicalChannelNo;
                 jT808_0X9102.ControlCmd = byte.Parse(jT_0x9102_Form.ControlCmd);
                 jT808_0X9102.CloseAVData = byte.Parse(jT_0x9102_Form.CloseAVData);
-                jT808_0X9102.SwitchStreamType = byte.Parse(jT_0x9102_Form.SwitchStreamType);
+                jT808_0X9102.StreamType = byte.Parse(jT_0x9102_Form.SwitchStreamType);
                 jT808Package.Bodies = jT808_0X9102;
                 HexData = JT1078Serializer.Serialize(jT808Package).ToHexString();
             }

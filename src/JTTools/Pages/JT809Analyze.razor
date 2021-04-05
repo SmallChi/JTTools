@@ -13,14 +13,18 @@
 @inject JT809_2011_Config  Config2011
 @inject JT809_2019_Config  Config2019
 
-<Select DefaultValue="@version" @bind-Value="@version" Style="width:200px" OnChange="@OnSelectVersion">
-    <SelectOption Value="v2011">2011版本</SelectOption>
-    <SelectOption Value="v2019">2019版本</SelectOption>
+<Select @bind-Value="@version" TItemValue="string" TItem="string" Style="width:200px" OnSelectedItemChanged="OnSelectVersion">
+    <SelectOptions>
+        <SelectOption TItemValue="string" TItem="string" Value="@("v2011")" Label="2011版本"/>
+        <SelectOption TItemValue="string" TItem="string" Value="@("v2019")" Label="2019版本"/>
+    </SelectOptions>
 </Select>
 
-<Select DefaultValue="@encryptType" @bind-Value="@encryptType" Style="width:200px" OnChange="@OnSelectEncryptType">
-    <SelectOption Value="none">未加密</SelectOption>
-    <SelectOption Value="encrypt">加密</SelectOption>
+<Select TItemValue="string" TItem="string" @bind-Value="@encryptType" Style="width:200px" OnSelectedItemChanged="OnSelectEncryptType">
+    <SelectOptions>
+        <SelectOption TItemValue="string" TItem="string" Value="@("none")" Label="未加密" />
+        <SelectOption TItemValue="string" TItem="string" Value="@("encrypt")" Label="加密" />
+    </SelectOptions>
 </Select>
 
 @if (encryptType == "encrypt")
@@ -81,10 +85,9 @@
         isOpen = !isOpen;
     }
 
-    public void OnSelectVersion(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value,
-        OneOf<SelectOption, IEnumerable<SelectOption>> option)
+    public void OnSelectVersion(string value)
     {
-        this.version = value.Value.ToString();
+        this.version = value;
         switch (version)
         {
             case "v2011":
@@ -97,10 +100,9 @@
         StateHasChanged();
     }
 
-    private void OnSelectEncryptType(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value,
-        OneOf<SelectOption, IEnumerable<SelectOption>> option)
+    private void OnSelectEncryptType(string value)
     {
-        encryptType = value.Value.ToString();
+        encryptType = value;
         StateHasChanged();
     }
 

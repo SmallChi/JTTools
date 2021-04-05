@@ -1,0 +1,127 @@
+﻿@page "/map"
+
+@using System.Text;
+@using System.Text.Encodings.Web;
+@using System.Text.Unicode;
+@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json;
+@inject IJSRuntime JsRuntime
+
+<RadioGroup @bind-Value="coordinateType" Size="large" TValue="string"  OnChange="@OnSelectedCoordinateTypeChanged">
+    <Radio RadioButton Value="@("WGS84")">WGS84</Radio>
+    <Radio RadioButton Value="@("GCJ02")">GCJ02</Radio>
+    <Radio RadioButton Value="@("BD09")">BD09</Radio>
+</RadioGroup>
+<br />
+<AntDesign.Input @bind-Value="LngLat" style="width: 450px;" Size="large" AllowClear>
+    <AddOnBefore>经纬度</AddOnBefore>
+</AntDesign.Input>
+<Button Type="primary" @onclick="Convert" Size="large">
+    转换
+</Button>
+<Button Type="primary" @onclick="CreateMarker" Size="large">
+    创建标注点
+</Button>
+<br />
+<AntDesign.Input @bind-Value="WGS84_LngLat" style="width: 450px;" Size="large" readonly>
+    <AddOnBefore>WGS84坐标系</AddOnBefore>
+</AntDesign.Input>
+<br />
+<AntDesign.Input @bind-Value="GCJ02_LngLat" style="width: 450px;" Size="large" readonly>
+    <AddOnBefore>GCJ02坐标系</AddOnBefore>
+</AntDesign.Input>
+<br />
+<AntDesign.Input @bind-Value="BD09_LngLat" style="width: 450px;" Size="large" readonly>
+    <AddOnBefore>BD09坐标系</AddOnBefore>
+</AntDesign.Input>
+<br />
+@if (isOpen)
+{
+    <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
+    <br />
+}
+
+<div id="mapContainer" style="width: 1024px; height: 768px; "></div>
+
+@code {
+
+    string coordinateType = "GCJ02";
+
+    private string LngLat= "113.87132,22.568962";
+
+    private string WGS84_LngLat;
+
+    private string GCJ02_LngLat;
+
+    private string BD09_LngLat;
+
+    private string ErrerMessage;
+
+    private bool isOpen = false;
+
+    protected override async void OnInitialized()
+    {
+        await JsRuntime.InvokeVoidAsync("mapInit");
+    }
+
+    void OnDismiss()
+    {
+        isOpen = !isOpen;
+    }
+
+    void OnSelectedCoordinateTypeChanged(string e)
+    {
+        if (string.IsNullOrEmpty(LngLat))
+        {
+            return;
+        }
+        string[] arr = LngLat.Split(new string[]{ ",", "，", "|", ":" }, StringSplitOptions.RemoveEmptyEntries);
+        if (arr.Length == 2)
+        {
+            if(double.TryParse(arr[0], out double lng) && double.TryParse(arr[1], out double lat))
+            {
+                if(e== "WGS84")
+                {
+                    WGS84_LngLat = $"{lng},{lat}";
+                    var gcj02 = Coordtransform.Wgs84togcj02(lng, lat);
+                    GCJ02_LngLat = $"{gcj02[0]},{gcj02[1]}";
+                    var bd09 = Coordtransform.Wgs84tobd09(lng, lat);
+                    BD09_LngLat = $"{bd09[0]},{bd09[1]}";
+                }
+                else if (e == "GCJ02")
+                {
+                    GCJ02_LngLat = $"{lng},{lat}";
+                    var wgs84 = Coordtransform.Gcj02towgs84(lng, lat);
+                    WGS84_LngLat = $"{wgs84[0]},{wgs84[1]}";
+                    var bd09 = Coordtransform.Gcj02tobd09(lng, lat);
+                    BD09_LngLat = $"{bd09[0]},{bd09[1]}";
+                }
+                else if (e == "BD09")
+                {
+                    BD09_LngLat = $"{lng},{lat}";
+                    var wgs84 = Coordtransform.Bd09towgs84(lng, lat);
+                    WGS84_LngLat = $"{wgs84[0]},{wgs84[1]}";
+                    var gcj02 = Coordtransform.Bd09togcj02(lng, lat);
+                    GCJ02_LngLat = $"{gcj02[0]},{gcj02[1]}";
+                }
+            }
+        }
+    }
+
+    [JSInvokable]
+    public void Convert()
+    {
+        OnSelectedCoordinateTypeChanged(coordinateType);
+    }
+
+    [JSInvokable]
+    public async void CreateMarker()
+    {
+        if (string.IsNullOrEmpty(GCJ02_LngLat))
+        {
+            return;
+        }
+        string[] arr = GCJ02_LngLat.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        await JsRuntime.InvokeVoidAsync("createMarker", arr);
+    }
+}

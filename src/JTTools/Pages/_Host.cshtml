@@ -16,12 +16,17 @@
     <base href="~/" />
     <link rel="icon" href="logo.png" type="image/x-icon">
     <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
+    <script type="text/javascript" src='//webapi.amap.com/maps?v=1.4.15&key=1beaad9c96973cf1614ab8703cb60356&plugin=AMap.MouseTool'>
+    </script>
+    <!-- UI组件库 1.0 -->
+    <script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
 </head>
 <body>
     <app>
         <component type="typeof(App)" render-mode="Server" />
     </app>
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+    <script src="~/js/map.js"></script>
     <script src="_framework/blazor.server.js"></script>
 
 </body>

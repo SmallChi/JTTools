@@ -14,11 +14,13 @@
 @using OneOf;
 
 <Tag Color="blue">如有分包，请换行区分。</Tag><br />
-<Select DefaultValue="@protocolType" @bind-Value="@protocolType" Style="width:200px" OnChange="@OnSelectProtocolType">
-    <SelectOption Value="JT808">国标</SelectOption>
-    <SelectOption Value="JT808_JT1078">国标扩展JT1078</SelectOption>
-    <SelectOption Value="JT808_JTAS">国标扩展主动安全(苏标)</SelectOption>
-    <SelectOption Value="JT808_JTRM">公交扩展协议(锐明)</SelectOption>
+<Select TItemValue="string" TItem="string" @bind-Value="@protocolType" Style="width:200px" OnSelectedItemChanged="OnSelectProtocolType">
+    <SelectOptions>
+        <SelectOption TItemValue="string" TItem="string" Label="国标" Value="@("JT808")" />
+        <SelectOption TItemValue="string" TItem="string" Label="国标扩展JT1078" Value="@("JT808_JT1078")" />
+        <SelectOption TItemValue="string" TItem="string" Label="国标扩展主动安全(苏标)" Value="@("JT808_JTAS")" />
+        <SelectOption TItemValue="string" TItem="string" Label="公交扩展协议(锐明)" Value="@("JT808_JTRM")" />
+    </SelectOptions>
 </Select>
 
 <Button Type="primary" @onclick="Query">分析</Button>
@@ -63,8 +65,7 @@
         isOpen = !isOpen;
     }
 
-    private void OnSelectProtocolType(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value,
-        OneOf<SelectOption, IEnumerable<SelectOption>> option)
+    private void OnSelectProtocolType(string value)
     {
         if ("JT808_JT1078" == protocolType)
         {
@@ -74,8 +75,8 @@
         {
             HexData = HexDataTmp;
         }
-        protocolType = value.Value.ToString();
-        StateHasChanged();
+        protocolType = value;
+        //StateHasChanged();
     }
 
     private void OnAreaTextPressEnter(KeyboardEventArgs eventArgs)

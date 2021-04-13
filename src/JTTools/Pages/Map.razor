@@ -76,36 +76,54 @@
             return;
         }
         string[] arr = LngLat.Split(new string[]{ ",", "，", "|", ":" }, StringSplitOptions.RemoveEmptyEntries);
-        if (arr.Length == 2)
+        List<double> wgs84s = new List<double>();
+        List<double> gcj02s = new List<double>();
+        List<double> bd09s = new List<double>();
+        for (var i=0;i< arr.Length; i=i+2)
         {
-            if(double.TryParse(arr[0], out double lng) && double.TryParse(arr[1], out double lat))
+            if (double.TryParse(arr[i], out double lng) && double.TryParse(arr[i+1], out double lat))
             {
-                if(e== "WGS84")
+                if (e == "WGS84")
                 {
-                    WGS84_LngLat = $"{lng},{lat}";
+                    wgs84s.Add(lng);
+                    wgs84s.Add(lat);
                     var gcj02 = Coordtransform.Wgs84togcj02(lng, lat);
-                    GCJ02_LngLat = $"{gcj02[0]},{gcj02[1]}";
+                    gcj02s.Add(gcj02[0]);
+                    gcj02s.Add(gcj02[1]);
                     var bd09 = Coordtransform.Wgs84tobd09(lng, lat);
-                    BD09_LngLat = $"{bd09[0]},{bd09[1]}";
+                    bd09s.Add(bd09[0]);
+                    bd09s.Add(bd09[1]);
                 }
                 else if (e == "GCJ02")
                 {
-                    GCJ02_LngLat = $"{lng},{lat}";
+                    gcj02s.Add(lng);
+                    gcj02s.Add(lat);
                     var wgs84 = Coordtransform.Gcj02towgs84(lng, lat);
-                    WGS84_LngLat = $"{wgs84[0]},{wgs84[1]}";
+                    wgs84s.Add(wgs84[0]);
+                    wgs84s.Add(wgs84[1]);
                     var bd09 = Coordtransform.Gcj02tobd09(lng, lat);
-                    BD09_LngLat = $"{bd09[0]},{bd09[1]}";
+                    bd09s.Add(bd09[0]);
+                    bd09s.Add(bd09[1]);
                 }
                 else if (e == "BD09")
                 {
-                    BD09_LngLat = $"{lng},{lat}";
+                    bd09s.Add(lng);
+                    bd09s.Add(lat);
+
                     var wgs84 = Coordtransform.Bd09towgs84(lng, lat);
-                    WGS84_LngLat = $"{wgs84[0]},{wgs84[1]}";
+                    wgs84s.Add(wgs84[0]);
+                    wgs84s.Add(wgs84[1]);
+
                     var gcj02 = Coordtransform.Bd09togcj02(lng, lat);
-                    GCJ02_LngLat = $"{gcj02[0]},{gcj02[1]}";
+                    gcj02s.Add(gcj02[0]);
+                    gcj02s.Add(gcj02[1]);
+
                 }
             }
         }
+        WGS84_LngLat = string.Join(',', wgs84s);
+        GCJ02_LngLat = string.Join(',', gcj02s);
+        BD09_LngLat = string.Join(',', bd09s);
     }
 
     [JSInvokable]
@@ -122,6 +140,21 @@
             return;
         }
         string[] arr = GCJ02_LngLat.Split(',', StringSplitOptions.RemoveEmptyEntries);
-        await JsRuntime.InvokeVoidAsync("createMarker", arr);
+        if (arr.Length == 2)
+        {
+            await JsRuntime.InvokeVoidAsync("createMarker", arr);
+        }
+        else if(arr.Length > 2)
+        {
+            List<List<string>> latlngs = new List<List<string>>();
+            for (var i = 0; i < arr.Length; i = i + 2)
+            {
+                List<string> latlng = new List<string>();
+                latlng.Add(arr[i]);
+                latlng.Add(arr[i+1]);
+                latlngs.Add(latlng);
+            }
+            await JsRuntime.InvokeVoidAsync("createMarkers", latlngs);
+        }
     }
 }

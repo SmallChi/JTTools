@@ -32,7 +32,7 @@ function createMarkers(arr) {
                 imageSize: new AMap.Size(36, 36),
             })
         });
-        if ((arr.length - 1) == i) {
+        if ((arr.length - 1) === i) {
             lastMarker = marker;
         }
         window.map.add(marker);

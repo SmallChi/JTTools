@@ -7,16 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.8.0" />
+    <PackageReference Include="AntDesign" Version="0.8.1" />
     <PackageReference Include="JT1078" Version="1.1.0" />
-    <PackageReference Include="JT808" Version="2.3.9" />
-    <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.3.6" />
-    <PackageReference Include="JT808.Protocol.Extensions.JTActiveSafety" Version="1.1.6" />
-    <PackageReference Include="JT808.Protocol.Extensions.Streamax" Version="0.2.6" />
+    <PackageReference Include="JT808" Version="2.4.0" />
+    <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.3.7" />
+    <PackageReference Include="JT808.Protocol.Extensions.JTActiveSafety" Version="1.1.7" />
+    <PackageReference Include="JT808.Protocol.Extensions.Streamax" Version="0.2.7" />
     <PackageReference Include="JT809" Version="2.2.0" />
     <PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="2.2.0" />
     <PackageReference Include="JTActiveSafety" Version="1.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.2" />
   </ItemGroup>

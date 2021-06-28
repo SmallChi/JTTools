@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace JTTools.Configs
 {
-    public class JT808_JTActiveSafety_Config : GlobalConfigBase
+    public class JT808_YueBiao_Config : GlobalConfigBase
     {
-        public override string ConfigId { get; protected set; } = "JT808_JTActiveSafety_Config";
+        public override string ConfigId { get; protected set; } = "JT808_YueBiao_Config";
     }
 }

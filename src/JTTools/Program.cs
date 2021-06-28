@@ -1,7 +1,8 @@
 using System;
 using JT808.Protocol;
 using JT808.Protocol.Extensions.JT1078;
-using JT808.Protocol.Extensions.JTActiveSafety;
+using JT808.Protocol.Extensions.SuBiao;
+using JT808.Protocol.Extensions.YueBiao;
 using JT809.Protocol;
 using JT809.Protocol.Extensions.JT1078;
 using Microsoft.AspNetCore.Hosting;
@@ -71,8 +72,10 @@ namespace JTTools
                 .ConfigureServices(services =>
                 {
                     services.AddJT808Configure();
-                    services.AddJT808Configure(new JT808_JTActiveSafety_Config())
-                            .AddJTActiveSafetyConfigure();
+                    services.AddJT808Configure(new JT808_SuBiao_Config())
+                            .AddSuBiaoConfigure();
+                    services.AddJT808Configure(new JT808_YueBiao_Config())
+                            .AddYueBiaoConfigure();
                     services.AddJT808Configure(new JT808_JT1078_Config())
                             .AddJT1078Configure();
                     services.AddJT809Configure(new JT809_2011_Config())

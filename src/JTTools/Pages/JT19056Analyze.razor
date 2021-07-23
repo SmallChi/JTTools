@@ -6,7 +6,7 @@
 @inject IJT808Config  Config
 
 
-<Select @bind-Value="@wayType" TItemValue="string" TItem="string" Style="width:100px" OnSelectedItemChanged="@OnSelectWayType">
+<Select @bind-Value="@wayType" DefaultValue="@("up")" TItemValue="string" TItem="string" Style="width:100px" OnSelectedItemChanged="@OnSelectWayType">
     <SelectOptions>
         <SelectOption TItemValue="string" TItem="string" Value="@("up")"  Label="上行"/>
         <SelectOption TItemValue="string" TItem="string" Value="@("down")" Label="下行"/>

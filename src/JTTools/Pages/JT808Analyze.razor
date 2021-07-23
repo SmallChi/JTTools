@@ -15,7 +15,7 @@
 
 <Tag Color="blue">如有分包，请换行区分。</Tag>
 <br />
-<Select TItemValue="string" TItem="string" @bind-Value="@protocolType" Style="width:260px" OnSelectedItemChanged="OnSelectProtocolType">
+<Select TItemValue="string" TItem="string" DefaultValue="@("JT808")" @bind-Value="@protocolType" Style="width:260px" OnSelectedItemChanged="OnSelectProtocolType">
     <SelectOptions>
         <SelectOption TItemValue="string" TItem="string" Label="国标(通过包自动识别版本号)" Value="@("JT808")" />
         <SelectOption TItemValue="string" TItem="string" Label="国标扩展JT1078" Value="@("JT808_JT1078")" />

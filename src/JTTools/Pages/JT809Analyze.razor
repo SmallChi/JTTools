@@ -13,14 +13,14 @@
 @inject JT809_2011_Config  Config2011
 @inject JT809_2019_Config  Config2019
 
-<Select @bind-Value="@version" TItemValue="string" TItem="string" Style="width:200px" OnSelectedItemChanged="OnSelectVersion">
+<Select @bind-Value="@version" DefaultValue="@("v2011")" TItemValue="string" TItem="string" Style="width:200px" OnSelectedItemChanged="OnSelectVersion">
     <SelectOptions>
         <SelectOption TItemValue="string" TItem="string" Value="@("v2011")" Label="2011版本"/>
         <SelectOption TItemValue="string" TItem="string" Value="@("v2019")" Label="2019版本"/>
     </SelectOptions>
 </Select>
 
-<Select TItemValue="string" TItem="string" @bind-Value="@encryptType" Style="width:200px" OnSelectedItemChanged="OnSelectEncryptType">
+<Select TItemValue="string" TItem="string" DefaultValue="@("none")" @bind-Value="@encryptType" Style="width:200px" OnSelectedItemChanged="OnSelectEncryptType">
     <SelectOptions>
         <SelectOption TItemValue="string" TItem="string" Value="@("none")" Label="未加密" />
         <SelectOption TItemValue="string" TItem="string" Value="@("encrypt")" Label="加密" />

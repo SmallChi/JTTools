@@ -14,7 +14,7 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
 
-<Select DefaultValue="@MsgType" TItemValue="string" TItem="string" @bind-Value="@MsgType" Style="width:200px" OnSelectedItemChanged="OnSelectMsgType">
+<Select DefaultValue="@("0x9101")" TItemValue="string" TItem="string" @bind-Value="@MsgType" Style="width:200px" OnSelectedItemChanged="OnSelectMsgType">
     <SelectOptions>
         <SelectOption TItemValue="string" TItem="string" Value="@("0x9101")" Label="808_打开看视频" />
         <SelectOption TItemValue="string" TItem="string" Value="@("0x9102")" Label="808_关闭看视频"/>

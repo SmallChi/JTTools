@@ -13,7 +13,7 @@
 @inject JT808_Streamax_Config  jT808_Streamax_Config
 @using OneOf;
 
-<Tag Color="blue">如有分包，请换行区分。</Tag>
+<Tag Color="blue">如有分包或多包，请换行(回车)区分。</Tag>
 <br />
 <Select TItemValue="string" TItem="string" DefaultValue="@("JT808")" @bind-Value="@protocolType" Style="width:260px" OnSelectedItemChanged="OnSelectProtocolType">
     <SelectOptions>
@@ -28,41 +28,58 @@
 
 <Button Type="primary" @onclick="Query">分析</Button>
 
-<TextArea AllowClear="true" MinRows="10" MaxRows="15" @bind-Value="@HexData" OnPressEnter="OnAreaTextPressEnter" />
-
+<TextArea AllowClear="true" Rows="4" @bind-Value="@HexData" OnPressEnter="OnAreaTextPressEnter" />
+<br />
 @if (isOpen)
 {
     <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
 }
 
-<div style="padding: 26px; min-height: 350px">
+<div style="min-height: 350px">
     @if (JT808HeaderPackages != null)
     {
-        <AntList DataSource="@JT808HeaderPackages" TItem="JT808HeaderPackage">
-            <ListItem>
-                <ListItemMeta>
-                    <TitleTemplate>
-                        <Tag Color="orange">终端号：@context.Header.TerminalPhoneNo</Tag>
-                        <Tag Color="volcano">消息Id：@("0x" + context.Header.MsgId.ToString("X2"))</Tag>
-                        <Tag Color="purple">消息流水号：@context.Header.MsgNum</Tag>
-                        <Tag Color="pink">设备版本号：@(((JT808.Protocol.Enums.JT808Version)context.Header.ProtocolVersion).ToString())</Tag>
-                        <Tag Color="red">总分包数：@context.Header.PackgeCount</Tag>
-                        <Tag Color="blue">当前页：@context.Header.PackageIndex</Tag>
-                        <Tag Color="cyan">数据体长度：@context.Header.MessageBodyProperty.DataLength</Tag>
-                        <Tag Color="geekblue">是否加密：@context.Header.MessageBodyProperty.Encrypt.ToString()</Tag>
-                    </TitleTemplate>
-                    <DescriptionTemplate>
-                        <pre>
-                        @context.Bodies.ToHexString()
-                    </pre>
-                    </DescriptionTemplate>
-                </ListItemMeta>
-            </ListItem>
-        </AntList>
+    <Collapse DefaultActiveKey="@(new[]{"1"})">
+        @for (int i = 0; i < JT808HeaderPackages.Count; i++)
+        {
+            var item = JT808HeaderPackages[i];
+            var index = i + 1;
+            var header = $"序号:{index}";
+            <Panel Key="@index.ToString()">
+                <HeaderTemplate>
+                    @header
+                    <Tag Color="orange">终端号：@item.Header.TerminalPhoneNo</Tag>
+                    <Tag Color="volcano">消息Id：@("0x" + item.Header.MsgId.ToString("X2"))</Tag>
+                    <Tag Color="purple">消息流水号：@item.Header.MsgNum</Tag>
+                    <Tag Color="pink">设备版本号：@(((JT808.Protocol.Enums.JT808Version)item.Header.ProtocolVersion).ToString())</Tag>
+                    <Tag Color="red">总分包数：@item.Header.PackgeCount</Tag>
+                    <Tag Color="blue">当前页：@item.Header.PackageIndex</Tag>
+                    <Tag Color="cyan">数据体长度：@item.Header.MessageBodyProperty.DataLength</Tag>
+                    <Tag Color="geekblue">是否加密：@item.Header.MessageBodyProperty.Encrypt.ToString()</Tag>
+                </HeaderTemplate>
+                <ChildContent>
+                    <pre>@item.Bodies.ToHexString()</pre>
+                </ChildContent>
+            </Panel>
+        }
+        <Panel Header="合并数据体" Key="99">
+            <pre>@Json</pre>
+        </Panel>
+    </Collapse>
     }
-    <pre>
-       @Json
-    </pre>
+    @if (JT808Packages != null)
+    {
+        <Collapse DefaultActiveKey="@(new[]{"1"})">
+            @for (int i = 0; i < JT808Packages.Count; i++)
+            {
+                var item = JT808Packages[i];
+                var index = i + 1;
+                var header = $"序号:{index}";
+                <Panel Header="@header" Key="@index.ToString()">
+                    <pre>@item.Json</pre>
+                </Panel>
+            }
+        </Collapse>
+    }
 </div>
 
 @code {
@@ -78,13 +95,18 @@
     private JT808Serializer JT1078Serializer;
 
     string protocolType = "JT808";
-    private List<JT808HeaderPackage> JT808HeaderPackages;
-    private string HexData = HexDataTmp;
-    private static string HexDataTmp = "7E 02 00 00 26 12 34 56 78 90 12 00 7D 02 00 00 00 01 00 00 00 02 00 BA 7F 0E 07 E4 F1 1C 00 28 00 3C 00 00 18 10 15 10 10 10 01 04 00 00 00 64 02 02 00 7D 01 13 7E";
-    private static string Hex2013ForceTmp = "7e0102400c01003000068109024a3130303330303030363831857e";
-    private static string HexSubDataTmp = "7E120523A204066657506200EB00020001015A00000023012012191042052012191050190000000000000000000101064446D10120121910221720121910420500000000000000000001010F1FE8EB0120121910023420121910221700000000000000000001010F182D5C0120121909471120121910015500000000000000000001010B38F2430120121909274020121909471100000000000000000001010F056DB40120121909080920121909274000000000000000000001010F0724380120121908483820121909080900000000000000000001010F0530AB0120121908290720121908483800000000000000000001010F05896C0120121908093720121908290700000000000000000001010F02CD3B0120121907500520121908093700000000000000000001010F056FEF0120121907303420121907500500000000000000000001010F043C3401201219072541201219073034000000000000000000010103C26C5F0120121907061120121907254100000000000000000001010F03F0C10120121906464220121907061100000000000000000001010F02F6330120121906271220121906464200000000000000000001010F02E43B0120121906074220121906271200000000000000000001010F033D670120121905481120121906074200000000000000000001010F088BF20120121905284120121905481100000000000000000001010F03F9FE0120121905091020121905284100000000000000000001010F05B1040120121904494020121905091000000000000000000001010F02B3540120121904301020121904494000000000000000000001010F0417B00120121904103920121904301000000000000000000001010F0538970120121903510820121904103900000000000000000001010F054E9E0120121903313820121903510800000000000000000001010F016ECB0120121903120820121903313800000000000000000001010F0333C00120121902523820121903120700000000000000000001010F029D230120121902330720121902523700000000000000000001010F0354E40120121902133720121902330700000000000000000001010F03303D0120121901540720121902133700000000000000000001010F04981E0120121901343720121901540700000000000000000001010F02AD940120121901150820121901343700000000000000000001010EFFD7CF0120121900553720121901150800000000000000000001010F07D9330120121900360720121900553700000000000000000001010F040E740C7E\n7E1205203804066657506200EC000200020120121900163320121900360700000000000000000001010F0CE4CD0120121900002220121900163300000000000000000001010C6F9E7B5D7E";
 
-    private string Json;
+    private List<JT808HeaderPackage> JT808HeaderPackages;
+
+    private List<JT808PackageInfo> JT808Packages;
+
+    private string HexData = HexDataTmp;
+
+    private static string HexDataTmp = "7E 02 00 00 26 12 34 56 78 90 12 00 7D 02 00 00 00 01 00 00 00 02 00 BA 7F 0E 07 E4 F1 1C 00 28 00 3C 00 00 18 10 15 10 10 10 01 04 00 00 00 64 02 02 00 7D 01 13 7E";
+
+    private static string Hex2013ForceTmp = "7e0102400c01003000068109024a3130303330303030363831857e";
+
+    private static string HexSubDataTmp = "7E120523A204066657506200EB00020001015A00000023012012191042052012191050190000000000000000000101064446D10120121910221720121910420500000000000000000001010F1FE8EB0120121910023420121910221700000000000000000001010F182D5C0120121909471120121910015500000000000000000001010B38F2430120121909274020121909471100000000000000000001010F056DB40120121909080920121909274000000000000000000001010F0724380120121908483820121909080900000000000000000001010F0530AB0120121908290720121908483800000000000000000001010F05896C0120121908093720121908290700000000000000000001010F02CD3B0120121907500520121908093700000000000000000001010F056FEF0120121907303420121907500500000000000000000001010F043C3401201219072541201219073034000000000000000000010103C26C5F0120121907061120121907254100000000000000000001010F03F0C10120121906464220121907061100000000000000000001010F02F6330120121906271220121906464200000000000000000001010F02E43B0120121906074220121906271200000000000000000001010F033D670120121905481120121906074200000000000000000001010F088BF20120121905284120121905481100000000000000000001010F03F9FE0120121905091020121905284100000000000000000001010F05B1040120121904494020121905091000000000000000000001010F02B3540120121904301020121904494000000000000000000001010F0417B00120121904103920121904301000000000000000000001010F0538970120121903510820121904103900000000000000000001010F054E9E0120121903313820121903510800000000000000000001010F016ECB0120121903120820121903313800000000000000000001010F0333C00120121902523820121903120700000000000000000001010F029D230120121902330720121902523700000000000000000001010F0354E40120121902133720121902330700000000000000000001010F03303D0120121901540720121902133700000000000000000001010F04981E0120121901343720121901540700000000000000000001010F02AD940120121901150820121901343700000000000000000001010EFFD7CF0120121900553720121901150800000000000000000001010F07D9330120121900360720121900553700000000000000000001010F040E740C7E\n7E1205203804066657506200EC000200020120121900163320121900360700000000000000000001010F0CE4CD0120121900002220121900163300000000000000000001010C6F9E7B5D7E";
 
     private string ErrerMessage;
 
@@ -101,7 +123,7 @@
         {
             HexData = HexSubDataTmp;
         }
-        else if("JT2013Force"== protocolType)
+        else if ("JT2013Force" == protocolType)
         {
             HexData = Hex2013ForceTmp;
         }
@@ -110,7 +132,6 @@
             HexData = HexDataTmp;
         }
         protocolType = value;
-        //StateHasChanged();
     }
 
     private void OnAreaTextPressEnter(KeyboardEventArgs eventArgs)
@@ -126,92 +147,108 @@
         JTRM_Serializer = jT808_Streamax_Config.GetSerializer();
     }
 
+    string Json = "";
+
     private void Query()
     {
         try
         {
             isOpen = false;
             JT808HeaderPackages = null;
+            JT808Packages = null;
+            Json = "";
             var hexs = HexData.Split("\n", StringSplitOptions.RemoveEmptyEntries);
-            if (hexs.Length == 1)
-            {
-                var data = HexData.ToHexBytes();
-                switch (protocolType)
-                {
-                    case "JT808":
-                        Json = Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
-                        break;
-                    case "JT808_JT1078":
-                        Json = JT1078Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
-                        break;
-                    case "JT808_SuBiao":
-                        Json = JTSuBiao_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
-                        break;
-                    case "JT808_JTRM":
-                        Json = JTRM_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
-                        break;
-                    case "JT2013Force":
-                        Json = Serializer.Analyze(data, JT808.Protocol.Enums.JT808Version.JTT2013Force ,options: JTJsonWriterOptions.Instance);
-                        break;
-                }
-            }
-            else if (hexs.Length > 1)
+            if (hexs.Length > 0)
             {
                 SortedList<int, JT808HeaderPackage> sort = new SortedList<int, JT808HeaderPackage>();
+                JT808Packages = new List<JT808PackageInfo>();
                 var total = 0;
                 for (var i = 0; i < hexs.Length; i++)
                 {
                     var data = hexs[i].ToHexBytes();
                     var headerPackage = Serializer.HeaderDeserialize(data);
-                    total = headerPackage.Header.PackgeCount;
-                    sort.Add(headerPackage.Header.PackageIndex, headerPackage);
-                }
-                if (sort.Count == total)
-                {
-                    List<byte> bodies = new List<byte>();
-                    ushort msgid = 0;
-                    foreach (var item in sort)
+                    //处理分包
+                    if (headerPackage.Header.MessageBodyProperty.IsPackage)
                     {
-                        msgid = item.Value.Header.MsgId;
-                        bodies = bodies.Concat(item.Value.Bodies).ToList();
+                        total = headerPackage.Header.PackgeCount;
+                        sort.Add(headerPackage.Header.PackageIndex, headerPackage);
                     }
-                    JT808HeaderPackages = sort.Select(s => s.Value).ToList();
-                    switch (protocolType)
+                    else
                     {
-                        case "JT808":
-                            Json = Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
-                            break;
-                        case "JT808_JT1078":
-                            Json = JT1078Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
-                            break;
-                        case "JT808_SuBiao":
-                            Json = JTSuBiao_Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
-                            break;
-                        case "JT808_JTRM":
-                            Json = JTRM_Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
-                            break;
-                        case "JT2013Force":
-                            Json = Serializer.Analyze(msgid, bodies.ToArray(), JT808.Protocol.Enums.JT808Version.JTT2013Force, options: JTJsonWriterOptions.Instance);
-                            break;
+                        switch (protocolType)
+                        {
+                            case "JT808":
+                                JT808Packages.Add(new JT808PackageInfo { Order = i, Json = Serializer.Analyze(data, options: JTJsonWriterOptions.Instance) });
+                                break;
+                            case "JT808_JT1078":
+                                JT808Packages.Add(new JT808PackageInfo { Order = i, Json = JT1078Serializer.Analyze(data, options: JTJsonWriterOptions.Instance) });
+                                break;
+                            case "JT808_SuBiao":
+                                JT808Packages.Add(new JT808PackageInfo { Order = i, Json = JTSuBiao_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance) });
+                                break;
+                            case "JT808_JTRM":
+                                JT808Packages.Add(new JT808PackageInfo { Order = i, Json = JTRM_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance) });
+                                break;
+                            case "JT2013Force":
+                                JT808Packages.Add(new JT808PackageInfo { Order = i, Json = Serializer.Analyze(data, JT808.Protocol.Enums.JT808Version.JTT2013Force, options: JTJsonWriterOptions.Instance) });
+                                break;
+                        }
                     }
                 }
-                else
+                if (sort.Count > 0)
                 {
-                    Json = "包数不匹配,请确认清楚！";
+                    if (sort.Count == total)
+                    {
+                        List<byte> bodies = new List<byte>();
+                        ushort msgid = 0;
+                        foreach (var item in sort)
+                        {
+                            msgid = item.Value.Header.MsgId;
+                            bodies = bodies.Concat(item.Value.Bodies).ToList();
+                        }
+                        JT808HeaderPackages = sort.Select(s => s.Value).ToList();
+                        switch (protocolType)
+                        {
+                            case "JT808":
+                                Json = Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT808_JT1078":
+                                Json = JT1078Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT808_SuBiao":
+                                Json = JTSuBiao_Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT808_JTRM":
+                                Json = JTRM_Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT2013Force":
+                                Json = Serializer.Analyze(msgid, bodies.ToArray(), JT808.Protocol.Enums.JT808Version.JTT2013Force, options: JTJsonWriterOptions.Instance);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Json = "包数不匹配,请确认清楚！";
+                    }
                 }
             }
         }
         catch (JT808Exception ex)
         {
             isOpen = !isOpen;
-            Json = "";
             ErrerMessage = ex.Message;
         }
         catch (Exception ex)
         {
             isOpen = !isOpen;
-            Json = "";
             ErrerMessage = ex.StackTrace;
         }
+    }
+
+    public class JT808PackageInfo
+    {
+        public int Order { get; set; }
+
+        public string Json { get; set; }
     }
 }

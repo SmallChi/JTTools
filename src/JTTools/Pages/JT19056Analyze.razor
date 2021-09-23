@@ -20,7 +20,7 @@
     <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
 }
 <div class="right">
-    <TextArea AllowClear="true" AutoSize="true" MinRows="10" MaxRows="30" @bind-Value="@HexData" />
+    <TextArea AllowClear="true" Rows="4" @bind-Value="@HexData" />
     <pre>
          @Json
     </pre>

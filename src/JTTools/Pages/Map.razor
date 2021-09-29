@@ -7,47 +7,58 @@
 @using System.Text.Json;
 @inject IJSRuntime JsRuntime
 
-<RadioGroup @bind-Value="coordinateType" Size="large" TValue="string"  OnChange="@OnSelectedCoordinateTypeChanged">
-    <Radio RadioButton Value="@("WGS84")">WGS84</Radio>
-    <Radio RadioButton Value="@("GCJ02")">GCJ02</Radio>
-    <Radio RadioButton Value="@("BD09")">BD09</Radio>
-</RadioGroup>
-<br />
-<AntDesign.Input @bind-Value="LngLat" Size="large" AllowClear>
-    <AddOnBefore>经纬度</AddOnBefore>
-</AntDesign.Input>
-<Button Type="primary" @onclick="Convert" Size="large">
-    转换
-</Button>
-<Button Type="primary" @onclick="CreateMarker" Size="large">
-    创建标注点
-</Button>
-<br />
-<AntDesign.Input @bind-Value="WGS84_LngLat" style="width: 450px;" Size="large" readonly>
-    <AddOnBefore>WGS84坐标系</AddOnBefore>
-</AntDesign.Input>
-<br />
-<AntDesign.Input @bind-Value="GCJ02_LngLat" style="width: 450px;" Size="large" readonly>
-    <AddOnBefore>GCJ02坐标系</AddOnBefore>
-</AntDesign.Input>
-<br />
-<AntDesign.Input @bind-Value="BD09_LngLat" style="width: 450px;" Size="large" readonly>
-    <AddOnBefore>BD09坐标系</AddOnBefore>
-</AntDesign.Input>
-<br />
-@if (isOpen)
-{
-    <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
-    <br />
-}
-
-<div id="mapContainer" style="width: 1024px; height: 768px; "></div>
+<AntDesign.Space Direction="DirectionVHType.Vertical" Style="width:100%">
+    <AntDesign.SpaceItem>
+        <RadioGroup @bind-Value="coordinateType" Size="large" TValue="string" OnChange="@OnSelectedCoordinateTypeChanged">
+            <Radio RadioButton Value="@("WGS84")">WGS84</Radio>
+            <Radio RadioButton Value="@("GCJ02")">GCJ02</Radio>
+            <Radio RadioButton Value="@("BD09")">BD09</Radio>
+        </RadioGroup>
+    </AntDesign.SpaceItem>
+    <AntDesign.SpaceItem>
+        <AntDesign.Input @bind-Value="LngLat" Size="large" AllowClear>
+            <AddOnBefore>经纬度</AddOnBefore>
+        </AntDesign.Input>
+    </AntDesign.SpaceItem>
+    <AntDesign.SpaceItem>
+        <Button Type="primary" @onclick="Convert" Size="large">
+            转换
+        </Button>
+        <Button Type="primary" @onclick="CreateMarker" Size="large">
+            创建标注点
+        </Button>
+    </AntDesign.SpaceItem>
+    <AntDesign.SpaceItem>
+        <AntDesign.Input @bind-Value="WGS84_LngLat" Size="large" readonly>
+            <AddOnBefore>WGS84坐标系</AddOnBefore>
+        </AntDesign.Input>
+    </AntDesign.SpaceItem>
+    <AntDesign.SpaceItem>
+        <AntDesign.Input @bind-Value="GCJ02_LngLat" Size="large" readonly>
+            <AddOnBefore>GCJ02坐标系</AddOnBefore>
+        </AntDesign.Input>
+    </AntDesign.SpaceItem>
+    <AntDesign.SpaceItem>
+        <AntDesign.Input @bind-Value="BD09_LngLat" Size="large" readonly>
+            <AddOnBefore>BD09坐标系</AddOnBefore>
+        </AntDesign.Input>
+    </AntDesign.SpaceItem>
+    @if (isOpen)
+    {
+        <AntDesign.SpaceItem>
+            <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
+        </AntDesign.SpaceItem>
+    }
+    <AntDesign.SpaceItem>
+        <div id="mapContainer" style="width: 100%; height: 768px; "></div>
+    </AntDesign.SpaceItem>
+</AntDesign.Space>
 
 @code {
 
     string coordinateType = "GCJ02";
 
-    private string LngLat= "113.87132,22.568962";
+    private string LngLat = "113.87132,22.568962";
 
     private string WGS84_LngLat;
 
@@ -76,11 +87,11 @@
         {
             return;
         }
-        string[] arr = LngLat.Split(new string[]{ ",", "，", "|", ":",";","；" }, StringSplitOptions.RemoveEmptyEntries);
+        string[] arr = LngLat.Split(new string[] { ",", "，", "|", ":", ";", "；" }, StringSplitOptions.RemoveEmptyEntries);
         List<double> wgs84s = new List<double>();
         List<double> gcj02s = new List<double>();
         List<double> bd09s = new List<double>();
-        for (var i=0;i< arr.Length; i=i+2)
+        for (var i = 0; i < arr.Length; i = i + 2)
         {
             try
             {
@@ -124,7 +135,7 @@
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 isOpen = true;
                 ErrerMessage = ex.Message;
@@ -154,14 +165,14 @@
         {
             await JsRuntime.InvokeVoidAsync("createMarker", arr);
         }
-        else if(arr.Length > 2)
+        else if (arr.Length > 2)
         {
             List<List<string>> latlngs = new List<List<string>>();
             for (var i = 0; i < arr.Length; i = i + 2)
             {
                 List<string> latlng = new List<string>();
                 latlng.Add(arr[i]);
-                latlng.Add(arr[i+1]);
+                latlng.Add(arr[i + 1]);
                 latlngs.Add(latlng);
             }
             await JsRuntime.InvokeVoidAsync("createMarkers", latlngs);

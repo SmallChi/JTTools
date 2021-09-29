@@ -9,11 +9,11 @@
   <ItemGroup>
     <PackageReference Include="AntDesign" Version="0.10.0" />
     <PackageReference Include="JT1078" Version="1.1.0" />
-    <PackageReference Include="JT808" Version="2.4.3" />
-    <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.4.3" />
+    <PackageReference Include="JT808" Version="2.4.4" />
+    <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.4.4" />
     <PackageReference Include="JT808.Protocol.Extensions.Streamax" Version="0.3.0" />
-    <PackageReference Include="JT808.Protocol.Extensions.SuBiao" Version="2.4.3" />
-    <PackageReference Include="JT808.Protocol.Extensions.YueBiao" Version="2.4.3" />
+    <PackageReference Include="JT808.Protocol.Extensions.SuBiao" Version="2.4.4" />
+    <PackageReference Include="JT808.Protocol.Extensions.YueBiao" Version="2.4.4" />
     <PackageReference Include="JT809" Version="2.2.0" />
     <PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="2.2.0" />
     <PackageReference Include="JTActiveSafety" Version="1.0.1" />

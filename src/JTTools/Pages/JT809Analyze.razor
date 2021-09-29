@@ -13,34 +13,44 @@
 @inject JT809_2011_Config  Config2011
 @inject JT809_2019_Config  Config2019
 
-<Select @bind-Value="@version" DefaultValue="@("v2011")" TItemValue="string" TItem="string" Style="width:200px" OnSelectedItemChanged="OnSelectVersion">
-    <SelectOptions>
-        <SelectOption TItemValue="string" TItem="string" Value="@("v2011")" Label="2011版本"/>
-        <SelectOption TItemValue="string" TItem="string" Value="@("v2019")" Label="2019版本"/>
-    </SelectOptions>
-</Select>
+<Space Direction="DirectionVHType.Vertical" Style="width:100%">
+    <SpaceItem>
+        <Select @bind-Value="@version" DefaultValue="@("v2011")" TItemValue="string" TItem="string" OnSelectedItemChanged="OnSelectVersion">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value="@("v2011")" Label="2011版本" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("v2019")" Label="2019版本" />
+            </SelectOptions>
+        </Select>
+    </SpaceItem>
+    <SpaceItem>
+        <Select TItemValue="string" TItem="string" DefaultValue="@("none")" @bind-Value="@encryptType" OnSelectedItemChanged="OnSelectEncryptType">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value="@("none")" Label="未加密" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("encrypt")" Label="加密" />
+            </SelectOptions>
+        </Select>
+    </SpaceItem>
+    @if (encryptType == "encrypt")
+    {
+        <SpaceItem>
+            <AntDesign.Input @bind-Value="@M1">
+                <AddOnBefore>M1</AddOnBefore>
+            </AntDesign.Input>
+            <AntDesign.Input @bind-Value="@IA1">
+                <AddOnBefore>IA1</AddOnBefore>
+            </AntDesign.Input>
+            <AntDesign.Input @bind-Value="@IC1">
+                <AddOnBefore>IC1</AddOnBefore>
+            </AntDesign.Input>
+        </SpaceItem>
+    }
+    <SpaceItem>
+        <Button Type="@ButtonType.Primary" @onclick="Query">分析</Button>
+    </SpaceItem>
+</Space>
 
-<Select TItemValue="string" TItem="string" DefaultValue="@("none")" @bind-Value="@encryptType" Style="width:200px" OnSelectedItemChanged="OnSelectEncryptType">
-    <SelectOptions>
-        <SelectOption TItemValue="string" TItem="string" Value="@("none")" Label="未加密" />
-        <SelectOption TItemValue="string" TItem="string" Value="@("encrypt")" Label="加密" />
-    </SelectOptions>
-</Select>
 
-@if (encryptType == "encrypt")
-{
-    <AntDesign.Input @bind-Value="@M1">
-        <AddOnBefore>M1</AddOnBefore>
-    </AntDesign.Input>
-    <AntDesign.Input @bind-Value="@IA1">
-        <AddOnBefore>IA1</AddOnBefore>
-    </AntDesign.Input>
-    <AntDesign.Input @bind-Value="@IC1">
-        <AddOnBefore>IC1</AddOnBefore>
-    </AntDesign.Input>
-}
 
-<Button Type="primary" @onclick="Query">分析</Button>
 
 @if (isOpen)
 {

@@ -13,74 +13,83 @@
 @inject JT808_Streamax_Config  jT808_Streamax_Config
 @using OneOf;
 
-<Tag Color="blue">如有分包或多包，请换行(回车)区分。</Tag>
-<br />
-<Select TItemValue="string" TItem="string" DefaultValue="@("JT808")" @bind-Value="@protocolType" Style="width:260px" OnSelectedItemChanged="OnSelectProtocolType">
-    <SelectOptions>
-        <SelectOption TItemValue="string" TItem="string" Label="国标(通过包自动识别版本号)" Value="@("JT808")" />
-        <SelectOption TItemValue="string" TItem="string" Label="国标扩展JT1078" Value="@("JT808_JT1078")" />
-        <SelectOption TItemValue="string" TItem="string" Label="国标扩展主动安全(苏标)" Value="@("JT808_SuBiao")" />
-        <SelectOption TItemValue="string" TItem="string" Label="国标扩展主动安全(粤标)" Value="@("JT808_YueBiao")" />
-        <SelectOption TItemValue="string" TItem="string" Label="公交扩展协议(锐明)" Value="@("JT808_JTRM")" />
-        <SelectOption TItemValue="string" TItem="string" Label="国标(强制使用2013版本解析)" Value="@("JT2013Force")" />
-    </SelectOptions>
-</Select>
-
-<Button Type="primary" @onclick="Query">分析</Button>
-
-<TextArea AllowClear="true" Rows="4" @bind-Value="@HexData" OnPressEnter="OnAreaTextPressEnter" />
-<br />
-@if (isOpen)
-{
-    <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
-}
-
-<div style="min-height: 350px">
-    @if (JT808HeaderPackages != null)
+<Space Direction="DirectionVHType.Vertical" Style="width:100%">
+    <SpaceItem>
+        <Alert Type="@AlertType.Warning" ShowIcon="true" Closable Message="小技巧" Description="如有分包或多包，请换行(回车)区分。"/>
+    </SpaceItem>
+    <SpaceItem>
+        <Select TItemValue="string" TItem="string" DefaultValue="@("JT808")" @bind-Value="@protocolType" OnSelectedItemChanged="OnSelectProtocolType">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Label="国标(通过包自动识别版本号)" Value="@("JT808")" />
+                <SelectOption TItemValue="string" TItem="string" Label="国标扩展JT1078" Value="@("JT808_JT1078")" />
+                <SelectOption TItemValue="string" TItem="string" Label="国标扩展主动安全(苏标)" Value="@("JT808_SuBiao")" />
+                <SelectOption TItemValue="string" TItem="string" Label="国标扩展主动安全(粤标)" Value="@("JT808_YueBiao")" />
+                <SelectOption TItemValue="string" TItem="string" Label="公交扩展协议(锐明)" Value="@("JT808_JTRM")" />
+                <SelectOption TItemValue="string" TItem="string" Label="国标(强制使用2013版本解析)" Value="@("JT2013Force")" />
+            </SelectOptions>
+        </Select>
+    </SpaceItem>
+    <SpaceItem>
+        <TextArea AllowClear="true" Rows="4" @bind-Value="@HexData" OnPressEnter="OnAreaTextPressEnter" />
+    </SpaceItem>
+    <SpaceItem>
+        <Button Type="primary" @onclick="Query">分析</Button>
+    </SpaceItem>
+    @if (isOpen)
     {
-    <Collapse DefaultActiveKey="@(new[]{"1"})">
-        @for (int i = 0; i < JT808HeaderPackages.Count; i++)
-        {
-            var item = JT808HeaderPackages[i];
-            var index = i + 1;
-            var header = $"序号:{index}";
-            <Panel Key="@index.ToString()">
-                <HeaderTemplate>
-                    @header
-                    <Tag Color="orange">终端号：@item.Header.TerminalPhoneNo</Tag>
-                    <Tag Color="volcano">消息Id：@("0x" + item.Header.MsgId.ToString("X2"))</Tag>
-                    <Tag Color="purple">消息流水号：@item.Header.MsgNum</Tag>
-                    <Tag Color="pink">设备版本号：@(((JT808.Protocol.Enums.JT808Version)item.Header.ProtocolVersion).ToString())</Tag>
-                    <Tag Color="red">总分包数：@item.Header.PackgeCount</Tag>
-                    <Tag Color="blue">当前页：@item.Header.PackageIndex</Tag>
-                    <Tag Color="cyan">数据体长度：@item.Header.MessageBodyProperty.DataLength</Tag>
-                    <Tag Color="geekblue">是否加密：@item.Header.MessageBodyProperty.Encrypt.ToString()</Tag>
-                </HeaderTemplate>
-                <ChildContent>
-                    <pre>@item.Bodies.ToHexString()</pre>
-                </ChildContent>
-            </Panel>
-        }
-        <Panel Header="合并数据体" Key="9999">
-            <pre>@Json</pre>
-        </Panel>
-    </Collapse>
+        <SpaceItem>
+            <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
+        </SpaceItem>
     }
-    @if (JT808Packages != null)
-    {
-        <Collapse DefaultActiveKey="@(new[]{"1"})">
-            @for (int i = 0; i < JT808Packages.Count; i++)
+    <SpaceItem>
+        <div style="min-height: 350px">
+            @if (JT808HeaderPackages != null)
             {
-                var item = JT808Packages[i];
-                var index = i + 1;
-                var header = $"序号:{index}";
-                <Panel Header="@header" Key="@index.ToString()">
-                    <pre>@item.Json</pre>
-                </Panel>
+                <Collapse DefaultActiveKey="@(new[]{"1"})">
+                    @for (int i = 0; i < JT808HeaderPackages.Count; i++)
+                    {
+                        var item = JT808HeaderPackages[i];
+                        var index = i + 1;
+                        var header = $"序号:{index}";
+                        <Panel Key="@index.ToString()">
+                            <HeaderTemplate>
+                                @header
+                                <Tag Color="orange">终端号：@item.Header.TerminalPhoneNo</Tag>
+                                <Tag Color="volcano">消息Id：@("0x" + item.Header.MsgId.ToString("X2"))</Tag>
+                                <Tag Color="purple">消息流水号：@item.Header.MsgNum</Tag>
+                                <Tag Color="pink">设备版本号：@(((JT808.Protocol.Enums.JT808Version)item.Header.ProtocolVersion).ToString())</Tag>
+                                <Tag Color="red">总分包数：@item.Header.PackgeCount</Tag>
+                                <Tag Color="blue">当前页：@item.Header.PackageIndex</Tag>
+                                <Tag Color="cyan">数据体长度：@item.Header.MessageBodyProperty.DataLength</Tag>
+                                <Tag Color="geekblue">是否加密：@item.Header.MessageBodyProperty.Encrypt.ToString()</Tag>
+                            </HeaderTemplate>
+                            <ChildContent>
+                                <pre>@item.Bodies.ToHexString()</pre>
+                            </ChildContent>
+                        </Panel>
+                    }
+                    <Panel Header="合并数据体" Key="9999">
+                        <pre>@Json</pre>
+                    </Panel>
+                </Collapse>
             }
-        </Collapse>
-    }
-</div>
+            @if (JT808Packages != null)
+            {
+                <Collapse DefaultActiveKey="@(new[]{"1"})">
+                    @for (int i = 0; i < JT808Packages.Count; i++)
+                    {
+                        var item = JT808Packages[i];
+                        var index = i + 1;
+                        var header = $"序号:{index}";
+                        <Panel Header="@header" Key="@index.ToString()">
+                            <pre>@item.Json</pre>
+                        </Panel>
+                    }
+                </Collapse>
+            }
+        </div>
+    </SpaceItem>
+</Space>
 
 @code {
 

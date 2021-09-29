@@ -6,25 +6,33 @@
 @inject IJT808Config  Config
 
 
-<Select @bind-Value="@wayType" DefaultValue="@("up")" TItemValue="string" TItem="string" Style="width:100px" OnSelectedItemChanged="@OnSelectWayType">
-    <SelectOptions>
-        <SelectOption TItemValue="string" TItem="string" Value="@("up")"  Label="上行"/>
-        <SelectOption TItemValue="string" TItem="string" Value="@("down")" Label="下行"/>
-    </SelectOptions>
-</Select>
-
-<Button Type="primary" @onclick="Query">分析</Button>
-
-@if (isOpen)
-{
-    <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
-}
-<div class="right">
-    <TextArea AllowClear="true" Rows="4" @bind-Value="@HexData" />
-    <pre>
-         @Json
-    </pre>
-</div>
+<Space Direction="DirectionVHType.Vertical" Style="width:100%">
+    <SpaceItem>
+        <Select @bind-Value="@wayType" DefaultValue="@("up")" TItemValue="string" TItem="string" OnSelectedItemChanged="@OnSelectWayType">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value="@("up")" Label="上行" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("down")" Label="下行" />
+            </SelectOptions>
+        </Select>
+    </SpaceItem>
+    <SpaceItem>
+        <div class="right">
+            <TextArea AllowClear="true" Rows="4" @bind-Value="@HexData" />
+            <pre>
+                 @Json
+            </pre>
+        </div>
+    </SpaceItem>
+    @if (isOpen)
+    {
+        <SpaceItem>
+            <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
+        </SpaceItem>
+    }
+    <SpaceItem>
+        <Button Type="@ButtonType.Primary" @onclick="Query">分析</Button>
+    </SpaceItem>
+</Space>
 
 @code {
     private JT808CarDVRSerializer Serializer;

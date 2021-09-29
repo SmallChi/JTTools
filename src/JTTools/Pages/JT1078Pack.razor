@@ -14,96 +14,162 @@
 @using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
 
-<Select DefaultValue="@("0x9101")" TItemValue="string" TItem="string" @bind-Value="@MsgType" Style="width:200px" OnSelectedItemChanged="OnSelectMsgType">
-    <SelectOptions>
-        <SelectOption TItemValue="string" TItem="string" Value="@("0x9101")" Label="808_打开看视频" />
-        <SelectOption TItemValue="string" TItem="string" Value="@("0x9102")" Label="808_关闭看视频"/>
-     </SelectOptions>
-</Select>
-
-@if (MsgType == "0x9101")
-{
-    <Form Model="@jT_0X9101_Form">
-        <AntDesign.Input @bind-Value="@context.Sim" Placeholder="123456789012" AllowClear>
-            <AddOnBefore>SIM</AddOnBefore>
-        </AntDesign.Input>
-        <AntDesign.Input @bind-Value="@context.SN" AllowClear>
-            <AddOnBefore>流水号</AddOnBefore>
-        </AntDesign.Input>
-        <AntDesign.Input @bind-Value="@context.IPAddress" Placeholder="127.0.0.1" AllowClear>
-            <AddOnBefore>IP地址</AddOnBefore>
-        </AntDesign.Input>
-        <AntDesign.Input @bind-Value="@context.TcpPort" AllowClear>
-            <AddOnBefore>Tcp端口</AddOnBefore>
-        </AntDesign.Input>
-        <AntDesign.Input @bind-Value="@context.UdpPort" AllowClear>
-            <AddOnBefore>Udp端口</AddOnBefore>
-        </AntDesign.Input>
-        <AntDesign.Input @bind-Value="@context.LogicalChannelNo" AllowClear>
-            <AddOnBefore>通道号</AddOnBefore>
-        </AntDesign.Input>
-        <Select Style="width:150px;" TItemValue="string" TItem="string" DefaultValue="@context.DataType" @bind-Value="@context.DataType">
+<Space Direction="DirectionVHType.Vertical" Style="width:100%">
+    <SpaceItem>
+        <Select DefaultValue="@("0x9101")" TItemValue="string" TItem="string" @bind-Value="@MsgType" OnSelectedItemChanged="OnSelectMsgType">
             <SelectOptions>
-                <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="音视频"/>
-                <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="视频"/>
-                <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="双向对讲"/>
-                <SelectOption TItemValue="string" TItem="string" Value="@("3")" Label="监听"/>
-                <SelectOption TItemValue="string" TItem="string" Value="@("4")" Label="中心广播"/>
-                <SelectOption TItemValue="string" TItem="string" Value="@("5")" Label="透传"/>
+                <SelectOption TItemValue="string" TItem="string" Value="@("0x9101")" Label="808_打开看视频" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("0x9102")" Label="808_关闭看视频" />
             </SelectOptions>
         </Select>
-        <Select Style="width:150px;" TItemValue="string" TItem="string" DefaultValue="@context.StreamType" @bind-Value="@context.StreamType">
-            <SelectOptions>
-                <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="主码流" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="子码流" />
-            </SelectOptions>
-        </Select>
-        <FormItem>
-            <Button Type="primary" @onclick="@Pack">组包</Button>
-        </FormItem>
-    </Form>
-}
-else if (MsgType == "0x9102")
-{
-    <Form Model="@jT_0x9102_Form">
-        <AntDesign.Input @bind-Value="@context.Sim" Placeholder="123456789012" AllowClear>
-            <AddOnBefore>SIM</AddOnBefore>
-        </AntDesign.Input>
-        <AntDesign.Input @bind-Value="@context.SN" AllowClear>
-            <AddOnBefore>流水号</AddOnBefore>
-        </AntDesign.Input>
-        <AntDesign.Input @bind-Value="@context.LogicalChannelNo" AllowClear>
-            <AddOnBefore>通道号</AddOnBefore>
-        </AntDesign.Input>
-        <Select Style="width:350px;" TItemValue="string" TItem="string" @bind-Value="@context.ControlCmd">
-            <SelectOptions>
-                <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="关闭音视频传输指令" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="切换码流（增加暂停和继续）" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="暂停该通道所有流的发送" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("3")" Label="恢复暂停前流的发送,与暂停前的流类型一致" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("4")" Label="关闭双向对讲" />
-            </SelectOptions>
-        </Select>
-        <Select Style="width:350px;" TItemValue="string" TItem="string" @bind-Value="@context.CloseAVData">
-            <SelectOptions>
-                <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="关闭该通道有关的音视频数据" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="只关闭该通道有关的音频，保留该通道有关的视频" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="只关闭该通道有关的视频，保留该通道有关的音频" />
-            </SelectOptions>
-        </Select>
-        <Select Style="width:150px;" TItemValue="string" TItem="string" @bind-Value="@context.SwitchStreamType">
-            <SelectOptions>
-                <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="主码流" />
-                <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="子码流" />
-            </SelectOptions>
-        </Select>
-        <FormItem>
-            <Button Type="primary" @onclick="@Pack">组包</Button>
-        </FormItem>
-    </Form>
-}
-
-<TextArea AllowClear="true" AutoSize="true" MinRows="10" MaxRows="30" @bind-Value="@HexData" />
+    </SpaceItem>
+    <SpaceItem>
+        @if (MsgType == "0x9101")
+        {
+            <Form Model="@jT_0X9101_Form">
+                <Row Gutter="8">
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.Sim" Placeholder="123456789012" AllowClear>
+                                <AddOnBefore>SIM</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.SN" AllowClear>
+                                <AddOnBefore>流水号</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.IPAddress" Placeholder="127.0.0.1" AllowClear>
+                                <AddOnBefore>IP地址</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.TcpPort" AllowClear>
+                                <AddOnBefore>Tcp端口</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.UdpPort" AllowClear>
+                                <AddOnBefore>Udp端口</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.LogicalChannelNo" AllowClear>
+                                <AddOnBefore>通道号</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <Select TItemValue="string" TItem="string" DefaultValue="@context.DataType" @bind-Value="@context.DataType">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="音视频" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="视频" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="双向对讲" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("3")" Label="监听" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("4")" Label="中心广播" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("5")" Label="透传" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <Select TItemValue="string" TItem="string" DefaultValue="@context.StreamType" @bind-Value="@context.StreamType">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="主码流" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="子码流" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+                </Row>
+                <FormItem>
+                    <Button Type="@ButtonType.Primary" @onclick="@Pack">组包</Button>
+                </FormItem>
+            </Form>
+        }
+        else if (MsgType == "0x9102")
+        {
+            <Form Model="@jT_0x9102_Form">
+                <Row Gutter="8">
+                    <GridCol Span="8">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.Sim" Placeholder="123456789012" AllowClear>
+                                <AddOnBefore>SIM</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="8">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.SN" AllowClear>
+                                <AddOnBefore>流水号</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="8">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.LogicalChannelNo" AllowClear>
+                                <AddOnBefore>通道号</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="8">
+                        <FormItem>
+                            <Select TItemValue="string" TItem="string" @bind-Value="@context.ControlCmd">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="关闭音视频传输指令" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="切换码流（增加暂停和继续）" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="暂停该通道所有流的发送" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("3")" Label="恢复暂停前流的发送,与暂停前的流类型一致" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("4")" Label="关闭双向对讲" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="8">
+                        <FormItem>
+                            <Select TItemValue="string" TItem="string" @bind-Value="@context.CloseAVData">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="关闭该通道有关的音视频数据" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="只关闭该通道有关的音频，保留该通道有关的视频" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="只关闭该通道有关的视频，保留该通道有关的音频" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="8">
+                        <FormItem>
+                            <Select TItemValue="string" TItem="string" @bind-Value="@context.SwitchStreamType">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="主码流" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="子码流" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+                </Row>
+                <FormItem>
+                    <Button Type="@ButtonType.Primary" @onclick="@Pack">组包</Button>
+                </FormItem>
+            </Form>
+        }
+    </SpaceItem>
+    <SpaceItem>
+        <TextArea AllowClear="true" AutoSize="true" MinRows="10" MaxRows="30" @bind-Value="@HexData" />
+    </SpaceItem>
+</Space>
 
 @code {
 

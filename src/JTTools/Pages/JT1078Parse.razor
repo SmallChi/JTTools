@@ -4,18 +4,28 @@
 @using JT1078.Protocol.Extensions;
 @using JTTools.Configs;
 
-<Button Type="primary" @onclick="Query">分析</Button>
+<Space Direction="DirectionVHType.Vertical" Style="width:100%">
+    <SpaceItem>
+        <TextArea AllowClear="true" Rows="4" @bind-Value="@HexData" />
+    </SpaceItem>
+    @if (isOpen)
+    {
+        <SpaceItem>
+            <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
+        </SpaceItem>
+    }
+    <SpaceItem>
+        <Button Type="@ButtonType.Primary" @onclick="Query">分析</Button>
+    </SpaceItem>
+    <SpaceItem>
+        <div class="right">
+            <pre>
+             @Json
+        </pre>
+        </div>
+    </SpaceItem>
+</Space>
 
-@if (isOpen)
-{
-    <Alert Type="@AlertType.Error" Description="@ErrerMessage" Closable AfterClose="OnDismiss" />
-}
-<div class="right">
-    <TextArea AllowClear="true" Rows="4" @bind-Value="@HexData" />
-    <pre>
-         @Json
-    </pre>
-</div>
 
 @code {
 

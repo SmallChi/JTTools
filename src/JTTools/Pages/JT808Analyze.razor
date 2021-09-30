@@ -4,9 +4,12 @@
 @using JT808.Protocol.Extensions;
 @using JT808.Protocol.Exceptions;
 @using JTTools.Configs;
+@using System.IO;
+@using System.Reflection;
 @using System.Text;
 @using System.Text.Encodings.Web;
 @using System.Text.Unicode;
+@using JT808.Protocol.Interfaces;
 @inject IJT808Config  config
 @inject JT808_JT1078_Config  jT808_JT1078_Config
 @inject JT808_SuBiao_Config  jT808_SuBiao_Config
@@ -15,7 +18,7 @@
 
 <Space Direction="DirectionVHType.Vertical" Style="width:100%">
     <SpaceItem>
-        <Alert Type="@AlertType.Warning" ShowIcon="true" Closable Message="小技巧" Description="如有分包或多包，请换行(回车)区分。"/>
+        <Alert Type="@AlertType.Warning" ShowIcon="true" Closable Message="小技巧" Description="如有分包或多包，请换行(回车)区分。" />
     </SpaceItem>
     <SpaceItem>
         <Select TItemValue="string" TItem="string" DefaultValue="@("JT808")" @bind-Value="@protocolType" OnSelectedItemChanged="OnSelectProtocolType">
@@ -26,9 +29,25 @@
                 <SelectOption TItemValue="string" TItem="string" Label="国标扩展主动安全(粤标)" Value="@("JT808_YueBiao")" />
                 <SelectOption TItemValue="string" TItem="string" Label="公交扩展协议(锐明)" Value="@("JT808_JTRM")" />
                 <SelectOption TItemValue="string" TItem="string" Label="国标(强制使用2013版本解析)" Value="@("JT2013Force")" />
+                <SelectOption TItemValue="string" TItem="string" Label="国标扩展私有协议" Value="@("JTPrivate")" />
             </SelectOptions>
         </Select>
     </SpaceItem>
+    @if (protocolType == "JTPrivate")
+    {
+        <SpaceItem>
+            <Alert Type="@AlertType.Info" ShowIcon="true" Message="前置条件">
+                <div>1.必须通过【https://github.com/SmallChi/JT808】实现的扩展库才可以支持</div>
+                <div>2.上传的文件只在浏览器本地，服务器不会收集任何私有协议库</div>
+            </Alert>
+        </SpaceItem>
+        <InputFile OnChange="@LoadFiles" />
+        @*目前组件不支持 <Upload Name="files" Action="" OnSingleCompleted="OnJTPrivateSingleCompleted">
+                <Button Icon="upload">
+                    <span>上传私有协议库(.dll)</span>
+                </Button>
+            </Upload>*@
+    }
     <SpaceItem>
         <TextArea AllowClear="true" Rows="4" @bind-Value="@HexData" OnPressEnter="OnAreaTextPressEnter" />
     </SpaceItem>
@@ -103,11 +122,15 @@
 
     private JT808Serializer JT1078Serializer;
 
+    private JT808Serializer JTPrivateSerializer;
+
     string protocolType = "JT808";
 
     private List<JT808HeaderPackage> JT808HeaderPackages;
 
     private List<JT808PackageInfo> JT808Packages;
+
+    private IJT808Config JT808PrivateConfig;
 
     private string HexData = HexDataTmp;
 
@@ -148,15 +171,51 @@
         HexData += "\n";
     }
 
+    private async void LoadFiles(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            using var memoryStream = new MemoryStream();
+            Stream fs = e.File.OpenReadStream();
+            await fs.CopyToAsync(memoryStream);
+            Assembly assembly = Assembly.Load(memoryStream.ToArray());
+            JT808PrivateConfig.Register(assembly);
+            JTPrivateSerializer = new JT808Serializer(JT808PrivateConfig);
+        }
+        catch (Exception ex)
+        {
+            ErrerMessage = ex.StackTrace;
+        }
+    }
+
     protected override void OnInitialized()
     {
         Serializer = config.GetSerializer();
         JT1078Serializer = jT808_JT1078_Config.GetSerializer();
         JTSuBiao_Serializer = jT808_SuBiao_Config.GetSerializer();
         JTRM_Serializer = jT808_Streamax_Config.GetSerializer();
+        JT808PrivateConfig = new LocalLodingConfig();
     }
 
     string Json = "";
+
+    //暂不支持
+    //private void OnJTPrivateSingleCompleted(AntDesign.UploadInfo uploadInfo)
+    //{
+    //    try
+    //    {
+    //        byte[] fs = File.ReadAllBytes(uploadInfo.File.ObjectURL);
+    //        if (uploadInfo.FileList.Count > 1)
+    //        {
+    //            uploadInfo.FileList.RemoveAt(0);
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+
+    //    }
+
+    //}
 
     private void Query()
     {
@@ -201,6 +260,12 @@
                             case "JT2013Force":
                                 JT808Packages.Add(new JT808PackageInfo { Order = i, Json = Serializer.Analyze(data, JT808.Protocol.Enums.JT808Version.JTT2013Force, options: JTJsonWriterOptions.Instance) });
                                 break;
+                            case "JTPrivate":
+                                if (JTPrivateSerializer != null)
+                                {
+                                    JT808Packages.Add(new JT808PackageInfo { Order = i, Json = JTPrivateSerializer.Analyze(data, options: JTJsonWriterOptions.Instance) });
+                                }
+                                break;
                         }
                     }
                 }
@@ -233,6 +298,12 @@
                             case "JT2013Force":
                                 Json = Serializer.Analyze(msgid, bodies.ToArray(), JT808.Protocol.Enums.JT808Version.JTT2013Force, options: JTJsonWriterOptions.Instance);
                                 break;
+                            case "JTPrivate":
+                                if (JTPrivateSerializer != null)
+                                {
+                                    Json = JTPrivateSerializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
+                                }
+                                break;
                         }
                     }
                     else
@@ -252,6 +323,11 @@
             isOpen = !isOpen;
             ErrerMessage = ex.StackTrace;
         }
+    }
+
+    public class LocalLodingConfig : GlobalConfigBase
+    {
+        public override string ConfigId { get; protected set; } = "LocalConfig";
     }
 
     public class JT808PackageInfo

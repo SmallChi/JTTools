@@ -14,6 +14,9 @@ using Newtonsoft.Json.Serialization;
 using JTTools.Configs;
 using Newtonsoft.Json;
 using JT808.Protocol.Extensions.Streamax;
+using System.Text.Json;
+using JT808.Protocol.MessagePack;
+using JT808.Protocol.MessageBody;
 
 namespace JTTools
 {
@@ -80,8 +83,15 @@ namespace JTTools
                             .AddJT1078Configure();
                     services.AddJT809Configure(new JT809_2011_Config())
                             .AddJT1078Configure();
+                    IServiceProvider serviceProvider = services.BuildServiceProvider();
                     services.AddJT809Configure(new JT809_2019_Config())
-                            .AddJT1078Configure();
+                            .AddJT1078Configure()
+                            .AddJT809_JT808AnalyzeCallback(0x0200,(bytes, writer, jT809Config)=> {
+                                IJT808Config jT808Config = serviceProvider.GetRequiredService<IJT808Config>();
+                                JT808MessagePackReader jT808MessagePackReader = new JT808MessagePackReader(bytes);
+                                JT808.Protocol.Extensions.JT808AnalyzeExtensions.Analyze(JT808.Protocol.JT808ConfigExtensions.GetMessagePackFormatter<JT808_0x0200>(jT808Config),
+                                    ref jT808MessagePackReader, writer, jT808Config);
+                            });
                     services.AddJT808Configure(new JT808_Streamax_Config())
                             .AddStreamaxConfigure();
                 })

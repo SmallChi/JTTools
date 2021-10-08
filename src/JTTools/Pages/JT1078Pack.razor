@@ -13,6 +13,7 @@
 @using OneOf;
 @using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
+@using System.ComponentModel;
 
 <Space Direction="DirectionVHType.Vertical" Style="width:100%">
     <SpaceItem>
@@ -20,6 +21,8 @@
             <SelectOptions>
                 <SelectOption TItemValue="string" TItem="string" Value="@("0x9101")" Label="808_打开看视频" />
                 <SelectOption TItemValue="string" TItem="string" Value="@("0x9102")" Label="808_关闭看视频" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("0x9205")" Label="808_查询资源列表" />
+                <SelectOption TItemValue="string" TItem="string" Value="@("0x9206")" Label="808_文件上传" />
             </SelectOptions>
         </Select>
     </SpaceItem>
@@ -165,6 +168,246 @@
                 </FormItem>
             </Form>
         }
+        else if (MsgType == "0x9205")
+        {
+            <Form Model="@jT_0X9205_Form">
+                <Row Gutter="8">
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.Sim" Placeholder="123456789012" AllowClear>
+                                <AddOnBefore>SIM</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.SN" AllowClear>
+                                <AddOnBefore>流水号</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.LogicalChannelNo" AllowClear>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <DatePicker TValue="DateTime?" ShowTime="@true"
+                                        @bind-Value="@context.BeginTime"
+                                        Format="yyyy-MM-dd HH:mm:ss"
+                                        DisabledDate="date => date <= DateTime.Now">
+
+                            </DatePicker>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <DatePicker TValue="DateTime?" ShowTime="@true"
+                                        @bind-Value="@context.EndTime"
+                                        Format="yyyy-MM-dd HH:mm:ss"
+                                        DisabledDate="date => date <= DateTime.Now" />
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <Select TItemValue="string" TItem="string" @bind-Value="@context.AlarmFlag">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("00000000000000000000000000000000")" Label="无报警类型" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="超速报警" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="疲劳驾驶" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("3")" Label="预警" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("4")" Label="GNSS模块发生故障" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol>
+                        <FormItem>
+                            <Select  TItemValue="string" TItem="string" @bind-Value="@context.MediaType">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="音视频" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="音频" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="视频" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("3")" Label="视频或音视频" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol>
+                        <FormItem>
+                            <Select  TItemValue="string" TItem="string" @bind-Value="@context.StreamType">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="所有码流" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="主码流" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="子码流" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol>
+                        <FormItem>
+                            <Select  TItemValue="string" TItem="string" @bind-Value="@context.MemoryType">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="所有存储器" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="主存储器" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="灾备存储器" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+
+                </Row>
+                <FormItem>
+                    <Button Type="@ButtonType.Primary" @onclick="@Pack">组包</Button>
+                </FormItem>
+            </Form>
+        }
+        else if (MsgType == "0x9206")
+        {
+            <Form Model="@jT_0X9206_Form">
+                <Row Gutter="8">
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.Sim" Placeholder="123456789012" AllowClear>
+                                <AddOnBefore>SIM</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.SN" AllowClear>
+                                <AddOnBefore>流水号</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.ServerIP" Placeholder="127.0.0.1" AllowClear>
+                                <AddOnBefore>FTP服务器地址</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.Port" AllowClear>
+                                <AddOnBefore>FTP服务器端口号</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.UserName" Placeholder="127.0.0.1" AllowClear>
+                                <AddOnBefore>FTP用户名</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.Password" AllowClear>
+                                <AddOnBefore>FTP密码</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.Password" AllowClear>
+                                <AddOnBefore>文件上传路径</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <AntDesign.Input @bind-Value="@context.LogicalChannelNo" AllowClear>
+                                <AddOnBefore>逻辑通道号</AddOnBefore>
+                            </AntDesign.Input>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <DatePicker TValue="DateTime?" ShowTime="@true"
+                                        @bind-Value="@context.BeginTime"
+                                        Format="yyyy-MM-dd HH:mm:ss"
+                                        DisabledDate="date => date <= DateTime.Now">
+
+                            </DatePicker>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <DatePicker TValue="DateTime?" ShowTime="@true"
+                                        @bind-Value="@context.EndTime"
+                                        Format="yyyy-MM-dd HH:mm:ss"
+                                        DisabledDate="date => date <= DateTime.Now" />
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <Select  TItemValue="string" TItem="string" @bind-Value="@context.AlarmFlag">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("00000000000000000000000000000000")" Label="无报警类型" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="超速报警" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="疲劳驾驶" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("3")" Label="预警" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("4")" Label="GNSS模块发生故障" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <Select  TItemValue="string" TItem="string" @bind-Value="@context.MediaType">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="音视频" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="音频" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="视频" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("3")" Label="视频或音视频" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <Select TItemValue="string" TItem="string" @bind-Value="@context.StreamType">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="所有码流" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="主码流" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="子码流" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <Select TItemValue="string" TItem="string" @bind-Value="@context.MemoryType">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="所有存储器" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="主存储器" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="灾备存储器" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6">
+                        <FormItem>
+                            <Select  TItemValue="string" TItem="string" @bind-Value="@context.TaskExcuteCondition">
+                                <SelectOptions>
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("0")" Label="WI-FI可下载" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("1")" Label="LAN连接时可下载" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("2")" Label="3G/4G连接时可下载" />
+                                    <SelectOption TItemValue="string" TItem="string" Value="@("7")" Label="WIFI,LAN,3G/4G" />
+                                </SelectOptions>
+                            </Select>
+                        </FormItem>
+                    </GridCol>
+                </Row>
+                <FormItem>
+                    <Button Type="@ButtonType.Primary" @onclick="@Pack">组包</Button>
+                </FormItem>
+            </Form>
+        }
+
     </SpaceItem>
     <SpaceItem>
         <TextArea AllowClear="true" AutoSize="true" MinRows="10" MaxRows="30" @bind-Value="@HexData" />
@@ -178,6 +421,15 @@
     JT_0x9101_Form jT_0X9101_Form = new JT_0x9101_Form();
 
     JT_0x9102_Form jT_0x9102_Form = new JT_0x9102_Form();
+    /// <summary>
+    /// 1078查询资源列表
+    /// </summary>
+    JT_0x9205_Form jT_0X9205_Form = new JT_0x9205_Form();
+    /// <summary>
+    /// 1078文件上传
+    /// </summary>
+    JT_0x9206_Form jT_0X9206_Form = new JT_0x9206_Form();
+
 
     JT808Serializer JT1078Serializer;
 
@@ -200,10 +452,11 @@
     {
         try
         {
+            JT808Package jT808Package = new JT808Package();
+            JT808Header header = new JT808Header();
             if (MsgType == "0x9101")
             {
-                JT808Package jT808Package = new JT808Package();
-                JT808Header header = new JT808Header();
+
                 header.MsgId = 0x9101;
                 header.ManualMsgNum = (ushort)jT_0X9101_Form.SN;
                 header.TerminalPhoneNo = jT_0X9101_Form.Sim;
@@ -220,8 +473,7 @@
             }
             else if (MsgType == "0x9102")
             {
-                JT808Package jT808Package = new JT808Package();
-                JT808Header header = new JT808Header();
+
                 header.MsgId = 0x9102;
                 header.ManualMsgNum = (ushort)jT_0x9102_Form.SN;
                 header.TerminalPhoneNo = jT_0x9102_Form.Sim;
@@ -233,6 +485,52 @@
                 jT808_0X9102.StreamType = byte.Parse(jT_0x9102_Form.SwitchStreamType);
                 jT808Package.Bodies = jT808_0X9102;
                 HexData = JT1078Serializer.Serialize(jT808Package).ToHexString();
+            }
+            else if (MsgType == "0x9205")
+            {
+                header.MsgId = 0x9205;
+                header.ManualMsgNum = (ushort)jT_0X9205_Form.SN;
+                header.TerminalPhoneNo = jT_0X9205_Form.Sim;
+                jT808Package.Header = header;
+                JT808.Protocol.MessageBody.JT808_0x0200 jT808_0X0200 = new JT808.Protocol.MessageBody.JT808_0x0200();
+
+                jT808_0X0200.AlarmFlag = (uint)JT808.Protocol.Enums.JT808Alarm.GNSS天线未接或被剪断;
+                JT808_0x9205 jT808_0X9205 = new JT808_0x9205();
+                jT808_0X9205.ChannelNo = jT_0X9205_Form.LogicalChannelNo;
+                jT808_0X9205.BeginTime = (DateTime)jT_0X9205_Form.BeginTime;
+                jT808_0X9205.EndTime = (DateTime)jT_0X9205_Form.EndTime;
+                jT808_0X9205.AlarmFlag = ulong.Parse(jT_0X9205_Form.AlarmFlag);
+                jT808_0X9205.MediaType = byte.Parse(jT_0X9205_Form.MediaType);
+                jT808_0X9205.StreamType = byte.Parse(jT_0X9205_Form.MemoryType);
+                jT808_0X9205.MemoryType = byte.Parse(jT_0X9205_Form.MemoryType);
+                jT808Package.Bodies = jT808_0X9205;
+                HexData = JT1078Serializer.Serialize(jT808Package).ToHexString();
+
+            }
+            else if (MsgType == "0x9206")
+            {
+                header.MsgId = 0x9206;
+                header.ManualMsgNum = (ushort)jT_0X9206_Form.SN;
+                header.TerminalPhoneNo = jT_0X9206_Form.Sim;
+                jT808Package.Header = header;
+                JT808_0x9206 jT808_0X9206 = new JT808_0x9206();
+                jT808_0X9206.ServerIpLength = byte.Parse(jT_0X9206_Form.ServerIP.Length.ToString());
+                jT808_0X9206.ServerIp = jT_0X9206_Form.ServerIP;
+                jT808_0X9206.Port = ushort.Parse(jT_0X9206_Form.Port);
+                jT808_0X9206.UserName = jT_0X9206_Form.UserName;
+                jT808_0X9206.Password = jT_0X9206_Form.Password;
+                jT808_0X9206.FileUploadPath = jT_0X9206_Form.FileUploadPath;
+                jT808_0X9206.BeginTime = (DateTime)jT_0X9206_Form.BeginTime;
+                jT808_0X9206.EndTime = (DateTime)jT_0X9206_Form.EndTime;
+                jT808_0X9206.AlarmFlag = ulong.Parse(jT_0X9206_Form.AlarmFlag);
+                jT808_0X9206.MediaType = byte.Parse(jT_0X9206_Form.MediaType);
+                jT808_0X9206.StreamType = byte.Parse(jT_0X9206_Form.MemoryType);
+                jT808_0X9206.MemoryPositon = byte.Parse(jT_0X9206_Form.MemoryType);
+                jT808_0X9206.TaskExcuteCondition = byte.Parse(jT_0X9206_Form.TaskExcuteCondition);
+                jT808Package.Bodies = jT808_0X9206;
+                HexData = JT1078Serializer.Serialize(jT808Package).ToHexString();
+
+
             }
         }
         catch (Exception ex)
@@ -275,5 +573,61 @@
         public string CloseAVData { get; set; } = "0";
         [Required]
         public string SwitchStreamType { get; set; } = "1";
+    }
+    public class JT_0x9205_Form
+    {
+        [Required]
+        public string Sim { get; set; } = "123456789012";
+        [Required]
+        public int SN { get; set; } = new Random().Next(1, 2000);
+        [Required, DisplayName("逻辑通道号")]
+        public byte LogicalChannelNo { get; set; } = 4;
+
+        [Required, DisplayName("开始时间")]
+        public DateTime? BeginTime { get; set; } = DateTime.Today;
+        [Required, DisplayName("结束时间")]
+        public DateTime? EndTime { get; set; } = DateTime.Now;
+        [Required, DisplayName("报警标志")]
+        public string AlarmFlag { get; set; } = "00000000000000000000000000000000";
+        [Required, DisplayName("音视频资源类型")]
+        public string MediaType { get; set; } = "0";
+        [Required, DisplayName("码流类型")]
+        public string StreamType { get; set; } = "0";
+        [Required, DisplayName("存储器类型")]
+        public string MemoryType { get; set; } = "0";
+    }
+
+    public class JT_0x9206_Form
+    {
+        [Required]
+        public string Sim { get; set; } = "123456789012";
+        [Required]
+        public int SN { get; set; } = new Random().Next(1, 2000);
+        [Required]
+        public byte LogicalChannelNo { get; set; } = 4;
+
+        public string ServerIP { get; set; } = "127.0.0.1";
+
+        public string Port { get; set; } = "6201";
+
+        public string UserName { get; set; } = "053500";
+
+        public string Password { get; set; } = "053500";
+
+        public string FileUploadPath { get; set; } = "./aaaaaaa";
+        [Required, DisplayName("开始时间")]
+        public DateTime? BeginTime { get; set; } = DateTime.Today;
+        [Required, DisplayName("结束时间")]
+        public DateTime? EndTime { get; set; } = DateTime.Now;
+        [Required, DisplayName("报警标志")]
+        public string AlarmFlag { get; set; } = "00000000000000000000000000000000";
+        [Required, DisplayName("音视频资源类型")]
+        public string MediaType { get; set; } = "0";
+        [Required, DisplayName("码流类型")]
+        public string StreamType { get; set; } = "0";
+        [Required, DisplayName("存储器类型")]
+        public string MemoryType { get; set; } = "0";
+
+        public string TaskExcuteCondition { get; set; } = "7";
     }
 }

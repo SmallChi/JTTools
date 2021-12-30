@@ -190,6 +190,8 @@
 
     protected override void OnInitialized()
     {
+        config.SkipCRCCode=true;
+        config.SkipCarDVRCRCCode=true;
         Serializer = config.GetSerializer();
         JT1078Serializer = jT808_JT1078_Config.GetSerializer();
         JTSuBiao_Serializer = jT808_SuBiao_Config.GetSerializer();

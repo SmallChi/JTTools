@@ -1,0 +1,1 @@
+dotnet publish  ./JTTools/JTTools.csproj -c Release -o .output -r win-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true -p:IncludeNativeLibrariesForSelfExtract=true

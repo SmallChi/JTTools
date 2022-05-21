@@ -59,6 +59,7 @@ namespace JTTools
                     })
                     .ConfigureAppConfiguration((hostingContext, config) =>
                     {
+ 
                         config.SetBasePath(AppDomain.CurrentDomain.BaseDirectory);
                         config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
                     })

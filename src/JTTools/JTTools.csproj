@@ -1,25 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
-    <UserSecretsId>2a42ef2e-4572-418c-b59d-bf2486f32108</UserSecretsId>
+    <TargetFramework>net7.0</TargetFramework>
+    <AssemblyVersion>1.0.2</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.12.6" />
+    <PackageReference Include="AntDesign" Version="0.12.7" />
     <PackageReference Include="JT1078" Version="1.2.0-preview6" />
-    <PackageReference Include="JT808" Version="2.5.0" />
-    <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.5.0" />
-    <PackageReference Include="JT808.Protocol.Extensions.Streamax" Version="0.4.2" />
-    <PackageReference Include="JT808.Protocol.Extensions.SuBiao" Version="2.5.0" />
-    <PackageReference Include="JT808.Protocol.Extensions.YueBiao" Version="2.5.0" />
-    <PackageReference Include="JT809" Version="2.2.2" />
-    <PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="2.2.2" />
+    <PackageReference Include="JT808" Version="2.5.1" />
+    <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.5.1" />
+    <PackageReference Include="JT808.Protocol.Extensions.Streamax" Version="0.4.3" />
+    <PackageReference Include="JT808.Protocol.Extensions.SuBiao" Version="2.5.1" />
+    <PackageReference Include="JT808.Protocol.Extensions.YueBiao" Version="2.5.1" />
+    <PackageReference Include="JT809" Version="2.2.3" />
+    <PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="2.2.3" />
     <PackageReference Include="JTActiveSafety" Version="1.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="5.0.4" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.1.0" />
   </ItemGroup>
 
 </Project>

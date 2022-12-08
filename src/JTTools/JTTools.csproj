@@ -17,7 +17,7 @@
     <PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="2.2.3" />
     <PackageReference Include="JTActiveSafety" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="NLog.Extensions.Logging" Version="5.1.0" />
   </ItemGroup>
 

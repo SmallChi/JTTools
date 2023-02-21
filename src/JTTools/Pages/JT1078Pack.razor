@@ -519,7 +519,7 @@
                 jT808_0X9206.Port = ushort.Parse(jT_0X9206_Form.Port);
                 jT808_0X9206.UserName = jT_0X9206_Form.UserName;
                 jT808_0X9206.Password = jT_0X9206_Form.Password;
-                jT808_0X9206.FileUploadPath = jT_0X9206_Form.FileUploadPath;
+                jT808_0X9206.FileUploadPath = jT_0X9206_Form.FileUploadPath??"";
                 jT808_0X9206.BeginTime = (DateTime)jT_0X9206_Form.BeginTime;
                 jT808_0X9206.EndTime = (DateTime)jT_0X9206_Form.EndTime;
                 jT808_0X9206.AlarmFlag = ulong.Parse(jT_0X9206_Form.AlarmFlag);

@@ -6,19 +6,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.12.7" />
+    <PackageReference Include="AntDesign" Version="0.14.4" />
     <PackageReference Include="JT1078" Version="1.2.0-preview6" />
-    <PackageReference Include="JT808" Version="2.5.1" />
-    <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.5.1" />
-    <PackageReference Include="JT808.Protocol.Extensions.Streamax" Version="0.4.3" />
-    <PackageReference Include="JT808.Protocol.Extensions.SuBiao" Version="2.5.1" />
-    <PackageReference Include="JT808.Protocol.Extensions.YueBiao" Version="2.5.1" />
+    <PackageReference Include="JT808" Version="2.6.1" />
+    <PackageReference Include="JT808.Protocol.DependencyInjection" Version="2.6.1" />
+    <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.6.1" />
+    <PackageReference Include="JT808.Protocol.Extensions.Streamax" Version="0.4.5" />
+    <PackageReference Include="JT808.Protocol.Extensions.SuBiao" Version="2.6.1" />
+    <PackageReference Include="JT808.Protocol.Extensions.YueBiao" Version="2.6.1" />
     <PackageReference Include="JT809" Version="2.2.3" />
     <PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="2.2.3" />
     <PackageReference Include="JTActiveSafety" Version="1.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="5.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.2.3" />
   </ItemGroup>
 
 </Project>

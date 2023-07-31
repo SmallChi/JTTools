@@ -93,9 +93,8 @@ namespace JTTools
                                 JT808.Protocol.Extensions.JT808AnalyzeExtensions.Analyze(JT808.Protocol.JT808ConfigExtensions.GetMessagePackFormatter<JT808_0x0200>(jT808Config),
                                     ref jT808MessagePackReader, writer, jT808Config);
                             });
-                    //TODO 
-                    //services.AddJT808Configure(new JT808_Streamax_Config())
-                    //        .AddStreamaxConfigure();
+                    services.AddJT808Configure(new JT808_Streamax_Config())
+                            .AddStreamaxConfigure();
                 })
                 .Build()
                 .Run();

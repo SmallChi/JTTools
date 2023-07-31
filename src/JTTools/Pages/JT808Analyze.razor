@@ -13,7 +13,7 @@
 @inject IJT808Config  config
 @inject JT808_JT1078_Config  jT808_JT1078_Config
 @inject JT808_SuBiao_Config  jT808_SuBiao_Config
-@*@inject JT808_Streamax_Config  jT808_Streamax_Config*@
+@inject JT808_Streamax_Config  jT808_Streamax_Config
 @inject JT808_YueBiao_Config  jT808_YueBiao_Config
 @using OneOf;
 
@@ -115,7 +115,7 @@
 
     private JT808Serializer Serializer;
 
-    //private JT808Serializer JTRM_Serializer;
+    private JT808Serializer JTRM_Serializer;
 
     private JT808Serializer JTSuBiao_Serializer;
 
@@ -154,6 +154,8 @@
 
     private void OnSelectProtocolType(string value)
     {
+        JT808HeaderPackages = null;
+        JT808Packages = null;
         if ("JT808_JT1078" == protocolType)
         {
             HexData = HexSubDataTmp;
@@ -202,7 +204,7 @@
         Serializer = config.GetSerializer();
         JT1078Serializer = jT808_JT1078_Config.GetSerializer();
         JTSuBiao_Serializer = jT808_SuBiao_Config.GetSerializer();
-        //JTRM_Serializer = jT808_Streamax_Config.GetSerializer();
+        JTRM_Serializer = jT808_Streamax_Config.GetSerializer();
         JTYueBiao_Serializer = jT808_YueBiao_Config.GetSerializer();
         JT808PrivateConfig = new LocalLodingConfig();
     }
@@ -268,7 +270,7 @@
                                 JT808Packages.Add(new JT808PackageInfo { Order = i, Json = JTYueBiao_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance) });
                                 break;
                             case "JT808_JTRM":
-                                //JT808Packages.Add(new JT808PackageInfo { Order = i, Json = JTRM_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance) });
+                                JT808Packages.Add(new JT808PackageInfo { Order = i, Json = JTRM_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance) });
                                 break;
                             case "JT2013Force":
                                 JT808Packages.Add(new JT808PackageInfo { Order = i, Json = Serializer.Analyze(data, JT808.Protocol.Enums.JT808Version.JTT2013Force, options: JTJsonWriterOptions.Instance) });
@@ -284,16 +286,16 @@
                 }
                 if (sort.Count > 0)
                 {
-                    if (sort.Count == total)
+                    List<byte> bodies = new List<byte>();
+                    ushort msgid = 0;
+                    foreach (var item in sort)
                     {
-                        List<byte> bodies = new List<byte>();
-                        ushort msgid = 0;
-                        foreach (var item in sort)
-                        {
-                            msgid = item.Value.Header.MsgId;
-                            bodies = bodies.Concat(item.Value.Bodies).ToList();
-                        }
-                        JT808HeaderPackages = sort.Select(s => s.Value).ToList();
+                        msgid = item.Value.Header.MsgId;
+                        bodies = bodies.Concat(item.Value.Bodies).ToList();
+                    }
+                    JT808HeaderPackages = sort.Select(s => s.Value).ToList();
+                    if (sort.Count == total)
+                    { 
                         switch (protocolType)
                         {
                             case "JT808":
@@ -309,7 +311,7 @@
                                 Json = JTYueBiao_Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
                                 break;
                             case "JT808_JTRM":
-                                //Json = JTRM_Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
+                                Json = JTRM_Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
                                 break;
                             case "JT2013Force":
                                 Json = Serializer.Analyze(msgid, bodies.ToArray(), JT808.Protocol.Enums.JT808Version.JTT2013Force, options: JTJsonWriterOptions.Instance);

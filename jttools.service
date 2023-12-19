@@ -1,0 +1,12 @@
+﻿[Unit]
+Description=JTTools Server
+After=network.target
+
+[Service]
+User=root
+Restart=on-failure
+WorkingDirectory=/home/jttools/
+ExecStart=/home/jttools/JTTools
+
+[Install]
+WantedBy=multi-user.target

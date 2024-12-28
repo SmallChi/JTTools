@@ -1,4 +1,5 @@
-﻿axios.defaults.baseURL = "http://120.76.99.64:18889/jtt";
+﻿//axios.defaults.baseURL = "http://120.76.99.64:18889/jtt";
+axios.defaults.baseURL = "https://jttools.smallchi.cn/jtt";
 
 function hexToString(hexStr) {
     // 移除可能存在的空格和换行符

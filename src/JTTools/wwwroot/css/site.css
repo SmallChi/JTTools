@@ -1,3 +1,9 @@
+@supports (font-family: -apple-system) {
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+}
+
 html {
   font-size: 14px;
 }
@@ -8,8 +14,25 @@ html {
   }
 }
 
-main>.container {
-  padding: 60px 15px 0;
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  min-height: 75rem;
+}
+
+.hide {
+  display: none;
 }
 
 .bd-placeholder-img {
@@ -27,7 +50,6 @@ main>.container {
 }
 
 .b-example-divider {
-  width: 100%;
   height: 3rem;
   background-color: rgba(0, 0, 0, .1);
   border: solid rgba(0, 0, 0, .15);
@@ -63,68 +85,151 @@ main>.container {
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
 }
-
-.btn-bd-primary {
-  --bd-violet-bg: #712cf9;
-  --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
-
-  --bs-btn-font-weight: 600;
-  --bs-btn-color: var(--bs-white);
-  --bs-btn-bg: var(--bd-violet-bg);
-  --bs-btn-border-color: var(--bd-violet-bg);
-  --bs-btn-hover-color: var(--bs-white);
-  --bs-btn-hover-bg: #6528e0;
-  --bs-btn-hover-border-color: #6528e0;
-  --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
-  --bs-btn-active-color: var(--bs-btn-hover-color);
-  --bs-btn-active-bg: #5a23c8;
-  --bs-btn-active-border-color: #5a23c8;
+/* 
+  1.全局样式=====
+*/
+main>.container {
+  padding: 100px 15px 0;
+}
+@media screen and (max-width:768px){
+  main>.container {
+  padding: 65px 15px 0;
+}
+}
+#main *:focus
+{
+  box-shadow:none;
+}
+.btn-clear {
+  background: none;
+  border: none;
+  color: #6c757d;
+  /* Bootstrap的次要颜色 */
+}
+.pre{
+  background: #fafafa;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #eeeeee;
+}
+.accordion-button:not(.collapsed){
+  color: #166ff1;
+  font-weight: 300;
+  background-color: #fafafa;
 }
 
-.bd-mode-toggle {
-  z-index: 1500;
+.badge{
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+    font-weight: 500;
+}
+.text-bg-primary{
+     color: #1d39c4!important;
+    background: #f0f5ff!important;
+    border-color: #adc6ff!important;
+
+}
+.text-bg-secondary{
+  color: #531dab!important;
+    background: #f9f0ff!important;
+    border-color: #d3adf7!important;
+}
+.text-bg-dark{
+  color: #666 !important;
+  background: #00000014 !important;
+  border-color: #b9b8b8 !important;
+}
+.text-bg-light{
+  color: #000 !important;
+  background: #fff !important;
+  border-color: #d8d7d7 !important;
+}
+.text-bg-success{
+  color: #20c997!important;
+  background: #20c9961a !important;
+  border-color: #20c99683 !important;
+}
+.text-bg-danger{
+  color: #dc3545!important;
+  background: #dc35451a !important;
+  border-color: #dc354583 !important;
+}
+.text-bg-warning{
+    color: #d46b08!important;
+    background: #fff7e6!important;
+    border-color: #ffd591!important;
+}
+.text-bg-info{
+  color: #096dd9!important;
+    background: #e6f7ff!important;
+    border-color: #91d5ff!important;
 }
 
-.bd-mode-toggle .dropdown-menu .active .bi {
-  display: block !important;
+.row{
+  margin-left: 0;
+  margin-right: 0;
 }
+/* 
+  2.JT808Parse模块样式====
+*/
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
+#JT808Parse textarea{
+  padding-top: 40px;
 }
-
-@keyframes fade-out {
-  to {
-    opacity: 0;
-  }
+#JT808Parse label{
+    color: rgb(222, 110, 5);
+    padding-top: 20px;
+    font-weight: bold;
 }
-
-@keyframes slide-from-right {
-  from {
-    transform: translateX(90px);
-  }
+#JT808Parse label i{
+  font-size: 20px;
 }
-
-@keyframes slide-to-left {
-  to {
-    transform: translateX(-90px);
-  }
+#JT808_Accordion_Result .badge{
+  margin-left: 10px;
 }
-
-/* define animations for the old and new content */
-::view-transition-old(slide-it) {
-  animation: 180ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
-    600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+/* 
+  4.产品模块样式====
+*/
+#ProductAD .carousel-inner{
+  height: 400px;
 }
-
-::view-transition-new(slide-it) {
-  animation: 420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
-    600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+#ProductAD .icon{
+    width: 65px;
+    height: 65px;
+    background: #ccc;
+    text-align: center;
+    border-radius: 50%;
+    margin: 25px 0 0 25px;
 }
-
-/* tie the view transition to a given CSS class */
-.sample-transition {
-  view-transition-name: slide-it;
+@media screen and (max-width:768px){
+ #ProductAD .icon{
+    width: 50px;
+    height: 50px;
+    margin: 15px 0 0 15px;
+}
+}
+#ProductAD >.card{
+  border:none
+}
+#ProductAD .nav-pills{
+  border-bottom: 1px solid #eee;
+  width: 100%;
+}
+#ProductAD .nav-pills .nav-link{
+  background: #eee;
+  color: #333;
+  border-bottom-left-radius: 0 ;
+  border-bottom-right-radius: 0;
+}
+#ProductAD .nav-pills .nav-link.active{
+  background: #258cfb;
+  color: #fff;
+}
+#ProductAD .row{
+  margin-left: -12px;
+  margin-right: -12px;
+}
+#ProductAD .custom-tooltip {
+  --bs-tooltip-bg: #712cf9;
+  --bs-tooltip-color: #fff;
 }

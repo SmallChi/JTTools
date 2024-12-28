@@ -31,8 +31,7 @@ namespace JTTools.Controllers
             }
             catch (Exception ex)
             {
-                result.Code = 500;
-                result.Message = ex.StackTrace??"";
+                result.Error(ex);
             }
             return result;
         }

@@ -12,6 +12,6 @@
         /// <summary>
         ///  hex字符串
         /// </summary>
-        public List<string> Hex { get; set; } = new List<string>();
+        public string Hex { get; set; } = "";
     }
 }

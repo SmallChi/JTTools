@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29123.88
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35506.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JTTools", "JTTools\JTTools.csproj", "{295AB139-27E0-45AE-8E95-A3D0F1E4161F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JTTools", "JTTools\JTTools.csproj", "{EEB24F42-2C88-4B9F-BA24-F5698988CECB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{295AB139-27E0-45AE-8E95-A3D0F1E4161F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{295AB139-27E0-45AE-8E95-A3D0F1E4161F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{295AB139-27E0-45AE-8E95-A3D0F1E4161F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{295AB139-27E0-45AE-8E95-A3D0F1E4161F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEB24F42-2C88-4B9F-BA24-F5698988CECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEB24F42-2C88-4B9F-BA24-F5698988CECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEB24F42-2C88-4B9F-BA24-F5698988CECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEB24F42-2C88-4B9F-BA24-F5698988CECB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

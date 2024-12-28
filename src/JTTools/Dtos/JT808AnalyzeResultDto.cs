@@ -27,6 +27,10 @@
         /// <summary>
         /// 
         /// </summary>
+        public int Order { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public string TerminalPhoneNo { get; set; } = "";
         /// <summary>
         /// 
@@ -60,5 +64,9 @@
         /// 
         /// </summary>
         public string Body { get; set; } = "";
+        /// <summary>
+        /// 
+        /// </summary>
+        public string JsonValue { get; set; } = "";
     }
 }

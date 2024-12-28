@@ -8,9 +8,9 @@ namespace JTTools.Dtos
     public class JT809AnalyzeDto
     {
         /// <summary>
-        /// 
+        ///  
         /// </summary>
-        public string ProtocolType { get; set; } = "";
+        public string ProtocolType { get; set; } = "2011";
         /// <summary>
         /// 
         /// </summary>

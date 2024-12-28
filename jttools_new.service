@@ -1,0 +1,13 @@
+﻿[Unit]
+Description=JTTools New Server
+After=network.target
+
+[Service]
+User=root
+Restart=on-failure
+WorkingDirectory=/home/jttools_new/
+ExecStart=dotnet JTTools.dll
+Environment="DOTNET_BUNDLE_EXTRACT_BASE_DIR=%h/.net"
+
+[Install]
+WantedBy=multi-user.target

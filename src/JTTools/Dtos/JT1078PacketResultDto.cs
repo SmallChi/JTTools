@@ -3,7 +3,7 @@
     /// <summary>
     /// 
     /// </summary>
-    public class JT905AnalyzeDto
+    public class JT1078PacketResultDto
     {
         /// <summary>
         ///  hex字符串

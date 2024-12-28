@@ -12,6 +12,11 @@ using System.Text.Unicode;
 using JT808.Protocol.Interfaces;
 using JTTools.Dtos;
 using System.Reflection.Emit;
+using JT809.Protocol;
+using System.Net.Sockets;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Reflection.PortableExecutable;
+using JT905.Protocol.SerialPort;
 
 namespace JTTools.Controllers
 {
@@ -34,7 +39,16 @@ namespace JTTools.Controllers
         JT808Serializer JTYueBiao_Serializer;
         JT808Serializer JTGps51_Serializer;
         JT808Serializer JT1078Serializer;
-        JT808Serializer JTPrivateSerializer;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="jT808_JT1078_Config"></param>
+        /// <param name="jT808_SuBiao_Config"></param>
+        /// <param name="jT808_Streamax_Config"></param>
+        /// <param name="jT808_YueBiao_Config"></param>
+        /// <param name="jT808_gps51_Config"></param>
         public JT808Controller(
                     IJT808Config config,
                     JT808_JT1078_Config jT808_JT1078_Config,
@@ -61,37 +75,132 @@ namespace JTTools.Controllers
         }
 
         /// <summary>
-        /// 序列化字典
+        /// 
         /// </summary>
+        /// <param name="request"></param>
         /// <returns></returns>
-        [HttpGet]
-        [Route("GetDict")]
-        public ResultDto<List<JTTDictDto>> GetDict()
-        {
-            return new ResultDto<List<JTTDictDto>>
-            {
-                 Result=new List<JTTDictDto>{
-                   { new JTTDictDto{Label = "国标(通过包自动识别版本号)" ,Value = "JT808"}},
-                   { new JTTDictDto{Label = "国标扩展JT1078", Value = "JT808_JT1078"}},
-                   { new JTTDictDto{Label = "国标扩展主动安全(苏标)", Value = "JT808_SuBiao"}},
-                   { new JTTDictDto{Label = "国标扩展主动安全(粤标)" ,Value = "JT808_YueBiao"}},
-                   { new JTTDictDto{Label = "公交扩展协议(锐明)", Value = "JT808_JTRM"}},
-                   { new JTTDictDto{Label = "国标(强制使用2013版本解析)" ,Value = "JT2013Force"}},
-                   { new JTTDictDto{Label = "国标扩展私有协议", Value = "JTPrivate"} },
-                   { new JTTDictDto{Label = "国标扩展私有协议(GPS51)", Value = "JT808_GPS51"} }
-                }
-            };
-        }
-
         [HttpPost]
         [Route("Analyze")]
         public ResultDto<JT808AnalyzeResultDto> Analyze(JT808AnalyzeDto request)
         {
             ResultDto<JT808AnalyzeResultDto> result = new ResultDto<JT808AnalyzeResultDto>();
             result.Result = new JT808AnalyzeResultDto();
-
-
-
+            if (string.IsNullOrEmpty(request.Hex)) 
+            {
+                result.Fail("hex数据不为空");
+                return result;
+            }
+            if (string.IsNullOrEmpty(request.ProtocolType))
+            {
+                result.Fail("请选择对应的版本类型");
+                return result;
+            }
+            SortedList<int, JT808HeaderPackage> sort = new SortedList<int, JT808HeaderPackage>();
+            List<JT808HeaderPackage> headerPackages;
+            var total = 0;
+            try
+            {
+                string[] lines = request.Hex.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+                foreach (var (i, item) in lines.Index())
+                {
+                    var data = item.ToHexBytes();
+                    var headerPackage = Serializer.HeaderDeserialize(data);
+                    var package = new JT808PackageInfoDto
+                    {
+                        Order = i+1,
+                        MsgId = headerPackage.Header.MsgId.ToString("X2"),
+                        ProtocolVersion = ((JT808.Protocol.Enums.JT808Version)headerPackage.Header.ProtocolVersion).ToString(),
+                        DataLength = headerPackage.Header.MessageBodyProperty.DataLength,
+                        TerminalPhoneNo = headerPackage.Header.TerminalPhoneNo,
+                        Encrypt = headerPackage.Header.MessageBodyProperty.Encrypt != JT808.Protocol.Enums.JT808EncryptMethod.None,
+                        MsgNum = headerPackage.Header.MsgNum
+                    };
+                    //处理分包
+                    if (headerPackage.Header.MessageBodyProperty.IsPackage)
+                    {
+                        total = headerPackage.Header.PackgeCount;
+                        sort.Add(headerPackage.Header.PackageIndex, headerPackage);
+                        package.PackageIndex = headerPackage.Header.PackageIndex;
+                        package.PackgeCount = headerPackage.Header.PackgeCount;
+                        package.Body = headerPackage.Bodies.ToHexString();
+                    }
+                    else
+                    {
+                        switch (request.ProtocolType)
+                        {
+                            case "JT808":
+                                package.JsonValue = Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT808_JT1078":
+                                package.JsonValue = JT1078Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT808_SuBiao":
+                                package.JsonValue = JTSuBiao_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT808_YueBiao":
+                                package.JsonValue = JTYueBiao_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT808_JTRM":
+                                package.JsonValue = JTRM_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT2013Force":
+                                package.JsonValue = Serializer.Analyze(data, JT808.Protocol.Enums.JT808Version.JTT2013Force, options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT808_GPS51":
+                                package.JsonValue = JTGps51_Serializer.Analyze(data, options: JTJsonWriterOptions.Instance);
+                                break;
+                        }
+                    }
+                    result.Result.Packages.Add(package);
+                }
+                if (sort.Count > 0)
+                {
+                    List<byte> bodies = new List<byte>();
+                    ushort msgid = 0;
+                    foreach (var item in sort)
+                    {
+                        msgid = item.Value.Header.MsgId;
+                        bodies = bodies.Concat(item.Value.Bodies).ToList();
+                    }
+                    headerPackages = sort.Select(s => s.Value).ToList();
+                    if (sort.Count == total)
+                    {
+                        result.Result.IsSubpackage = true;
+                        switch (request.ProtocolType)
+                        {
+                            case "JT808":
+                                result.Result.JsonValue = Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT808_JT1078":
+                                result.Result.JsonValue = JT1078Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT808_SuBiao":
+                                result.Result.JsonValue = JTSuBiao_Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT808_YueBiao":
+                                result.Result.JsonValue = JTYueBiao_Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT808_JTRM":
+                                result.Result.JsonValue = JTRM_Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT2013Force":
+                                result.Result.JsonValue = Serializer.Analyze(msgid, bodies.ToArray(), JT808.Protocol.Enums.JT808Version.JTT2013Force, options: JTJsonWriterOptions.Instance);
+                                break;
+                            case "JT808_GPS51":
+                                result.Result.JsonValue = JTGps51_Serializer.Analyze(msgid, bodies.ToArray(), options: JTJsonWriterOptions.Instance);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        result.Fail("包数不匹配,请确认清楚！");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Error(ex);
+            }
             return result;
         }
     }

@@ -1,24 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <AssemblyVersion>1.0.4</AssemblyVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.16.3" />
-    <PackageReference Include="JT1078" Version="1.2.0-preview6" />
-    <PackageReference Include="JT808" Version="2.6.5" />
-    <PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.6.5" />
-    <PackageReference Include="JT808.Protocol.Extensions.Streamax" Version="0.5.0" />
-    <PackageReference Include="JT808.Protocol.Extensions.SuBiao" Version="2.6.5" />
-    <PackageReference Include="JT808.Protocol.Extensions.YueBiao" Version="2.6.5" />
-    <PackageReference Include="JT809" Version="2.2.5" />
-    <PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="2.2.5" />
-    <PackageReference Include="JTActiveSafety" Version="1.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.6" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="5.3.11" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="JT1078" Version="1.2.0-preview7" />
+		<PackageReference Include="JT808" Version="2.7.1" />
+		<PackageReference Include="JT808.Protocol.Extensions.GPS51" Version="2.7.1" />
+		<PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.7.1" />
+		<PackageReference Include="JT808.Protocol.Extensions.Streamax" Version="0.5.5" />
+		<PackageReference Include="JT808.Protocol.Extensions.SuBiao" Version="2.7.1" />
+		<PackageReference Include="JT808.Protocol.Extensions.YueBiao" Version="2.7.1" />
+		<PackageReference Include="JT809" Version="2.2.6" />
+		<PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="2.2.6" />
+		<PackageReference Include="JT905" Version="1.0.0-preview3" />
+		<PackageReference Include="JTActiveSafety" Version="1.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+		<PackageReference Include="NSwag.AspNetCore" Version="14.2.0" />
+	</ItemGroup>
 
 </Project>

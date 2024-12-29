@@ -10,7 +10,6 @@ using JT808.Protocol.MessagePack;
 using JT808.Protocol.MessageBody;
 using JTTools.Configs;
 using JT808.Protocol.Extensions.GPS51;
-using YamlDotNet.Serialization;
 using JT905.Protocol;
 
 

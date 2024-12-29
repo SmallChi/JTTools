@@ -1,5 +1,4 @@
-﻿//axios.defaults.baseURL = "http://120.76.99.64:18889/jtt";
-axios.defaults.baseURL = "https://jttools.smallchi.cn/jtt";
+﻿axios.defaults.baseURL = "https://jttools.smallchi.cn/jtt";
 
 function hexToString(hexStr) {
     // 移除可能存在的空格和换行符
@@ -109,7 +108,7 @@ $(document).ready(function () {
         navbarCollapse.hide();
     });
 
-    $("#JT808_ProtocolType").change(function () {
+    $("#JT808_ProtocolType").on("change", function () {
         var protocolType = $(this).val();
         var hexData = JT808HexData;
         if ("JT808_JT1078" == protocolType) {
@@ -129,7 +128,7 @@ $(document).ready(function () {
         //$("#JT809_Result").text("");
     });
 
-    $("#JT809_ProtocolType").change(function () {
+    $("#JT809_ProtocolType").on("change", function () {
         var selectedValue = $(this).val();
         if (selectedValue == "2011") {
             $("#JT809_Hex").val(JT809HexData2011);
@@ -139,7 +138,7 @@ $(document).ready(function () {
         $("#JT809_Result").text("");
     });
 
-    $("#JT809_EncryptType").change(function () {
+    $("#JT809_EncryptType").on("change", function () {
         var selectedValue = $(this).val();
         if (selectedValue == "none") {
             $("#JT809_Encrypt_Group").fadeOut();
@@ -148,7 +147,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#JT19056_ProtocolType").change(function () {
+    $("#JT19056_ProtocolType").on("change",function () {
         var selectedValue = $(this).val();
         if (selectedValue == "up") {
             $("#JT19056_Hex").val(JT19056UpHexData);
@@ -317,6 +316,6 @@ $(document).ready(function () {
     });
 
     $("#ProductAD_GPS51").on("click", function () {
-        window.open("https://gps51.com/#/login?username=19019000002&password=Aa0002", '_blank');
+        window.open("https://gps51.com/#/login?username=001test&password=Aa1357", '_blank');
     });
 });

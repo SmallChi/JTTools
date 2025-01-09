@@ -1,7 +1,7 @@
 @supports (font-family: -apple-system) {
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
 }
 
 html {
@@ -85,150 +85,202 @@ body {
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
 }
+
 /* 
   1.全局样式=====
 */
+header .navbar {
+  padding: 15px;
+}
+
+@media screen and (max-width:768px) {
+  header .navbar {
+    padding: 10px;
+  }
+}
+
 main>.container {
   padding: 100px 15px 0;
 }
-@media screen and (max-width:768px){
+
+@media screen and (max-width:768px) {
   main>.container {
-  padding: 65px 15px 0;
+    padding: 65px 15px 0;
+  }
 }
+
+#main *:focus {
+  box-shadow: none;
 }
-#main *:focus
-{
-  box-shadow:none;
-}
+
 .btn-clear {
   background: none;
   border: none;
   color: #6c757d;
   /* Bootstrap的次要颜色 */
 }
-.pre{
+
+.pre {
   background: #fafafa;
-    padding: 15px;
-    border-radius: 4px;
-    border: 1px solid #eeeeee;
+  padding: 15px;
+  border-radius: 4px;
+  border: 1px solid #eeeeee;
 }
-.accordion-button:not(.collapsed){
+
+.accordion-button:not(.collapsed) {
   color: #166ff1;
   font-weight: 300;
   background-color: #fafafa;
 }
 
-.badge{
-    border: 1px solid #d9d9d9;
-    border-radius: 2px;
-    font-weight: 500;
+.giuhub-link {
+  display: block;
 }
-.text-bg-primary{
-     color: #1d39c4!important;
-    background: #f0f5ff!important;
-    border-color: #adc6ff!important;
+
+.giuhub-logo {
+  width: 45px;
+  height: 45px;
+}
+
+@media screen and (max-width:768px) {
+  .giuhub-logo {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+.badge {
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+.text-bg-primary {
+  color: #1d39c4 !important;
+  background: #f0f5ff !important;
+  border-color: #adc6ff !important;
 
 }
-.text-bg-secondary{
-  color: #531dab!important;
-    background: #f9f0ff!important;
-    border-color: #d3adf7!important;
+
+.text-bg-secondary {
+  color: #531dab !important;
+  background: #f9f0ff !important;
+  border-color: #d3adf7 !important;
 }
-.text-bg-dark{
+
+.text-bg-dark {
   color: #666 !important;
   background: #00000014 !important;
   border-color: #b9b8b8 !important;
 }
-.text-bg-light{
+
+.text-bg-light {
   color: #000 !important;
   background: #fff !important;
   border-color: #d8d7d7 !important;
 }
-.text-bg-success{
-  color: #20c997!important;
+
+.text-bg-success {
+  color: #20c997 !important;
   background: #20c9961a !important;
   border-color: #20c99683 !important;
 }
-.text-bg-danger{
-  color: #dc3545!important;
+
+.text-bg-danger {
+  color: #dc3545 !important;
   background: #dc35451a !important;
   border-color: #dc354583 !important;
 }
-.text-bg-warning{
-    color: #d46b08!important;
-    background: #fff7e6!important;
-    border-color: #ffd591!important;
-}
-.text-bg-info{
-  color: #096dd9!important;
-    background: #e6f7ff!important;
-    border-color: #91d5ff!important;
+
+.text-bg-warning {
+  color: #d46b08 !important;
+  background: #fff7e6 !important;
+  border-color: #ffd591 !important;
 }
 
-.row{
+.text-bg-info {
+  color: #096dd9 !important;
+  background: #e6f7ff !important;
+  border-color: #91d5ff !important;
+}
+
+.row {
   margin-left: 0;
   margin-right: 0;
 }
+
 /* 
   2.JT808Parse模块样式====
 */
 
-#JT808Parse textarea{
+#JT808Parse textarea {
   padding-top: 40px;
 }
-#JT808Parse label{
-    color: rgb(222, 110, 5);
-    padding-top: 20px;
-    font-weight: bold;
+
+#JT808Parse label {
+  color: rgb(222, 110, 5);
+  padding-top: 20px;
+  font-weight: bold;
 }
-#JT808Parse label i{
+
+#JT808Parse label i {
   font-size: 20px;
 }
-#JT808_Accordion_Result .badge{
+
+#JT808_Accordion_Result .badge {
   margin-left: 10px;
 }
+
 /* 
   4.产品模块样式====
 */
-#ProductAD .carousel-inner{
+#ProductAD .carousel-inner {
   height: 400px;
 }
-#ProductAD .icon{
-    width: 65px;
-    height: 65px;
-    background: #ccc;
-    text-align: center;
-    border-radius: 50%;
-    margin: 25px 0 0 25px;
+
+#ProductAD .icon {
+  width: 65px;
+  height: 65px;
+  background: #ccc;
+  text-align: center;
+  border-radius: 50%;
+  margin: 25px 0 0 25px;
 }
-@media screen and (max-width:768px){
- #ProductAD .icon{
+
+@media screen and (max-width:768px) {
+  #ProductAD .icon {
     width: 50px;
     height: 50px;
     margin: 15px 0 0 15px;
+  }
 }
+
+#ProductAD>.card {
+  border: none
 }
-#ProductAD >.card{
-  border:none
-}
-#ProductAD .nav-pills{
+
+#ProductAD .nav-pills {
   border-bottom: 1px solid #eee;
   width: 100%;
 }
-#ProductAD .nav-pills .nav-link{
+
+#ProductAD .nav-pills .nav-link {
   background: #eee;
   color: #333;
-  border-bottom-left-radius: 0 ;
+  border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
-#ProductAD .nav-pills .nav-link.active{
+
+#ProductAD .nav-pills .nav-link.active {
   background: #258cfb;
   color: #fff;
 }
-#ProductAD .row{
+
+#ProductAD .row {
   margin-left: -12px;
   margin-right: -12px;
 }
+
 #ProductAD .custom-tooltip {
   --bs-tooltip-bg: #712cf9;
   --bs-tooltip-color: #fff;

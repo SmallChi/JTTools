@@ -147,7 +147,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#JT19056_ProtocolType").on("change",function () {
+    $("#JT19056_ProtocolType").on("change", function () {
         var selectedValue = $(this).val();
         if (selectedValue == "up") {
             $("#JT19056_Hex").val(JT19056UpHexData);

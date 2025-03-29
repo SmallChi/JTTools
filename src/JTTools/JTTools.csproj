@@ -19,7 +19,7 @@
 		<PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="2.2.6" />
 		<PackageReference Include="JT905" Version="1.0.0-preview3" />
 		<PackageReference Include="JTActiveSafety" Version="1.0.2" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
 		<PackageReference Include="NSwag.AspNetCore" Version="14.2.0" />
 	</ItemGroup>
 

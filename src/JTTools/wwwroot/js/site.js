@@ -1,4 +1,7 @@
-﻿axios.defaults.baseURL = "https://jttools.smallchi.cn/jtt";
+﻿
+axios.defaults.baseURL = "https://jttools.smallchi.cn/jtt";
+
+//axios.defaults.baseURL = "http://127.0.0.1:18889/jtt";
 
 function hexToString(hexStr) {
     // 移除可能存在的空格和换行符
@@ -184,50 +187,37 @@ $(document).ready(function () {
                 Hex: $("#JT808_Hex").val(),
                 ProtocolType: $("#JT808_ProtocolType").val()
             }).then((res) => {
-                console.debug(res);
+                // console.debug(res);
                 if (res.data.Code == 200) {
                     $('#JT808_Accordion_Result').html("");
-                    if (res.data.Result.IsSubpackage) {
-                        if (res.data.Result.Packages) {
-                            $.each(res.data.Result.Packages, function (index, item) {
-                                var accordionHeader_content = '';
-                                accordionHeader_content += '<span class="badge text-bg-primary">终端号：' + item.TerminalPhoneNo + '</span>';
-                                accordionHeader_content += '<span class="badge text-bg-secondary">消息Id：' + item.MsgId + '</span>';
-                                accordionHeader_content += '<span class="badge text-bg-success">消息流水号：' + item.MsgNum + '</span>';
-                                accordionHeader_content += '<span class="badge text-bg-danger">设备版本号：' + item.ProtocolVersion + '</span>';
-                                accordionHeader_content += '<span class="badge text-bg-warning">总分包数：' + item.PackgeCount + '</span>';
-                                accordionHeader_content += '<span class="badge text-bg-info">当前页：' + item.PackageIndex + '</span>';
-                                accordionHeader_content += '<span class="badge text-bg-dark">数据体长度：' + item.DataLength + '</span>';
-                                accordionHeader_content += '<span class="badge text-bg-light">是否加密：' + (item.Encrypt ? '是' : '否') + '</span>';
-                                var accordionHeader = '<h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-target="#collapse' + index + '" aria-expanded="false" aria-controls="collapse' + index + '">' + '序号:' + item.Order + accordionHeader_content + '</button></h2>';
-                                var accordionBody = '<div id="collapse' + index + '" class="accordion-collapse collapse"><div class="accordion-body"><pre>' + item.Body + '</pre></div></div>';
-                                var accordionItem = '<div class="accordion-item">' + accordionHeader + accordionBody + '</div>';
-                                $('#JT808_Accordion_Result').append(accordionItem);
-                            });
-                            {
-                                var index = res.data.Result.Packages.length + 1;
-                                var accordionHeader = '<h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-target="#collapse' + index + '" aria-expanded="false" aria-controls="collapse' + index + '">' + '合并数据体' + '</button></h2>';
-                                var accordionBody = '<div id="collapse' + index + '" class="accordion-collapse collapse"><div class="accordion-body"><pre>' + res.data.Result.JsonValue + '</pre></div></div>';
-                                var accordionItem = '<div class="accordion-item">' + accordionHeader + accordionBody + '</div>';
-                                $('#JT808_Accordion_Result').append(accordionItem);
-                            }
-                            $('#JT808_Accordion_Result div.accordion-collapse').addClass('show');
-                        } else {
-                            $('#JT808_Accordion_Result').html("处理异常，请检测对应Hex数据包");
+                    if (res.data.Result.Packages) {
+                        $.each(res.data.Result.Packages, function (index, item) {
+                            var accordionHeader_content = '';
+                            accordionHeader_content += '<span class="badge text-bg-primary">终端号：' + item.TerminalPhoneNo + '</span>';
+                            accordionHeader_content += '<span class="badge text-bg-secondary">消息Id：' + item.MsgId + '</span>';
+                            accordionHeader_content += '<span class="badge text-bg-success">消息流水号：' + item.MsgNum + '</span>';
+                            accordionHeader_content += '<span class="badge text-bg-danger">设备版本号：' + item.ProtocolVersion + '</span>';
+                            accordionHeader_content += '<span class="badge text-bg-warning">总分包数：' + item.PackgeCount + '</span>';
+                            accordionHeader_content += '<span class="badge text-bg-info">当前页：' + item.PackageIndex + '</span>';
+                            accordionHeader_content += '<span class="badge text-bg-dark">数据体长度：' + item.DataLength + '</span>';
+                            accordionHeader_content += '<span class="badge text-bg-light">是否加密：' + (item.Encrypt ? '是' : '否') + '</span>';
+                            var accordionHeader = '<h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-target="#collapse' + index + '" aria-expanded="false" aria-controls="collapse' + index + '">' + '序号:' + item.Order + accordionHeader_content + '</button></h2>';
+                            var accordionBody = '<div id="collapse' + index + '" class="accordion-collapse collapse"><div class="accordion-body"><pre>' + item.Body + '</pre></div></div>';
+                            var accordionItem = '<div class="accordion-item">' + accordionHeader + accordionBody + '</div>';
+                            $('#JT808_Accordion_Result').append(accordionItem);
+                        });
+                        if (res.data.Result.IsSubpackage) {
+                            var index = res.data.Result.Packages.length + 1;
+                            var accordionHeader = '<h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-target="#collapse' + index + '" aria-expanded="false" aria-controls="collapse' + index + '">' + '合并数据体' + '</button></h2>';
+                            var accordionBody = '<div id="collapse' + index + '" class="accordion-collapse collapse"><div class="accordion-body"><pre>' + res.data.Result.JsonValue + '</pre></div></div>';
+                            var accordionItem = '<div class="accordion-item">' + accordionHeader + accordionBody + '</div>';
+                            $('#JT808_Accordion_Result').append(accordionItem);
                         }
+                        $('#JT808_Accordion_Result div.accordion-collapse').addClass('show');
                     } else {
-                        if (res.data.Result.Packages) {
-                            $.each(res.data.Result.Packages, function (index, item) {
-                                var accordionHeader = '<h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-target="#collapse' + index + '" aria-expanded="false" aria-controls="collapse' + index + '">' + '序号:' + item.Order + '</button></h2>';
-                                var accordionBody = '<div id="collapse' + index + '" class="accordion-collapse collapse"><div class="accordion-body"><pre>' + item.JsonValue + '</pre></div></div>';
-                                var accordionItem = '<div class="accordion-item">' + accordionHeader + accordionBody + '</div>';
-                                $('#JT808_Accordion_Result').append(accordionItem);
-                            });
-                            $('#JT808_Accordion_Result div.accordion-collapse').addClass('show');
-                        } else {
-                            $('#JT808_Accordion_Result').html("处理异常，请检测对应Hex数据包");
-                        }
+                        $('#JT808_Accordion_Result').html("处理异常，请检测对应Hex数据包");
                     }
+
                 } else {
                     $("#JT808_Accordion_Result").html(res.data.Message);
                 }
@@ -316,6 +306,10 @@ $(document).ready(function () {
     });
 
     $("#ProductAD_GPS51").on("click", function () {
+        window.open("https://gps51.com/#/login?username=001test&password=Aa1357", '_blank');
+    });
+
+    $("#ProductAD_GPS51_AI").on("click", function () {
         window.open("https://gps51.com/#/login?username=001test&password=Aa1357", '_blank');
     });
 });

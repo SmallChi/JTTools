@@ -162,10 +162,10 @@ namespace JTTools.Controllers
                         msgid = item.Value.Header.MsgId;
                         bodies = bodies.Concat(item.Value.Bodies).ToList();
                     }
-                    headerPackages = sort.Select(s => s.Value).ToList();
-                    if (sort.Count == total)
+                    headerPackages = sort.Select(s => s.Value).ToList();   
+                    result.Result.IsSubpackage = sort.Count == total;
+                    if (result.Result.IsSubpackage)
                     {
-                        result.Result.IsSubpackage = true;
                         switch (request.ProtocolType)
                         {
                             case "JT808":
@@ -193,8 +193,8 @@ namespace JTTools.Controllers
                     }
                     else
                     {
-                        result.Fail("包数不匹配,请确认清楚！");
-                    }
+                        result.Result.JsonValue ="";
+                    }  
                 }
             }
             catch (Exception ex)

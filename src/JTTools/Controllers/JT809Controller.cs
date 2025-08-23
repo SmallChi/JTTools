@@ -12,6 +12,8 @@ using JTTools.Dtos;
 using System.Reflection.Emit;
 using JT808.Protocol;
 using System.Security.Cryptography.Xml;
+using JT808.Protocol.MessagePack;
+using JT808.Protocol.MessageBody;
 
 namespace JTTools.Controllers
 {
@@ -24,21 +26,27 @@ namespace JTTools.Controllers
     {
         JT809_2011_Config config2011;
         JT809_2019_Config config2019;
+        IJT808Config jt808Config;
         JT809Serializer serializer2011;
         JT809Serializer serializer2019;
+
+        int MAX_BUFFER_SIZE = 1024 * 1024 * 1; //10M
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="jt808Config"></param>
         /// <param name="config2011"></param>
         /// <param name="config2019"></param>
         public JT809Controller(
+                    IJT808Config jt808Config,
                     JT809_2011_Config config2011,
                     JT809_2019_Config config2019
             )
         {
             this.config2011 = config2011;
             this.config2019 = config2019;
+            this.jt808Config = jt808Config;
             serializer2011 = config2011.GetSerializer();
             serializer2019 = config2019.GetSerializer();
         }
@@ -69,27 +77,37 @@ namespace JTTools.Controllers
                     case "2011":
                         if (request.IsEncrypt)
                         {
-                            result.Result.JsonValue = serializer2011.Analyze(data, JTJsonWriterOptions.Instance);
+                            result.Result.JsonValue = serializer2011.Analyze(data, JTJsonWriterOptions.Instance, MAX_BUFFER_SIZE);
                         }
                         else
                         {
                             IJT809Config jt809ConfigInternal = new JT809Config2011(Guid.NewGuid().ToString());
                             jt809ConfigInternal.EncryptOptions = encryptOptions;
+                            jt809ConfigInternal.AnalyzeCallbacks.Add(0x0200, (bytes, writer, jT809Config) => {       
+                                JT808MessagePackReader jT808MessagePackReader = new JT808MessagePackReader(bytes);
+                                JT808.Protocol.Extensions.JT808AnalyzeExtensions.Analyze(JT808.Protocol.JT808ConfigExtensions.GetMessagePackFormatter<JT808_0x0200>(jt808Config),
+                                    ref jT808MessagePackReader, writer, jt808Config);
+                            });
                             JT809Serializer jT809SerializerInternal = new JT809Serializer(jt809ConfigInternal);
-                            result.Result.JsonValue = jT809SerializerInternal.Analyze(data, JTJsonWriterOptions.Instance);
+                            result.Result.JsonValue = jT809SerializerInternal.Analyze(data, JTJsonWriterOptions.Instance, MAX_BUFFER_SIZE);
                         }
                         break;
                     case "2019":
                         if (request.IsEncrypt)
                         {
-                            result.Result.JsonValue = serializer2019.Analyze(data, JTJsonWriterOptions.Instance);
+                            result.Result.JsonValue = serializer2019.Analyze(data, JTJsonWriterOptions.Instance, MAX_BUFFER_SIZE);
                         }
                         else
                         {
-                            IJT809Config jt809ConfigInternal = new JT809Config2019(Guid.NewGuid().ToString());  
+                            IJT809Config jt809ConfigInternal = new JT809Config2019(Guid.NewGuid().ToString());
                             jt809ConfigInternal.EncryptOptions = encryptOptions;
+                            jt809ConfigInternal.AnalyzeCallbacks.Add(0x0200, (bytes, writer, jT809Config) => {
+                                JT808MessagePackReader jT808MessagePackReader = new JT808MessagePackReader(bytes);
+                                JT808.Protocol.Extensions.JT808AnalyzeExtensions.Analyze(JT808.Protocol.JT808ConfigExtensions.GetMessagePackFormatter<JT808_0x0200>(jt808Config),
+                                    ref jT808MessagePackReader, writer, jt808Config);
+                            });
                             JT809Serializer jT809SerializerInternal = new JT809Serializer(jt809ConfigInternal);
-                            result.Result.JsonValue = jT809SerializerInternal.Analyze(data, JTJsonWriterOptions.Instance);
+                            result.Result.JsonValue = jT809SerializerInternal.Analyze(data, JTJsonWriterOptions.Instance, MAX_BUFFER_SIZE);
                         }
                         break;
                     default:

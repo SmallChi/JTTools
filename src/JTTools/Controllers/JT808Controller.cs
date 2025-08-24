@@ -17,6 +17,9 @@ using System.Net.Sockets;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Reflection.PortableExecutable;
 using JT905.Protocol.SerialPort;
+using JT808.Protocol.Enums;
+using YamlDotNet.Serialization;
+using JT808.Protocol.MessageBody;
 
 namespace JTTools.Controllers
 {
@@ -39,6 +42,8 @@ namespace JTTools.Controllers
         JT808Serializer JTYueBiao_Serializer;
         JT808Serializer JTGps51_Serializer;
         JT808Serializer JT1078Serializer;
+
+ 
 
         /// <summary>
         /// 
@@ -123,6 +128,10 @@ namespace JTTools.Controllers
                         package.PackageIndex = headerPackage.Header.PackageIndex;
                         package.PackgeCount = headerPackage.Header.PackgeCount;
                         package.Body = headerPackage.Bodies.ToHexString();
+                        if (package.PackageIndex == 1)
+                        {
+                            package.Body =$"首包数据体:\r\n{package.Body}\r\n{BodyAnalyze(headerPackage.Header.MsgId, headerPackage.Bodies)}\r\n" ;
+                        }
                     }
                     else
                     {
@@ -193,7 +202,7 @@ namespace JTTools.Controllers
                     }
                     else
                     {
-                        result.Result.JsonValue ="";
+                        result.Result.JsonValue = "";
                     }  
                 }
             }
@@ -202,6 +211,17 @@ namespace JTTools.Controllers
                 result.Error(ex);
             }
             return result;
+        }
+
+        string BodyAnalyze(ushort msgId, byte[] body)
+        {
+            switch (msgId)
+            {
+                case (ushort)JT808MsgId._0x0801:
+                    return Serializer.Analyze<JT808_0x0801>(body, options: JTJsonWriterOptions.Instance);
+                default:
+                    return "";
+            }
         }
     }
 }

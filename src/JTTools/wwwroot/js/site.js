@@ -3,16 +3,54 @@ axios.defaults.baseURL = "https://jttools.smallchi.cn/jtt";
 
 //axios.defaults.baseURL = "http://127.0.0.1:18889/jtt";
 
-function hexToString(hexStr) {
-    // 移除可能存在的空格和换行符
+function hexToString(hexStr, encoding = 'utf-8') {
+    // 移除空格和换行符
     hexStr = hexStr.replace(/\s+/g, '');
+    
     // 将16进制字符串转换为字节数组
     let bytes = [];
     for (let i = 0; i < hexStr.length; i += 2) {
         bytes.push(parseInt(hexStr.substring(i, i + 2), 16));
     }
-    // 将字节数组转换为字符串
-    return String.fromCharCode.apply(null, bytes);
+
+    // 使用 TextDecoder 解码
+    let decoder = new TextDecoder(encoding);
+    return decoder.decode(new Uint8Array(bytes));
+}
+
+/**
+ * 初始化当前浏览器支持的编码
+ * @param {*} e select元素
+ */
+function initEncoding(e) {
+    [
+        // 常见 UNICODE 系列
+        "UTF-8", "UTF-16LE", "UTF-16BE", "UTF-32LE", "UTF-32BE",
+
+        // 中文编码
+        "GBK", "GB18030", "HZ-GB-2312", "BIG5",
+
+        // 日文编码
+        "SHIFT_JIS", "EUC-JP", "ISO-2022-JP",
+
+        // 韩文编码
+        "EUC-KR", "ISO-2022-KR",
+
+        // 西欧、拉美等
+        "ISO-8859-1", "ISO-8859-2", "ISO-8859-5", "ISO-8859-15","WINDOWS-1250", "WINDOWS-1251", "WINDOWS-1252", "WINDOWS-1256",
+
+        // 俄语、希腊语等
+        "KOI8-R", "KOI8-U", "MACINTOSH", "X-MAC-CYRILLIC",
+
+        // 其它
+        "IBM866", "ISO-2022-CN", "WINDOWS-1254", "WINDOWS-874"
+    ].forEach((enc) => {
+        try {
+            new TextDecoder(enc);
+            e.append(new Option(enc, enc));
+        } catch {
+        }
+    });
 }
 
 /*ref: https://kimi.moonshot.cn/  auto-generated code */
@@ -32,6 +70,9 @@ jQuery.fn.extend({
             return $obj.css({ height: $obj.attr('_initAdjustHeight'), 'overflow-y': 'hidden' })
                 .height(elem.scrollHeight);
         }
+    },
+    addEncoding: function () {
+        initEncoding(this);
     }
 });
 
@@ -64,6 +105,7 @@ $(document).ready(function () {
     $("#JTSB_Hex").val(JTSBHexData);
     $("#JT1078_Hex").val(JT1078HexData);
     $("#HexTools").val(HexTools);
+    $("#HexToolsEncoding").addEncoding()
 
     window.addEventListener('load', function () {
         console.log('load location: ', document.location, 'state: ', event.state);
@@ -161,11 +203,12 @@ $(document).ready(function () {
     });
 
     $("#HexToolsConvert").on("click", function () {
+        let encoding = $("#HexToolsEncoding").val();
         var hexLines = $("#HexTools").val().split('\n');
         var hexStr = "";
         if (hexLines) {
             for (var i = 0; i < hexLines.length; i++) {
-                var hex = hexToString(hexLines[i]);
+                var hex = hexToString(hexLines[i],encoding);
                 hexStr += hex + "\n";
             }
         }

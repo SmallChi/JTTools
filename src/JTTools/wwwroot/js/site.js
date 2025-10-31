@@ -295,7 +295,7 @@ $(document).ready(function () {
             {
                 Hex: $("#JT809_Hex").val(),
                 ProtocolType: $("#JT809_ProtocolType").val(),
-                IsEncrypt: $("#JT809_EncryptType").val() == "none",
+                IsEncrypt: $("#JT809_EncryptType").val() != "none",
                 M1: parseInt($("#JT809_M1_Value").val()),
                 IA1: parseInt($("#JT809_IA1_Value").val()),
                 IC1: parseInt($("#JT809_IC1_Value").val()),

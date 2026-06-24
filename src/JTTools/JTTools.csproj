@@ -9,18 +9,18 @@
 
 	<ItemGroup>
 		<PackageReference Include="JT1078" Version="1.2.0-preview8" />
-		<PackageReference Include="JT808" Version="2.7.7" />
-		<PackageReference Include="JT808.Protocol.Extensions.GPS51" Version="2.7.7" />
-		<PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.7.7" />
-		<PackageReference Include="JT808.Protocol.Extensions.Streamax" Version="0.6.1" />
-		<PackageReference Include="JT808.Protocol.Extensions.SuBiao" Version="2.7.7" />
-		<PackageReference Include="JT808.Protocol.Extensions.YueBiao" Version="2.7.7" />
+		<PackageReference Include="JT808" Version="2.7.9" />
+		<PackageReference Include="JT808.Protocol.Extensions.GPS51" Version="2.7.9" />
+		<PackageReference Include="JT808.Protocol.Extensions.JT1078" Version="2.7.9" />
+		<PackageReference Include="JT808.Protocol.Extensions.Streamax" Version="0.6.3" />
+		<PackageReference Include="JT808.Protocol.Extensions.SuBiao" Version="2.7.9" />
+		<PackageReference Include="JT808.Protocol.Extensions.YueBiao" Version="2.7.9" />
 		<PackageReference Include="JT809" Version="2.2.9" />
 		<PackageReference Include="JT809.Protocol.Extensions.JT1078" Version="2.2.9" />
 		<PackageReference Include="JT905" Version="1.0.0" />
 		<PackageReference Include="JTActiveSafety" Version="1.0.3" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
-		<PackageReference Include="NSwag.AspNetCore" Version="14.6.3" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
+		<PackageReference Include="NSwag.AspNetCore" Version="14.7.1" />
 	</ItemGroup>
 
 </Project>

@@ -1,12 +1,14 @@
 ﻿
-axios.defaults.baseURL = "jtt";
+axios.defaults.baseURL = "/jtt";
 
-//axios.defaults.baseURL = "http://127.0.0.1:18889/jtt";
+// axios.defaults.baseURL = "https://jttools.smallchi.cn/jtt";
+
+// axios.defaults.baseURL = "http://127.0.0.1:18889/jtt";
 
 function hexToString(hexStr, encoding = 'utf-8') {
     // 移除空格和换行符
     hexStr = hexStr.replace(/\s+/g, '');
-    
+
     // 将16进制字符串转换为字节数组
     let bytes = [];
     for (let i = 0; i < hexStr.length; i += 2) {
@@ -37,7 +39,7 @@ function initEncoding(e) {
         "EUC-KR", "ISO-2022-KR",
 
         // 西欧、拉美等
-        "ISO-8859-1", "ISO-8859-2", "ISO-8859-5", "ISO-8859-15","WINDOWS-1250", "WINDOWS-1251", "WINDOWS-1252", "WINDOWS-1256",
+        "ISO-8859-1", "ISO-8859-2", "ISO-8859-5", "ISO-8859-15", "WINDOWS-1250", "WINDOWS-1251", "WINDOWS-1252", "WINDOWS-1256",
 
         // 俄语、希腊语等
         "KOI8-R", "KOI8-U", "MACINTOSH", "X-MAC-CYRILLIC",
@@ -93,10 +95,6 @@ $(document).ready(function () {
     var route_state = 0;
     var navbarCollapse = new bootstrap.Collapse('#navbarCollapse', {
         toggle: false
-    });
-    var carousel = new bootstrap.Carousel('#ProductCarousel', {
-        interval: 2000,
-        touch: false
     });
     $("#JT808_Hex").val(JT808HexData);
     $("#JT809_Hex").val(JT809HexData2011);
@@ -208,7 +206,7 @@ $(document).ready(function () {
         var hexStr = "";
         if (hexLines) {
             for (var i = 0; i < hexLines.length; i++) {
-                var hex = hexToString(hexLines[i],encoding);
+                var hex = hexToString(hexLines[i], encoding);
                 hexStr += hex + "\n";
             }
         }
@@ -371,11 +369,27 @@ $(document).ready(function () {
             });
     });
 
-    $("#ProductAD_GPS51").on("click", function () {
-        window.open("https://gps51.com/#/login?username=001test&password=Aa1357", '_blank');
+    window.BnbCopyState = 0;
+    $("#BnbIdCopyBtn").on("click", function () {
+        if (window.BnbCopyState == 0) {
+            copyToClipboard($("#BnbValue").val());
+            window.BnbCopyState = 1;
+            $("#BnbIdCopyI").removeClass("bi-copy").addClass("bi-check2");
+            setTimeout(() => {
+                $("#BnbIdCopyI").removeClass("bi-check2").addClass("bi-copy");
+                window.BnbCopyState = 0;
+            }, 2000);
+        }
     });
 
-    $("#ProductAD_GPS51_AI").on("click", function () {
-        window.open("https://gps51.com/#/login?username=001test&password=Aa1357", '_blank');
-    });
+    async function copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            console.log('复制成功');
+        } catch (err) {
+            console.error('复制失败:', err);
+            // 降级到传统方法
+            fallbackCopy(text);
+        }
+    }
 });
